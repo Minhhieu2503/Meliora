@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meliora — Nghệ Thuật Trà Nở Hoa | Viên Trà Isomalt Tinh Khiết</title>
+  <meta name="description" content="Khám phá Meliora - dòng trà viên tea bomb vỏ isomalt trong suốt tinh khiết từ Việt Nam. Bung nở từng cánh hoa, lá trà thượng hạng trong tách nước nóng.">
+  <meta name="keywords" content="Meliora, tea bomb, trà nở hoa, viên trà isomalt, trà thảo mộc, trà hoa hồng, trà hoa cúc">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Meliora — Nghệ Thuật Trà Nở Hoa">
+  <meta property="og:description" content="Viên trà trong veo, bung nở ngay trước mắt bạn. Trải nghiệm nghệ thuật trà thảo mộc vỏ isomalt tinh khiết.">
+  <meta property="og:image" content="assets/images/hero-tea-bomb.jpg">
+
+  <!-- Google Fonts: Cormorant Garamond, Playfair Display & Be Vietnam Pro with full Vietnamese diacritics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Background Blobs -->
+  <div class="ambient-bg-wrapper" aria-hidden="true">
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-3"></div>
+  </div>
+
+  <!-- Interactive Floating Petals Canvas -->
+  <canvas id="petals-canvas" aria-hidden="true"></canvas>
+
+  <!-- ==========================================================================
+       1. NAVIGATION BAR
+       ========================================================================== -->
+  <nav class="site-nav" id="main-nav">
+    <div class="container nav-container">
+      <a href="#hero" class="nav-logo" aria-label="Meliora Trang chủ">
+        <img src="assets/images/logo-header.png" alt="Meliora - Artisan Beverage Bombs" class="brand-logo-img">
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">Về Meliora</a></li>
+        <li><a href="#why-isomalt" class="nav-link">Vì sao Isomalt</a></li>
+        <li><a href="#journey" class="nav-link">Hành trình</a></li>
+        <li><a href="#flavors" class="nav-link">Hương vị</a></li>
+        <li><a href="#how-to-brew" class="nav-link">Cách pha</a></li>
+        <li><a href="#faq" class="nav-link">Câu hỏi</a></li>
+      </ul>
+
+      <!-- Desktop CTA Buttons (Fanpage & TikTok only) -->
+      <div class="nav-ctas">
+        <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" class="btn btn-secondary nav-btn" title="Ghé Fanpage Facebook">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </span>
+          <span>Fanpage</span>
+        </a>
+        <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="btn btn-tiktok nav-btn" title="Theo dõi TikTok">
+          <span class="btn-icon">
+            <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg>
+          </span>
+          <span>TikTok</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-menu-toggle" id="mobile-toggle" aria-label="Mở bảng chọn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <ul class="mobile-drawer-links">
+      <li><a href="#about">Về Meliora</a></li>
+      <li><a href="#why-isomalt">Vì sao Isomalt</a></li>
+      <li><a href="#journey">Hành trình của viên trà</a></li>
+      <li><a href="#flavors">Bộ sưu tập hương vị</a></li>
+      <li><a href="#how-to-brew">Cách thưởng thức</a></li>
+      <li><a href="#moments">Khoảnh khắc</a></li>
+      <li><a href="#faq">Câu hỏi thường gặp</a></li>
+    </ul>
+    <div class="mobile-drawer-ctas">
+      <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="btn btn-tiktok">
+        <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg></span>
+        <span>Xem trên TikTok</span>
+      </a>
+      <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" class="btn btn-facebook">
+        <span class="btn-icon"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span>
+        <span>Ghé Fanpage Facebook</span>
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <!-- ==========================================================================
+         2. HERO SECTION
+         ========================================================================== -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid">
+        <!-- Hero Text Content -->
+        <div class="hero-content reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Nghệ Thuật Trà Thủ Công Việt Nam</span>
+          </div>
+          
+          <h1 class="hero-headline">
+            Nhìn trà <span class="highlight-flower">nở hoa</span>
+          </h1>
+          
+          <p class="hero-subheadline">
+            Viên trà trong veo, bung nở ngay trước mắt bạn. Từng cánh hoa, búp trà và lát quả sấy thăng hoa được ôm trọn trong lớp cầu pha lê Isomalt tinh khiết.
+          </p>
+
+          <div class="hero-ctas">
+            <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="btn btn-tiktok btn-large" title="Xem video bung nở trên TikTok">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg>
+              </span>
+              <span>Xem trên TikTok</span>
+            </a>
+
+            <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-large" title="Ghé thăm Fanpage chính thức">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </span>
+              <span>Ghé Fanpage</span>
+            </a>
+          </div>
+
+          <div class="hero-trust-badges">
+            <div class="trust-item">
+              <span class="trust-icon">✦</span>
+              <span>Vỏ Isomalt Tự Nhiên</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🌸</span>
+              <span>100% Hoa Thảo Mộc Thật</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🍃</span>
+              <span>Không Đường Hóa Học</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Showcase -->
+        <div class="hero-visual-wrapper reveal-fade-up stagger-2">
+          <!-- Floating Badge Top Right -->
+          <div class="floating-hero-badge badge-top-right">
+            <span>✨</span>
+            <span>Vũ điệu bung nở kỳ ảo</span>
+          </div>
+
+          <!-- Glass Cup Card -->
+          <div class="hero-tea-cup-card">
+            <div class="hero-image-container">
+              <img src="assets/images/hero-tea-bomb.jpg" alt="Viên trà trong suốt Meliora tan chảy trong ly nước nóng" loading="eager" width="600" height="600">
+              <div class="glass-refraction-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Floating Badge Bottom Left -->
+          <div class="floating-hero-badge badge-bottom-left">
+            <span>🫖</span>
+            <span>Nhiệt độ hoàn hảo: 85°C - 90°C</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VỀ MELIORA (ABOUT BRAND STORY)
+         ========================================================================== -->
+    <section class="section about-section" id="about">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Triết Lý Thủ Công</span>
+          </div>
+          <h2 class="section-title">Vẻ đẹp nhìn thấu <em>thời gian</em></h2>
+          <p class="section-subtitle">
+            Meliora trong tiếng Latinh mang ý nghĩa "không ngừng vươn tới sự hoàn mỹ". Chúng tôi tin rằng thưởng trà không chỉ là nếm hương vị, mà còn là một khoảnh khắc ngưng đọng để thưởng lãm vẻ đẹp của tạo hóa.
+          </p>
+        </div>
+
+        <!-- 2-Column Artisan Craft Showcase -->
+        <div class="about-grid">
+          <!-- Left: 3 Pillars & Stat Pills -->
+          <div class="about-pillars-col reveal-fade-up stagger-1">
+            <div class="about-pillars">
+              <!-- Pillar 1 -->
+              <div class="about-pillar-card">
+                <div class="pillar-icon-box" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a5 5 0 0 0-5 5c0 3 5 8 5 8s5-5 5-8a5 5 0 0 0-5-5z"></path>
+                    <circle cx="12" cy="7" r="1.5"></circle>
+                    <path d="M7 13c-2.5 0-5 2-5 5s2 4 5 4 5-1.5 5-4"></path>
+                    <path d="M17 13c2.5 0 5 2 5 5s-2 4-5 4-5-1.5-5-4"></path>
+                  </svg>
+                </div>
+                <div class="pillar-content">
+                  <h3>100% Hoa Thảo Mộc Sấy Thăng Hoa</h3>
+                  <p>Từng nụ hồng Pháp, đóa cúc hoàng kim và lát trái cây tươi được sấy thăng hoa ở nhiệt độ âm sâu (-40°C), khóa chặt 98% sắc màu rực rỡ và tinh dầu nguyên bản.</p>
+                </div>
+              </div>
+
+              <!-- Pillar 2 -->
+              <div class="about-pillar-card">
+                <div class="pillar-icon-box" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+                <div class="pillar-content">
+                  <h3>Vỏ Cầu Isomalt Siêu Tinh Khiết</h3>
+                  <p>Chiết xuất hoàn toàn từ củ cải đường nhập khẩu Đức, lớp vỏ cầu trong suốt như pha lê, tan êm dịu trong nước nóng mà không để lại bất kỳ vẩn đục hay dư vị ngọt gắt.</p>
+                </div>
+              </div>
+
+              <!-- Pillar 3 -->
+              <div class="about-pillar-card">
+                <div class="pillar-icon-box" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                    <line x1="6" y1="1" x2="6" y2="4"></line>
+                    <line x1="10" y1="1" x2="10" y2="4"></line>
+                    <line x1="14" y1="1" x2="14" y2="4"></line>
+                  </svg>
+                </div>
+                <div class="pillar-content">
+                  <h3>Nghi Thức Thưởng Trà Đương Đại</h3>
+                  <p>Mỗi viên Meliora không đơn thuần là một thức uống, mà là liệu pháp xoa dịu tâm trí — ngắm nhìn cánh hoa bung tỏa diệu kỳ trong làn nước trong vắt.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Metrics Pills -->
+            <div class="about-stats-row">
+              <div class="stat-pill">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Hoa Thật Tự Nhiên</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-number">0g</span>
+                <span class="stat-label">Đường Hóa Học</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-number">-40°C</span>
+                <span class="stat-label">Sấy Thăng Hoa</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-number">&lt; 2kcal</span>
+                <span class="stat-label">Năng Lượng / Tách</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Visual Artisan Showcase Card -->
+          <div class="about-visual-col reveal-fade-up stagger-2">
+            <div class="about-showcase-card">
+              <!-- Floating Badges -->
+              <div class="about-badge-top">
+                <span>✨</span>
+                <span>Thủ công từng viên</span>
+              </div>
+              <div class="about-badge-bottom">
+                <span>💎</span>
+                <span>Pha Lê Isomalt Đức</span>
+              </div>
+
+              <!-- Main Frame -->
+              <div class="about-image-frame">
+                <img src="assets/images/flavor-chamomile-gold.jpg" alt="Viên trà thảo mộc Meliora trong suốt trên phiến đá cẩm thạch" loading="lazy" width="500" height="525">
+                <div class="glass-refraction-overlay"></div>
+              </div>
+
+              <!-- Quote Card -->
+              <blockquote class="about-card-quote">
+                "Thưởng trà không chỉ bằng vị giác, mà bắt đầu từ khoảnh khắc đôi mắt được xoa dịu bởi vẻ đẹp bung nở tinh khôi."
+                <cite>— Nghệ nhân Meliora</cite>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         3. "VÌ SAO MELIORA CHỌN ISOMALT CHO LỚP VỎ TEA BOMB?"
+         ========================================================================== -->
+    <section class="section why-isomalt-section" id="why-isomalt">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Bí Mật Vỏ Cầu Pha Lê</span>
+          </div>
+          <h2 class="section-title">Vì sao Meliora chọn <em>Isomalt</em>?</h2>
+          <p class="section-subtitle">
+            Khác với đường kính thông thường hay gelatin, Isomalt là tinh thể đường tự nhiên chiết xuất từ củ cải đường của Đức — tạo nên lớp vỏ cầu trong suốt tựa pha lê và an lành cho cơ thể.
+          </p>
+        </div>
+
+        <div class="isomalt-intro-box reveal-fade-up stagger-1">
+          <p class="isomalt-intro-text">
+            Mỗi viên <strong>Meliora Tea Bomb</strong> được làm thủ công ở nhiệt độ kiểm soát nghiêm ngặt. Lớp vỏ Isomalt siêu mỏng ôm trọn bông cúc hoàng kim, nụ hồng Pháp hay lát đào tươi sấy lạnh, giữ nguyên vẹn tinh chất và hình dáng tự nhiên cho tới khoảnh khắc gặp nước nóng.
+          </p>
+        </div>
+
+        <!-- 3 Glass Cards as specified -->
+        <div class="isomalt-cards-grid">
+          <!-- Card 1: Vị ngọt dịu -->
+          <div class="glass-card isomalt-card reveal-fade-up stagger-1">
+            <div class="isomalt-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+              </svg>
+            </div>
+            <h3 class="isomalt-card-title">Vị ngọt dịu</h3>
+            <p class="isomalt-card-desc">
+              Vị ngọt thanh khiết, chỉ bằng 50% đường ăn. Isomalt tan êm mà không để lại hậu vị gắt, tôn vinh trọn vẹn hương trà búp non và mùi thơm nguyên bản của cánh hoa sấy lạnh.
+            </p>
+            <span class="isomalt-pill">Thanh tao • Không nồng</span>
+          </div>
+
+          <!-- Card 2: Ít năng lượng hơn đường thông thường -->
+          <div class="glass-card isomalt-card reveal-fade-up stagger-2">
+            <div class="isomalt-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <h3 class="isomalt-card-title">Ít năng lượng</h3>
+            <p class="isomalt-card-desc">
+              Chỉ số đường huyết cực thấp (GI = 2), cung cấp lượng calo chỉ bằng phân nửa đường mía. Hoàn toàn thân thiện cho người kiêng đường, giữ vóc dáng và lối sống lành mạnh.
+            </p>
+            <span class="isomalt-pill">GI = 2 • Thân thiện vóc dáng</span>
+          </div>
+
+          <!-- Card 3: Trong suốt, giữ trọn vẻ đẹp nguyên liệu -->
+          <div class="glass-card isomalt-card reveal-fade-up stagger-3">
+            <div class="isomalt-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m4.93 4.93 4.24 4.24"></path>
+                <path d="m14.83 9.17 4.24-4.24"></path>
+                <path d="m14.83 14.83 4.24 4.24"></path>
+                <path d="m9.17 14.83-4.24 4.24"></path>
+              </svg>
+            </div>
+            <h3 class="isomalt-card-title">Trong suốt như ngọc</h3>
+            <p class="isomalt-card-desc">
+              Độ trong suốt quang học cao như thủy tinh hữu cơ. Cho phép bạn nhìn xuyên thấu từng thớ hoa, nhụy vàng và lá trà bên trong — mang lại khoái cảm thị giác ngay từ cái nhìn đầu tiên.
+            </p>
+            <span class="isomalt-pill">See-through Beauty</span>
+          </div>
+        </div>
+
+        <!-- Comparison Banner -->
+        <div class="isomalt-comparison-card reveal-fade-up stagger-2">
+          <div class="comparison-col highlight-col">
+            <h4>
+              <span>✨</span>
+              <span>Lớp Vỏ Isomalt của Meliora</span>
+            </h4>
+            <ul class="comparison-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#2D7A46" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Độ trong suốt cao, không bị đục mờ</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#2D7A46" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Ngọt thanh dịu, không lấn át hương trà</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#2D7A46" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Không gây sâu răng, chỉ số GI cực thấp</li>
+            </ul>
+          </div>
+          <div class="comparison-col">
+            <h4>
+              <span>⚖️</span>
+              <span>Đường Kính Mía Thông Thường</span>
+            </h4>
+            <ul class="comparison-list">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#C35A5A" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Dễ ngả vàng khi đun, che mất màu hoa</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#C35A5A" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Vị ngọt gắt, át mất hương thảo mộc mộc mạc</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="#C35A5A" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Lượng calo cao, dễ làm tăng đường huyết</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         4. "HÀNH TRÌNH CỦA MỘT VIÊN TRÀ" (SCROLL & INTERACTIVE TIMELINE)
+         ========================================================================== -->
+    <section class="section journey-section" id="journey">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Khoảnh Khắc Bung Nở</span>
+          </div>
+          <h2 class="section-title">Hành trình của <em>một viên trà</em></h2>
+          <p class="section-subtitle">
+            Từ khối ngọc tĩnh lặng đến bản hòa tấu màu sắc và hương thơm. Hãy cùng chiêm ngưỡng 4 giai đoạn kỳ diệu khi viên trà gặp gỡ làn nước ấm.
+          </p>
+        </div>
+
+        <!-- Interactive Bloom Simulator Stage -->
+        <div class="journey-interactive-stage reveal-fade-up">
+          <div class="simulator-card">
+            <!-- Left: Visual Simulation Stage (Photographic Real Bloom) -->
+            <div class="simulator-visual-stage">
+              <div class="photo-bloom-stage" id="photo-bloom-stage">
+                <div class="bloom-image-layer active" data-stage="1">
+                  <img src="assets/images/bloom-stage-1.jpg" alt="Giai đoạn 1: Viên trà nguyên vẹn">
+                </div>
+                <div class="bloom-image-layer" data-stage="2">
+                  <img src="assets/images/bloom-stage-2.jpg" alt="Giai đoạn 2: Thả vào nước nóng">
+                </div>
+                <div class="bloom-image-layer" data-stage="3">
+                  <img src="assets/images/bloom-stage-3.jpg" alt="Giai đoạn 3: Vỏ tan dần">
+                </div>
+                <div class="bloom-image-layer" data-stage="4">
+                  <img src="assets/images/bloom-stage-4.jpg" alt="Giai đoạn 4: Trà, hoa, quả bung nở">
+                </div>
+                <!-- Interactive Shimmer & Steam Overlay -->
+                <div class="bloom-steam-overlay" aria-hidden="true"></div>
+                <div class="bloom-glass-reflection" aria-hidden="true"></div>
+                <div class="rising-bubbles-layer" id="sim-bubbles"></div>
+              </div>
+            </div>
+
+            <!-- Right: Stepper Controls & Description -->
+            <div class="simulator-content-box">
+              <span class="simulator-step-badge" id="sim-step-badge">GIAI ĐOẠN 01</span>
+              <h3 class="simulator-step-title" id="sim-step-title">Viên trà nguyên vẹn</h3>
+              <p class="simulator-step-desc" id="sim-step-desc">
+                Lớp vỏ Isomalt trong suốt như khối ngọc lưu ly pha lê, ôm trọn cánh hoa sấy thăng hoa và búp trà thơm ngát bên trong mà chưa hề tiếp xúc với nước.
+              </p>
+
+              <!-- Step Buttons -->
+              <div class="timeline-stepper">
+                <div class="step-tab active" data-step="1">
+                  <span class="step-num">BƯỚC 1</span>
+                  <span class="step-label">Nguyên vẹn</span>
+                </div>
+                <div class="step-tab" data-step="2">
+                  <span class="step-num">BƯỚC 2</span>
+                  <span class="step-label">Gặp nước nóng</span>
+                </div>
+                <div class="step-tab" data-step="3">
+                  <span class="step-num">BƯỚC 3</span>
+                  <span class="step-label">Vỏ tan dần</span>
+                </div>
+                <div class="step-tab" data-step="4">
+                  <span class="step-num">BƯỚC 4</span>
+                  <span class="step-label">Bung nở</span>
+                </div>
+              </div>
+
+              <div class="simulator-action-row">
+                <button class="btn btn-secondary" id="sim-play-btn">
+                  <span>▶ Xem mô phỏng tan chảy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         5. "BỘ SƯU TẬP HƯƠNG VỊ" (FLAVORS SECTION)
+         ========================================================================== -->
+    <section class="section flavors-section" id="flavors">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Tuyển Tập Thượng Hạng</span>
+          </div>
+          <h2 class="section-title">Bộ sưu tập <em>hương vị</em></h2>
+          <p class="section-subtitle">
+            Mỗi viên trà Meliora là một tác phẩm kết hợp hài hòa giữa hoa tươi sấy thăng hoa, thảo mộc quý và búp trà cổ thụ danh tiếng Việt Nam.
+          </p>
+        </div>
+
+        <div class="flavors-grid">
+          <!-- Flavor 1: Hoa Hồng Pháp & Dâu Tây -->
+          <div class="flavor-card" data-theme-color="rgba(242, 167, 184, 0.45)" style="--flavor-color: #DE8296; --card-glow: rgba(242, 167, 184, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-rose.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-rose-berry.jpg" alt="Viên trà Hoa Hồng Pháp & Dâu Tây" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">Ngọt ngào • Lãng mạn</span>
+              <h3 class="flavor-name">Hoa Hồng & Dâu Tây</h3>
+            </div>
+            <p class="flavor-desc">
+              Sự kết hợp quyến rũ giữa những nụ hồng Pháp ngát hương cùng vị chua ngọt thanh mát của dâu tây sấy giòn Đà Lạt.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Phấn hoa dịu ngọt, thơm lâu</div>
+              <div class="note-item"><strong>Vị:</strong> Chua thanh êm dịu, ngọt nhẹ</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Hồng ngọc trong trẻo</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Nụ hồng Pháp</span>
+              <span class="ingredient-chip">Dâu tây sấy lạnh</span>
+              <span class="ingredient-chip">Trà Shan Tuyết</span>
+              <span class="ingredient-chip">Isomalt Đức</span>
+            </div>
+          </div>
+
+          <!-- Flavor 2: Hoa Cúc Hoàng Kim & Quế Hoa -->
+          <div class="flavor-card" data-theme-color="rgba(246, 178, 107, 0.45)" style="--flavor-color: #E09549; --card-glow: rgba(246, 178, 107, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-chamomile.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-chamomile-gold.jpg" alt="Viên trà Hoa Cúc Hoàng Kim & Quế Hoa" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">An yên • Thư thái</span>
+              <h3 class="flavor-name">Cúc Hoàng Kim & Quế Hoa</h3>
+            </div>
+            <p class="flavor-desc">
+              Đóa cúc vàng bung nở trọn vẹn, thoảng hương quế hoa ngọt ngào cùng vị bùi dịu của kỷ tử đỏ hữu cơ.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Thảo mộc ấm áp, thoảng mật ong</div>
+              <div class="note-item"><strong>Vị:</strong> Hậu ngọt sâu lắng, dịu nhẹ</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Vàng hổ phách lấp lánh</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Cúc hoàng kim đóa</span>
+              <span class="ingredient-chip">Quế hoa vàng</span>
+              <span class="ingredient-chip">Kỷ tử đỏ</span>
+              <span class="ingredient-chip">Bạch trà búp</span>
+            </div>
+          </div>
+
+          <!-- Flavor 3: Đào Mật & Trà Ô Long -->
+          <div class="flavor-card" data-theme-color="rgba(247, 163, 139, 0.45)" style="--flavor-color: #F7A38B; --card-glow: rgba(247, 163, 139, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-peach.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-peach-oolong.jpg" alt="Viên trà Đào Mật & Trà Ô Long" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">Tươi mát • Hiện đại</span>
+              <h3 class="flavor-name">Đào Mật & Trà Ô Long</h3>
+            </div>
+            <p class="flavor-desc">
+              Từng lát đào mật má hồng sấy giòn quyện cùng những búp trà Ô Long Mộc Châu đậm vị, gợi nhớ buổi sớm mùa thu.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Quả đào chín mọng tự nhiên</div>
+              <div class="note-item"><strong>Vị:</strong> Chát nhẹ đầu lưỡi, ngọt hậu</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Vàng cam mật ong</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Lát đào mật sấy</span>
+              <span class="ingredient-chip">Ô Long Tứ Quý</span>
+              <span class="ingredient-chip">Cánh hoa rum</span>
+              <span class="ingredient-chip">Isomalt Đức</span>
+            </div>
+          </div>
+
+          <!-- Flavor 4: Vải Thiều & Bạch Trà Hoa Nhài -->
+          <div class="flavor-card" data-theme-color="rgba(215, 230, 205, 0.45)" style="--flavor-color: #7B9B62; --card-glow: rgba(168, 198, 134, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-jasmine.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-jasmine-lychee.jpg" alt="Viên trà Vải Thiều & Bạch Trà Hoa Nhài" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">Thanh khiết • Tinh tế</span>
+              <h3 class="flavor-name">Vải Thiều & Trà Nhài</h3>
+            </div>
+            <p class="flavor-desc">
+              Vị ngọt đằm thắm của trái vải thiều nhiệt đới nâng niu hương hoa nhài trắng tinh khôi và búp bạch trà non mơn mởn.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Hoa nhài tháng 5 thanh tao</div>
+              <div class="note-item"><strong>Vị:</strong> Ngọt mọng nước, dịu êm</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Trắng ngọc ánh xanh</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Vải thiều sấy dẻo</span>
+              <span class="ingredient-chip">Búp hoa nhài</span>
+              <span class="ingredient-chip">Bạch trà Kim Tuyên</span>
+              <span class="ingredient-chip">Isomalt Đức</span>
+            </div>
+          </div>
+
+          <!-- Flavor 5: Matcha Cố Đô Isomalt -->
+          <div class="flavor-card" data-theme-color="rgba(168, 198, 134, 0.45)" style="--flavor-color: #8BA869; --card-glow: rgba(168, 198, 134, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-matcha.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-matcha.jpg" alt="Viên trà Matcha Cố Đô Isomalt" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">Tập trung • Tươi mới</span>
+              <h3 class="flavor-name">Matcha Cố Đô & Gạo Lứt</h3>
+            </div>
+            <p class="flavor-desc">
+              Bột matcha nghiền cối đá hòa cùng lá sencha và gạo lứt rang thơm bùi, mang lại khoảnh khắc tĩnh tâm trọn vẹn.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Cốm non & gạo lứt thơm lừng</div>
+              <div class="note-item"><strong>Vị:</strong> Umami tròn vị, ngọt hậu</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Xanh ngọc bích mướt mắt</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Matcha vụ xuân</span>
+              <span class="ingredient-chip">Lá sencha</span>
+              <span class="ingredient-chip">Gạo lứt rang</span>
+              <span class="ingredient-chip">Isomalt Đức</span>
+            </div>
+          </div>
+
+          <!-- Flavor 6: Trà Trái Cây Rừng & Hibiscus -->
+          <div class="flavor-card" data-theme-color="rgba(229, 140, 157, 0.45)" style="--flavor-color: #D15A75; --card-glow: rgba(229, 140, 157, 0.35);">
+            <div class="flavor-card-bg" style="background-image: url('assets/images/card-bg-hibiscus.jpg');" aria-hidden="true"></div>
+            <div class="flavor-card-veil" aria-hidden="true"></div>
+            <div class="flavor-sphere-preview">
+              <img src="assets/images/flavor-hibiscus-berry.jpg" alt="Viên trà Trái Cây Rừng & Hibiscus" loading="lazy" width="300" height="300">
+            </div>
+            <div class="flavor-card-header">
+              <span class="flavor-tag">Rực rỡ • Tràn năng lượng</span>
+              <h3 class="flavor-name">Trái Cây Rừng & Hibiscus</h3>
+            </div>
+            <p class="flavor-desc">
+              Đài hoa Hibiscus đỏ thắm kết hợp cùng việt quất rừng và dâu tằm, đánh thức mọi giác quan với sắc đỏ kiêu sa.
+            </p>
+            <div class="flavor-notes">
+              <div class="note-item"><strong>Hương:</strong> Quả mọng chín rộ, tươi vui</div>
+              <div class="note-item"><strong>Vị:</strong> Chua ngọt sảng khoái</div>
+              <div class="note-item"><strong>Sắc nước:</strong> Đỏ ruby mê hoặc</div>
+            </div>
+            <div class="ingredients-title">Nguyên liệu bên trong:</div>
+            <div class="ingredient-chips">
+              <span class="ingredient-chip">Hoa Hibiscus</span>
+              <span class="ingredient-chip">Việt quất rừng</span>
+              <span class="ingredient-chip">Dâu tằm sấy</span>
+              <span class="ingredient-chip">Hồng trà cao nguyên</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         6. "CÁCH THƯỞNG THỨC" (BREWING RITUAL)
+         ========================================================================== -->
+    <section class="section brew-section" id="how-to-brew">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Nghi Thức Thưởng Trà</span>
+          </div>
+          <h2 class="section-title">Cách thưởng thức <em>Meliora</em></h2>
+          <p class="section-subtitle">
+            Chỉ với 3 bước giản dị, bạn có thể tự tạo nên một màn trình diễn thị giác nghệ thuật ngay tại bàn làm việc hay góc trà chiều ấm cúng.
+          </p>
+        </div>
+
+        <div class="brew-steps-grid">
+          <!-- Step 1 -->
+          <div class="glass-card brew-step-card reveal-fade-up stagger-1">
+            <div class="brew-icon-bubble">
+              <span>🔮</span>
+            </div>
+            <span class="brew-step-badge">BƯỚC 01</span>
+            <h3>Thả viên trà</h3>
+            <p>
+              Đặt nhẹ nhàng 01 viên trà Meliora vào ly hoặc bình thủy tinh trong suốt (dung tích lý tưởng 350ml - 450ml).
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="glass-card brew-step-card reveal-fade-up stagger-2">
+            <div class="brew-icon-bubble">
+              <span>🫖</span>
+            </div>
+            <span class="brew-step-badge">BƯỚC 02</span>
+            <h3>Rót nước nóng</h3>
+            <p>
+              Rót từ từ dòng nước nóng 85°C - 90°C trực tiếp lên bề mặt viên cầu để kích hoạt quá trình tan chảy êm dịu của Isomalt.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="glass-card brew-step-card reveal-fade-up stagger-3">
+            <div class="brew-icon-bubble">
+              <span>🌸</span>
+            </div>
+            <span class="brew-step-badge">BƯỚC 03</span>
+            <h3>Ngắm hoa & Thưởng thức</h3>
+            <p>
+              Dành 60 - 90 giây chiêm ngưỡng vũ điệu bung nở của từng cánh hoa, khuấy nhẹ và thưởng thức từng ngụm trà an yên.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pro Tip Card -->
+        <div class="brew-pro-tip reveal-fade-up">
+          <div class="pro-tip-icon">💡</div>
+          <div class="pro-tip-content">
+            <h4>Bí quyết từ Nghệ nhân Meliora</h4>
+            <p>
+              Nên dùng ly thủy tinh hai lớp hoặc ly dáng trụ thẳng đứng không hoa văn để bắt trọn hiệu ứng ánh sáng. Bạn có thể châm thêm 2 - 3 lượt nước nóng để cảm nhận các tầng hương sâu lắng tiếp theo của trà thảo mộc.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         7. "KHOẢNH KHẮC TỪ MELIORA" (TIKTOK & COMMUNITY)
+         ========================================================================== -->
+    <section class="section moments-section" id="moments">
+      <div class="container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Lan Tỏa Vẻ Đẹp</span>
+          </div>
+          <h2 class="section-title">Khoảnh khắc từ <em>Meliora</em></h2>
+          <p class="section-subtitle">
+            Hàng ngàn video triệu view ghi lại giây phút trà bung nở kỳ ảo được chia sẻ bởi những tâm hồn yêu nghệ thuật và lối sống chánh niệm.
+          </p>
+        </div>
+
+        <div class="moments-grid">
+          <!-- Moment Card 1 -->
+          <div class="moment-card reveal-fade-up stagger-1" 
+               data-moment-title="Trải nghiệm thả viên trà hoa hồng hoàng hôn 🌅"
+               data-moment-desc="Giây phút lớp vỏ pha lê tan chảy, cánh hoa hồng bung xòe mềm mại trong ánh nắng chiều buông.">
+            <img src="assets/images/flavor-rose-berry.jpg" alt="Video clip hoa hồng bung nở" loading="lazy">
+            <div class="moment-overlay">
+              <span class="moment-top-badge">🔥 Đang Trending</span>
+              <div class="moment-center-play">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div class="moment-bottom-info">
+                <div class="moment-author">@meliorateabombs • TikTok</div>
+                <div class="moment-caption">Trải nghiệm thả viên trà hoa hồng hoàng hôn 🌅</div>
+                <div class="moment-stats">
+                  <span>👁 142.8K lượt xem</span>
+                  <span>❤️ 18.5K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moment Card 2 -->
+          <div class="moment-card reveal-fade-up stagger-2"
+               data-moment-title="Bóc hộp quà Meliora phiên bản giới hạn 🎁"
+               data-moment-desc="Món quà tinh tế dành tặng người thương với 6 viên trà trong suốt như ngọc lưu ly.">
+            <img src="assets/images/flavor-chamomile-gold.jpg" alt="Video mở hộp Meliora" loading="lazy">
+            <div class="moment-overlay">
+              <span class="moment-top-badge">✨ Hộp Quà Tinh Tế</span>
+              <div class="moment-center-play">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div class="moment-bottom-info">
+                <div class="moment-author">@anhthu_lifestyle • TikTok</div>
+                <div class="moment-caption">Bóc hộp quà Meliora phiên bản giới hạn 🎁</div>
+                <div class="moment-stats">
+                  <span>👁 98.2K lượt xem</span>
+                  <span>❤️ 12.1K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moment Card 3 -->
+          <div class="moment-card reveal-fade-up stagger-3"
+               data-moment-title="Cận cảnh khoảnh khắc hoa cúc bung nở siêu thực ✨"
+               data-moment-desc="Từng cánh cúc hoàng kim vươn mình trong làn nước nóng 90 độ, đẹp không lời nào tả xiết.">
+            <img src="assets/images/hero-tea-bomb.jpg" alt="Cận cảnh hoa bung nở" loading="lazy">
+            <div class="moment-overlay">
+              <span class="moment-top-badge">🌸 Triệu Lượt Xem</span>
+              <div class="moment-center-play">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div class="moment-bottom-info">
+                <div class="moment-author">@tra_chieu_chill • TikTok</div>
+                <div class="moment-caption">Cận cảnh khoảnh khắc hoa cúc bung nở siêu thực ✨</div>
+                <div class="moment-stats">
+                  <span>👁 210.5K lượt xem</span>
+                  <span>❤️ 29.8K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moment Card 4 -->
+          <div class="moment-card reveal-fade-up stagger-4"
+               data-moment-title="Góc chill buổi sáng với trà đào ô long ☕"
+               data-moment-desc="Một tách trà thơm lành không đường, khởi đầu ngày làm việc đầy năng lượng tươi mới.">
+            <img src="assets/images/flavor-rose-berry.jpg" alt="Góc chill trà sáng" loading="lazy">
+            <div class="moment-overlay">
+              <span class="moment-top-badge">☕ Morning Ritual</span>
+              <div class="moment-center-play">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <div class="moment-bottom-info">
+                <div class="moment-author">@minhkhang_tea • TikTok</div>
+                <div class="moment-caption">Góc chill buổi sáng với trà đào ô long ☕</div>
+                <div class="moment-stats">
+                  <span>👁 76.3K lượt xem</span>
+                  <span>❤️ 9.4K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         8. FAQ ACCORDION
+         ========================================================================== -->
+    <section class="section faq-section" id="faq">
+      <div class="container faq-container">
+        <div class="section-header reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Giải Đáp Thắc Mắc</span>
+          </div>
+          <h2 class="section-title">Câu hỏi <em>thường gặp</em></h2>
+          <p class="section-subtitle">
+            Những thông tin cần biết về nguồn gốc Isomalt, cách pha chế và trải nghiệm sản phẩm trà viên Meliora.
+          </p>
+        </div>
+
+        <div class="faq-accordion reveal-fade-up">
+          <!-- Item 1 -->
+          <div class="faq-item active">
+            <button class="faq-question">
+              <span>Đường Isomalt là gì và có an toàn cho sức khỏe không?</span>
+              <span class="faq-toggle-icon">＋</span>
+            </button>
+            <div class="faq-answer">
+              Isomalt là một loại polyol tự nhiên được tinh chế từ củ cải đường nhập khẩu từ Đức. Khác với đường mía, Isomalt không gây sâu răng, có chỉ số đường huyết cực thấp (GI = 2) và lượng calo chỉ khoảng 2 kcal/g (bằng một nửa đường thông thường). Isomalt được Tổ chức Y tế Thế giới (WHO) và FDA Hoa Kỳ chứng nhận an toàn cho cả người ăn kiêng và người tiểu đường khi dùng với lượng vừa phải.
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Nên pha viên trà với nước bao nhiêu độ là lý tưởng nhất?</span>
+              <span class="faq-toggle-icon">＋</span>
+            </button>
+            <div class="faq-answer">
+              Nhiệt độ hoàn hảo nhất để kích hoạt viên trà là <strong>85°C - 90°C</strong>. Ở nhiệt độ này, lớp vỏ isomalt sẽ tan đều trong 30 - 45 giây mà không làm "cháy" cánh hoa hoặc làm đắng vị trà tinh khiết bên trong. Sau khi hoa nở hết, bạn nên đợi thêm 1 phút để trà ngấm vị trọn vẹn trước khi thưởng thức.
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Viên trà Meliora bảo quản được trong bao lâu?</span>
+              <span class="faq-toggle-icon">＋</span>
+            </button>
+            <div class="faq-answer">
+              Mỗi viên trà Meliora được bọc trong màng mỏng kín khí và đặt trong hộp kèm gói hút ẩm. Ở nhiệt độ phòng thoáng mát (dưới 26°C), viên trà giữ trọn độ trong suốt và hương vị trong vòng <strong>6 tháng</strong> kể từ ngày sản xuất. Tránh để nơi ẩm ướt hoặc tiếp xúc trực tiếp với ánh nắng mặt trời.
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Meliora có dùng hương liệu tổng hợp hay chất bảo quản không?</span>
+              <span class="faq-toggle-icon">＋</span>
+            </button>
+            <div class="faq-answer">
+              Hoàn toàn <strong>KHÔNG</strong>. Meliora cam kết sử dụng 100% nụ hoa, cánh hoa và thảo mộc tự nhiên được xử lý qua công nghệ sấy thăng hoa lạnh (freeze-drying) giúp giữ lại nguyên vẹn màu sắc, cấu trúc và tinh dầu nguyên bản của hoa quả. Màu sắc nước trà hoàn toàn tự nhiên từ hoa và búp trà.
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Tôi có thể đặt mua trà Meliora ở đâu?</span>
+              <span class="faq-toggle-icon">＋</span>
+            </button>
+            <div class="faq-answer">
+              Vì mỗi viên trà Meliora là sản phẩm nghệ thuật chế tác thủ công theo mẻ giới hạn, trang web này được tạo ra để <strong>trưng bày nghệ thuật sản phẩm</strong>. Để được tư vấn set quà, chọn vị yêu thích và đặt hàng chính hãng, quý khách vui lòng <strong>liên hệ trực tiếp qua <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" style="color: var(--lotus-pink-deep); text-decoration: underline;">Fanpage Facebook</a> hoặc kênh TikTok chính thức</strong> của Meliora bằng các nút bấm trên trang. Đội ngũ trà nương của Meliora sẽ phản hồi và chuẩn bị đơn hàng cho bạn ngay lập tức!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         9. CLOSING CTA BAND
+         ========================================================================== -->
+    <section class="section closing-cta-section">
+      <div class="container">
+        <div class="closing-cta-card reveal-fade-up">
+          <div class="badge-tag">
+            <span class="dot"></span>
+            <span>Kết Nối Cùng Meliora</span>
+          </div>
+          <h2 class="closing-title">Muốn thử một viên trà nở hoa?</h2>
+          <p class="closing-subtitle">
+            Mang cả khu vườn hoa rực rỡ và những phút giây an yên vào tách trà của bạn. Nhắn tin ngay cho chúng tôi để chọn vị trà bạn yêu thích.
+          </p>
+
+          <div class="closing-cta-buttons">
+            <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" class="btn btn-facebook btn-large" title="Nhắn tin Fanpage Facebook">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </span>
+              <span>Nhắn Fanpage để đặt hàng</span>
+            </a>
+
+            <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="btn btn-tiktok btn-large" title="Theo dõi kênh TikTok Meliora">
+              <span class="btn-icon">
+                <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg>
+              </span>
+              <span>Theo dõi TikTok</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       10. FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <!-- Brand Col -->
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <img src="assets/images/logo.png" alt="Meliora - Artisan Beverage Bombs" class="brand-logo-img footer-logo-img">
+          </div>
+          <p class="footer-tagline">
+            See-through beauty • Vũ điệu trà nở hoa.<br>
+            Nghệ thuật trà hoa thủ công bọc tinh thể Isomalt tinh khiết từ Việt Nam.
+          </p>
+          <div class="footer-social-links">
+            <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Facebook Fanpage" title="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="TikTok Official" title="TikTok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Navigation Col -->
+        <div class="footer-col">
+          <h5>Khám Phá</h5>
+          <ul class="footer-links-list">
+            <li><a href="#about">Về Meliora</a></li>
+            <li><a href="#why-isomalt">Vì sao chọn Isomalt?</a></li>
+            <li><a href="#journey">Hành trình bung nở</a></li>
+            <li><a href="#flavors">Bộ sưu tập hương vị</a></li>
+            <li><a href="#how-to-brew">Hướng dẫn thưởng thức</a></li>
+            <li><a href="#faq">Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Col -->
+        <div class="footer-col">
+          <h5>Kênh Tư Vấn & Đặt Trà</h5>
+          <ul class="footer-links-list">
+            <li>Facebook: <a href="https://www.facebook.com/meliora.vietnam" target="_blank" rel="noopener noreferrer">@meliora.vietnam</a></li>
+            <li>TikTok: <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer">@meliorateabombs</a></li>
+            <li>Studio: Hà Nội & TP. Hồ Chí Minh</li>
+            <li>Hotline hỗ trợ: 1900 xxxx (8:30 - 21:00)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="copyright">
+          © 2026 Meliora Tea Bombs Vietnam. Mọi quyền được bảo lưu.
+        </div>
+        <div class="disclaimer-note">
+          <span>🌿</span>
+          <span>Lưu ý: Isomalt dùng với lượng vừa phải.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       VIDEO MODAL (Interactive TikTok / Reel Preview)
+       ========================================================================== -->
+  <div class="video-modal-backdrop" id="video-modal" role="dialog" aria-modal="true" aria-label="Xem video clip Meliora">
+    <div class="video-modal-container">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Đóng cửa sổ video">✕</button>
+      <div class="modal-video-box">
+        <img src="assets/images/hero-tea-bomb.jpg" alt="Video demo trà bung nở" id="modal-preview-img">
+        <div class="modal-tea-steam"></div>
+        <div class="modal-bottom-bar">
+          <h4 id="modal-video-title">Khoảnh khắc trà nở hoa Meliora</h4>
+          <p id="modal-video-desc">Xem trọn vẹn vũ điệu bung nở của cánh hoa trên TikTok Meliora.</p>
+          <a href="https://tiktok.com/@meliorateabombs" target="_blank" rel="noopener noreferrer" class="btn btn-tiktok" style="width: 100%;">
+            <span class="btn-icon">
+              <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.97v7.54c0 1.94-.49 3.95-1.6 5.5-1.39 1.97-3.73 3.16-6.15 3.19-2.58.07-5.13-1.12-6.68-3.17-1.61-2.09-1.96-4.99-1.02-7.46.95-2.52 3.18-4.32 5.86-4.72.63-.09 1.28-.1 1.92-.04v4.06c-.46-.09-.94-.1-1.42-.03-1.22.17-2.32.96-2.85 2.06-.57 1.16-.48 2.61.22 3.69.7 1.09 1.99 1.73 3.28 1.62 1.39-.08 2.65-.99 3.09-2.31.25-.74.27-1.54.27-2.32V.02z"/></svg>
+            </span>
+            <span>Xem video đầy đủ trên TikTok</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="js/main.js"></script>
+</body>
+</html>
