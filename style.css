@@ -1,0 +1,1632 @@
+/* ==========================================================================
+   DEUX / Meliora Landing Page Design System & Styles
+   ========================================================================== */
+
+:root {
+  /* Brand Color Palette Matching Exact Spec */
+  --bg-cream: #FFF0C8;
+  --bg-cream-light: #FFF8E7;
+  --bg-cream-dark: #FBE6B5;
+  
+  --brand-pink: #E5195E;
+  --brand-pink-hover: #C7124E;
+  --brand-orange: #F26A1B;
+  --brand-orange-deep: #D4540C;
+  --brand-orange-cta: #E5195E;
+  --brand-orange-hero: #F26A1B;
+  --brand-green-dark: #0F3B26;
+  
+  --text-primary: #0F3B26;
+  --text-muted: #2E5240;
+  --text-light: #ffffff;
+  
+  --tab-bg: #dbe4f0;
+  --tab-active-bg: #0F3B26;
+  --tab-active-text: #ffffff;
+
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Elevations & Transitions */
+  --shadow-soft: 0 10px 25px -5px rgba(15, 59, 38, 0.08), 0 8px 10px -6px rgba(15, 59, 38, 0.05);
+  --shadow-product: 0 20px 28px -8px rgba(15, 59, 38, 0.22);
+  --shadow-hover: 0 28px 42px -10px rgba(15, 59, 38, 0.32);
+  --transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-cream);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   1. Utility Bar (Top Strip)
+   ========================================================================== */
+.utility-bar {
+  background-color: var(--brand-green-dark);
+  color: #ebf5ee;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.45rem 2rem;
+  position: relative;
+  z-index: 50;
+}
+
+.utility-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.utility-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.utility-link {
+  transition: opacity 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.utility-link:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+}
+
+.cart-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #ebf5ee;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.cart-trigger-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.cart-count-badge {
+  background-color: var(--brand-pink);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  min-width: 1.2rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   2. Header & Hero Wrapper (Continuous navbar.jpg Background)
+   ========================================================================== */
+.header-hero-wrapper {
+  position: relative;
+  width: 100%;
+  background-image: url('assets/navbar.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.header-hero-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(252, 233, 211, 0.45) 0%, rgba(247, 180, 109, 0.22) 50%, rgba(235, 88, 30, 0.28) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.main-header {
+  background: rgba(253, 244, 234, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 1.15rem 2.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.main-header.scrolled {
+  background-color: rgba(252, 233, 211, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo-container .brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.header-logo-container .brand-logo:hover {
+  transform: scale(1.04);
+}
+
+.header-logo-emblem {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  display: block;
+}
+
+.brand-logo-text {
+  font-family: var(--font-sans);
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--brand-pink);
+  display: inline-block;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.nav-item {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #3b271d;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: var(--brand-pink);
+  transition: width 0.25s ease;
+}
+
+.nav-item:hover {
+  color: var(--brand-pink);
+}
+
+.nav-item:hover::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   3. Hero Section (Matching Reference Screenshot)
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 540px;
+  background: transparent;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.seal-badge {
+  position: absolute;
+  top: 2rem;
+  right: 4%;
+  z-index: 15;
+  width: 105px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: floatBounce 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatBounce {
+  0% { transform: translateY(0) rotate(2deg); }
+  100% { transform: translateY(-7px) rotate(-3deg); }
+}
+
+.seal-star {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #f84f09;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(184, 46, 2, 0.35);
+  clip-path: polygon(
+    50% 0%, 61% 10%, 75% 7%, 82% 19%, 95% 23%, 94% 37%, 100% 50%,
+    94% 63%, 95% 77%, 82% 81%, 75% 93%, 61% 90%, 50% 100%,
+    39% 90%, 25% 93%, 18% 81%, 5% 77%, 6% 63%, 0% 50%,
+    6% 37%, 5% 23%, 18% 19%, 25% 7%, 39% 10%
+  );
+  transition: transform 0.4s ease;
+}
+
+.seal-badge:hover .seal-star {
+  transform: rotate(45deg);
+}
+
+.seal-text {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.seal-text .bold {
+  font-weight: 900;
+  font-size: 1.15rem;
+  font-style: italic;
+}
+
+/* Fluid Container spanning edge-to-edge */
+.hero-container-fluid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3.5rem 4rem 1rem 4rem;
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero-main-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6.4vw, 5.6rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  text-shadow: 0 3px 12px rgba(60, 20, 5, 0.55), 0 1px 4px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.hero-content-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  flex: 1;
+}
+
+.hero-spacer-left {
+  flex: 1 1 50%;
+  min-height: 220px;
+}
+
+.hero-cta-column {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-bottom: 3.5rem;
+}
+
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 10px rgba(50, 18, 5, 0.6);
+}
+
+.hero-cta-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: var(--brand-pink);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 800;
+  padding: 0.85rem 2.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(229, 25, 94, 0.4);
+  transition: var(--transition-smooth);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: none;
+}
+
+.hero-cta-pill-btn .brand-emphasis {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hero-cta-pill-btn:hover {
+  background-color: var(--brand-pink-hover);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(229, 25, 94, 0.52);
+}
+
+.hero-cta-pill-btn:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Full-Width Curvy / Wavy transition lines */
+.hero-wavy-divider {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  margin-top: -12px;
+  background-color: transparent;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.wavy-svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+/* ==========================================================================
+   4. Attributes Section (4 Badges)
+   ========================================================================== */
+.attributes-section {
+  padding: 2.5rem 1.5rem 2rem;
+  background-color: var(--bg-cream);
+}
+
+.attributes-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.attribute-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.badge-circle {
+  width: 82px;
+  height: 82px;
+  border: 2.2px solid #281d18;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: transparent;
+  transition: transform 0.25s ease;
+}
+
+.attribute-item:hover .badge-circle {
+  transform: scale(1.06);
+}
+
+.badge-icon {
+  width: 32px;
+  height: 32px;
+  stroke: #281d18;
+}
+
+.badge-sublabel {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  color: #281d18;
+}
+
+.badge-letter {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #281d18;
+  line-height: 1;
+}
+
+.badge-v {
+  font-size: 2.4rem;
+  position: relative;
+  top: -2px;
+}
+
+.badge-leaf-accent {
+  width: 14px;
+  height: 14px;
+  color: #1e7041;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+}
+
+.badge-gf {
+  font-size: 2.1rem;
+  font-style: italic;
+  font-family: 'Playfair Display', serif;
+}
+
+.badge-stacked-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+  font-family: var(--font-sans);
+}
+
+.badge-row {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.badge-row.bold {
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.attribute-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d211b;
+}
+
+/* ==========================================================================
+   5. Products Showcase Section (Exact match with screenshot: no cards, just image + pill button)
+   ========================================================================== */
+.products-section {
+  padding: 3rem 1.5rem 4.5rem;
+  background-color: var(--bg-cream);
+}
+
+.products-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  align-items: end;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-image-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  position: relative;
+  background: transparent;
+}
+
+/* Soft studio cast shadow on the ground */
+.product-image-box::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  width: 140px;
+  height: 22px;
+  background: radial-gradient(ellipse at center, rgba(15, 59, 38, 0.38) 0%, rgba(15, 59, 38, 0.12) 55%, transparent 75%);
+  border-radius: 50%;
+  z-index: 1;
+  transform: rotate(-3deg);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.product-card:hover .product-image-box::after {
+  transform: scale(1.15) translateY(4px) rotate(-3deg);
+  opacity: 0.85;
+  filter: blur(6px);
+}
+
+.product-image {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 230px;
+  height: 230px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.08) brightness(1.05);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card:hover .product-image {
+  transform: translateY(-10px) scale(1.05);
+}
+
+.product-cta-btn {
+  position: relative;
+  z-index: 5;
+  background-color: var(--brand-pink);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 0.75rem 1.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 6px 16px rgba(229, 25, 94, 0.35);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+  width: auto;
+  min-width: 185px;
+  max-width: 240px;
+  white-space: nowrap;
+  letter-spacing: 0.015em;
+  border: none;
+  cursor: pointer;
+}
+
+.product-cta-btn:hover {
+  background-color: var(--brand-pink-hover);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 22px rgba(229, 25, 94, 0.48);
+}
+
+.product-cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   6. Press & Testimonials Section
+   ========================================================================== */
+.press-section {
+  padding: 3.5rem 1.5rem 4rem;
+  background-color: var(--bg-cream);
+  border: none;
+}
+
+.press-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.press-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.press-quote {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #2b1f1a;
+  quotes: "“" "”";
+}
+
+.press-logo {
+  font-style: normal;
+  color: #281d18;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.press-logo.forbes {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.press-logo.buzzfeed {
+  font-family: var(--font-sans);
+  color: #ee3322;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.press-logo.entrepreneur {
+  font-family: Georgia, serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.press-logo.zoe-report {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.report-dot {
+  width: 5px;
+  height: 5px;
+  background-color: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ==========================================================================
+   7. Interactive Section: We Like It Raw
+   ========================================================================== */
+.lifestyle-section {
+  padding: 4rem 1.5rem 5rem;
+  background-color: var(--bg-cream);
+  text-align: center;
+}
+
+.lifestyle-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.lifestyle-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900;
+  color: #214a36;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.tab-controls {
+  display: inline-flex;
+  background-color: var(--tab-bg);
+  padding: 0.35rem;
+  border-radius: 9999px;
+  margin-bottom: 2rem;
+  gap: 0.35rem;
+}
+
+.tab-btn {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #555;
+  padding: 0.65rem 1.75rem;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+  letter-spacing: 0.04em;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #111;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.panel-card-inner {
+  background-color: #fed788;
+  border-radius: 28px;
+  padding: 3rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  align-items: center;
+  gap: 2.5rem;
+  box-shadow: 0 15px 35px rgba(184, 115, 34, 0.15);
+}
+
+.scallop-blob-photo-box {
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  position: relative;
+  background: transparent;
+}
+
+.scallop-blob-photo-box::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  width: 140px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(15, 59, 38, 0.28) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: 1;
+}
+
+.blob-tab-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.08) brightness(1.05);
+}
+
+.panel-desc-main {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: #0F3B26;
+  font-weight: 600;
+  text-align: left;
+}
+
+.lifestyle-cta-row {
+  margin-top: 2.5rem;
+}
+
+.tab-bottom-cta-btn {
+  background-color: var(--brand-pink);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 0.85rem 2.8rem;
+  border-radius: 9999px;
+  box-shadow: 0 8px 20px rgba(216, 27, 96, 0.38);
+  transition: var(--transition-smooth);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.tab-bottom-cta-btn:hover {
+  background-color: var(--brand-pink-hover);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 26px rgba(216, 27, 96, 0.48);
+}
+
+/* ==========================================================================
+   8. Wavy Reviews Section with Speech Bubbles (Exact S-Curve Ribbon Like Screenshot)
+   ========================================================================== */
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.wavy-reviews-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-cream);
+  padding: 0 0 3.5rem;
+  overflow: hidden;
+}
+
+.wavy-reviews-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.wavy-curved-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(480px, 42vw, 620px);
+  overflow: visible;
+  background-color: transparent;
+}
+
+.wavy-photo-cutout {
+  width: 100%;
+  height: 100%;
+  clip-path: url(#wave-ribbon);
+  -webkit-clip-path: url(#wave-ribbon);
+  overflow: hidden;
+  background-color: #211714;
+}
+
+.wavy-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
+}
+
+.speech-bubbles-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.speech-bubble {
+  position: absolute;
+  background-color: #bde0fe;
+  color: #1a2f3b;
+  padding: 1.15rem 1.6rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  max-width: 310px;
+  line-height: 1.35;
+  pointer-events: auto;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.speech-bubble:hover {
+  transform: scale(1.04);
+}
+
+.speech-bubble .bubble-text {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: #1a2f3b;
+}
+
+.speech-bubble .bubble-author {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: block;
+  color: #1a2f3b;
+}
+
+/* Chat bubble tails matching screenshot 3 */
+.bubble-top-left {
+  top: 14%;
+  left: 14%;
+  transform: rotate(-2deg);
+}
+
+.bubble-top-left:hover {
+  transform: rotate(0deg) scale(1.04);
+}
+
+.bubble-top-left::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  left: 28px;
+  width: 0;
+  height: 0;
+  border-top: 9px solid #bde0fe;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+
+.bubble-bottom-left {
+  top: 34%;
+  left: 4%;
+  transform: rotate(2deg);
+}
+
+.bubble-bottom-left:hover {
+  transform: rotate(0deg) scale(1.04);
+}
+
+.bubble-bottom-left::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -9px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-right: 9px solid #bde0fe;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.bubble-bottom-right {
+  top: 52%;
+  left: 24%;
+  transform: rotate(-1.5deg);
+}
+
+.bubble-bottom-right:hover {
+  transform: rotate(0deg) scale(1.04);
+}
+
+.bubble-bottom-right::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: -9px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-right: 9px solid #bde0fe;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+/* ==========================================================================
+   9. Influencers & Newsletter Section
+   ========================================================================== */
+.influencers-section {
+  background-color: var(--bg-cream);
+  padding: 4.5rem 2rem 5rem;
+  text-align: center;
+}
+
+.influencers-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  color: #214a36;
+  margin-bottom: 3.5rem;
+  letter-spacing: -0.02em;
+}
+
+.newsletter-strip {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.newsletter-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.newsletter-tag {
+  color: var(--brand-pink);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.newsletter-sub {
+  color: #665248;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.newsletter-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 340px;
+  max-width: 440px;
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 0.85rem 1.4rem;
+  border-radius: 9999px;
+  border: 1px solid #d4c2b0;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.newsletter-btn {
+  background-color: var(--brand-pink);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.85rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.newsletter-btn:hover {
+  background-color: var(--brand-pink-hover);
+  transform: translateY(-2px);
+}
+
+/* Footer Wavy Divider (Transition into Deep Forest Green) */
+.footer-wavy-divider {
+  width: 100%;
+  line-height: 0;
+  background-color: var(--bg-cream);
+  margin-bottom: -1px;
+}
+
+.footer-wavy-divider svg {
+  display: block;
+  width: 100%;
+  height: 60px;
+}
+
+/* ==========================================================================
+   10. Main Footer
+   ========================================================================== */
+.main-footer {
+  background-color: var(--brand-green-dark);
+  color: #e4eee9;
+  padding: 4rem 2rem 2.5rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  gap: 4rem;
+  margin-bottom: 3.5rem;
+}
+
+.footer-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.footer-logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  background-color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.footer-brand-name {
+  font-family: var(--font-sans);
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--brand-pink);
+  text-transform: uppercase;
+}
+
+.footer-brand p {
+  color: #c9b3a3;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 360px;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.footer-col h4 {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer-col a {
+  display: block;
+  color: #c9b3a3;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-col a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9c8a7e;
+}
+
+/* ==========================================================================
+   11. Cart Slide-Out Drawer & Toast
+   ========================================================================== */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(33, 23, 20, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.cart-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 440px;
+  background-color: #ffffff;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cart-drawer.open {
+  transform: translateX(0);
+}
+
+.cart-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f0e6dc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-header h3 {
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.cart-close-btn {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #888;
+  padding: 0.2rem 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.cart-close-btn:hover {
+  color: #111;
+}
+
+.cart-free-shipping {
+  background-color: var(--bg-cream-light);
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid #f0e6dc;
+}
+
+.shipping-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e5d7ca;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.45rem;
+}
+
+.shipping-progress-fill {
+  height: 100%;
+  background-color: var(--brand-pink);
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.shipping-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.cart-items-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart-empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #999;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f5ede6;
+}
+
+.cart-item-thumb {
+  width: 65px;
+  height: 65px;
+  border-radius: 12px;
+  background-color: var(--bg-cream);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-info h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.item-price {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--brand-pink);
+  margin-bottom: 0.4rem;
+}
+
+.item-qty-control {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.qty-btn {
+  padding: 0.15rem 0.6rem;
+  color: #555;
+  transition: background-color 0.2s;
+}
+
+.qty-btn:hover {
+  background-color: #eee;
+}
+
+.item-qty-control span {
+  padding: 0 0.5rem;
+}
+
+.cart-footer {
+  padding: 1.5rem;
+  border-top: 1px solid #f0e6dc;
+  background-color: #faf7f5;
+}
+
+.cart-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+}
+
+.cart-checkout-btn {
+  width: 100%;
+  background-color: var(--brand-pink);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 0.9rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 6px 16px rgba(216, 27, 96, 0.35);
+}
+
+.cart-checkout-btn:hover {
+  background-color: var(--brand-pink-hover);
+  transform: translateY(-2px);
+}
+
+.cart-note {
+  font-size: 0.75rem;
+  color: #888;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* Toast */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: #211714;
+  color: #ffffff;
+  padding: 0.85rem 1.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  z-index: 110;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast-icon {
+  background-color: #10b981;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+/* ==========================================================================
+   12. Responsive Design
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1.5rem;
+  }
+
+  .press-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .utility-bar {
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .main-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .nav-links {
+    gap: 1.25rem;
+  }
+
+  .seal-badge {
+    top: 1rem;
+    right: 1.5rem;
+    width: 85px;
+    height: 85px;
+  }
+
+  .seal-text {
+    font-size: 0.8rem;
+  }
+
+  .seal-text .bold {
+    font-size: 0.95rem;
+  }
+
+  .hero-container-fluid {
+    padding: 2rem 1.25rem 0.5rem;
+  }
+
+  .hero-main-title {
+    text-align: center;
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
+    margin-bottom: 1rem;
+  }
+
+  .hero-content-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .hero-cta-column {
+    align-items: center;
+    padding-bottom: 2rem;
+  }
+
+  .attributes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+  }
+
+  .badge-circle {
+    width: 72px;
+    height: 72px;
+  }
+
+  .panel-card-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .panel-desc-main {
+    text-align: center;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .speech-bubble {
+    position: static;
+    margin: 1rem auto;
+    width: 90%;
+  }
+
+  .speech-bubbles-overlay {
+    position: relative;
+    padding: 2rem 1rem;
+  }
+
+  .wavy-reviews-banner {
+    min-height: auto;
+    max-height: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .products-container {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+  }
+
+  .tab-controls {
+    width: 100%;
+    display: flex;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .press-container {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+
+  .newsletter-strip {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .newsletter-left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .newsletter-form {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .newsletter-input {
+    width: 100%;
+  }
+
+  .newsletter-btn {
+    width: 100%;
+  }
+}
