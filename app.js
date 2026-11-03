@@ -19,7 +19,7 @@
     email: 'hellomelioravn@gmail.com'
   };
   const BOX = {
-    3: { sku: 'GS-3', name: 'Gift Set 3', price: 100000, image: 'assets/products/set3.webp' },
+    3: { sku: 'GS-3', name: 'Gift Set 3', price: 100000, image: 'assets/products/set3.webp', mustTry: true },
     6: { sku: 'GS-6', name: 'Gift Set 6', price: 190000, image: 'assets/products/set6.webp' }
   };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -137,6 +137,7 @@
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
   };
   const productUrl = p => `#/san-pham/${p.slug}`;
+  const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.5 4.5 7 4.5c2 0 3.6 1.1 5 3 1.4-1.9 3-3 5-3 3.5 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
   const plusIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>';
   const canBuy = p => p.status === 'available';
 
@@ -394,6 +395,7 @@
         <a class="card-img" href="${productUrl(p)}" aria-label="Xem chi tiết ${esc(p.vn)}">
           <img src="${p.image}" alt="Viên ${esc(LINE[p.line].name)} ${esc(p.vn)}" loading="lazy" width="880" height="1100" />
           ${statusBadge(p)}
+          ${p.mustTry ? `<span class="must-try">${HEART}Must try</span>` : ''}
         </a>
         <div class="card-body">
           <p class="card-line card-line-${p.line}">${LINE[p.line].name}</p>
@@ -416,6 +418,7 @@
         <button class="card-img card-img-box" data-start-builder="${size}" aria-label="Chọn ${b.name}">
           <img src="${b.image}" alt="Hộp quà Meliora ${size} viên" loading="lazy" width="1000" height="1000" />
           <span class="status status-available">Còn hàng</span>
+          ${b.mustTry ? `<span class="must-try">${HEART}Must try</span>` : ''}
         </button>
         <div class="card-body">
           <p class="card-line card-line-gift">Gift Set</p>
@@ -470,17 +473,62 @@
   window.addEventListener('resize', () => goShopPage(shopPage, true));
   shopViewport.addEventListener('load', () => goShopPage(shopPage, true), true);
 
-  // swipe on touch screens
-  let swipeX = null;
-  let swipeY = null;
-  shopViewport.addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; swipeY = e.touches[0].clientY; }, { passive: true });
-  shopViewport.addEventListener('touchend', e => {
-    if (swipeX === null) return;
-    const dx = e.changedTouches[0].clientX - swipeX;
-    const dy = e.changedTouches[0].clientY - swipeY;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) goShopPage(shopPage + (dx < 0 ? 1 : -1));
-    swipeX = null;
+  // Drag with the mouse, swipe on touch, or scroll sideways on a trackpad to change page
+  let drag = null;
+  let dragMoved = false;
+  shopViewport.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    drag = { x: e.clientX, y: e.clientY, id: e.pointerId, w: shopViewport.clientWidth, locked: false };
+    dragMoved = false;
   });
+  shopViewport.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    if (!drag.locked) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; } // vertical: let the page scroll
+      drag.locked = true;
+      dragMoved = true;
+      shopViewport.setPointerCapture(e.pointerId);
+      shopViewport.classList.add('is-dragging');
+      shopTrack.style.transition = 'none';
+    }
+    // resist at the first / last page
+    const edge = (shopPage === 0 && dx > 0) || (shopPage === shopPages - 1 && dx < 0);
+    const off = edge ? dx * 0.3 : dx;
+    shopTrack.style.transform = `translateX(calc(${-shopPage} * (100% + var(--page-gap)) + ${off}px))`;
+  });
+  const endDrag = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    const wasLocked = drag.locked;
+    drag = null;
+    shopViewport.classList.remove('is-dragging');
+    if (!wasLocked) return;
+    shopTrack.style.transition = '';
+    const threshold = Math.min(120, shopViewport.clientWidth * 0.12);
+    if (dx < -threshold) goShopPage(shopPage + 1);
+    else if (dx > threshold) goShopPage(shopPage - 1);
+    else goShopPage(shopPage);
+  };
+  shopViewport.addEventListener('pointerup', endDrag);
+  shopViewport.addEventListener('pointercancel', endDrag);
+  // a drag should not also count as a click on a card
+  shopViewport.addEventListener('click', e => {
+    if (dragMoved) { e.preventDefault(); e.stopPropagation(); dragMoved = false; }
+  }, true);
+  shopViewport.addEventListener('dragstart', e => e.preventDefault());
+
+  let wheelLock = 0;
+  shopViewport.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 12) return;
+    e.preventDefault();
+    const now = Date.now();
+    if (now < wheelLock) return;
+    wheelLock = now + 700;
+    goShopPage(shopPage + (e.deltaX > 0 ? 1 : -1));
+  }, { passive: false });
 
   function setShopFilter(filter, silent) {
     if (filter === shopFilter && !silent) return;
