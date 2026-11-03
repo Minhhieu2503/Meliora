@@ -1,70 +1,103 @@
 /* ==========================================================================
    MELIORA — Artisan Beverage Bombs
-   Catalog, flavor menu, gift-box builder, cart, checkout and page motion.
+   Shop (SKU catalog), product pages, gift builder, cart and order hand-off.
+   Orders are sent to Meliora through Zalo / Messenger: there is no backend,
+   so the site never claims an order was received before the customer sends it.
    ========================================================================== */
 
 (() => {
   'use strict';
 
-  const HOTLINE = '0842097274';
-  const FREE_SHIP = 200000;
-  const SHIP_FEE = 25000;
-  const BOX_PRICE = { 3: 100000, 6: 190000 };
+  /* ------------------------------------------------------------------------
+     0. CONFIG — change contact channels / prices here
+     ------------------------------------------------------------------------ */
+  const CONTACT = {
+    phone: '+84 842 097 274',
+    tel: '+84842097274',
+    zalo: 'https://zalo.me/0842097274',
+    messenger: 'https://m.me/meliora.vietnam',
+    email: 'hellomelioravn@gmail.com'
+  };
+  const BOX = {
+    3: { sku: 'GS-3', name: 'Gift Set 3', price: 100000, image: 'assets/products/set3.webp' },
+    6: { sku: 'GS-6', name: 'Gift Set 6', price: 190000, image: 'assets/products/set6.webp' }
+  };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ------------------------------------------------------------------------
-     1. CATALOG — flavors from the Meliora brief (7 hot tea, 4 sparkling)
+     1. CATALOG — SKU list from brief section 4.3
+     status: 'available' | 'soldout' | 'soon'  (update to match real stock)
      ------------------------------------------------------------------------ */
-  const HOT = 'tea';
-  const COLD = 'mocktail';
-  const LINE_NAME = { tea: 'Hot-Infusion Tea Bomb', mocktail: 'Sparkling Mocktail Bomb' };
-
-  const TEA_LABEL = {
-    storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
-    caution: 'Sử dụng ly chịu nhiệt. Không dùng nếu mẫn cảm với thành phần.',
-    brew: 'Rót 250 mL nước nóng khoảng 90°C, thả viên, ủ 5 phút.'
-  };
-  const COLD_LABEL = {
-    storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
-    caution: 'Không pha trong chai kín. Không dùng nếu mẫn cảm với thành phần.',
-    brew: 'Rót 250 mL nước có gas lạnh, thả viên, chờ sủi tan 2–3 phút rồi khuấy nhẹ.'
+  const LINE = {
+    tea: { name: 'Tea Bomb', long: 'Hot-Infusion Tea Bomb' },
+    mocktail: { name: 'Mocktail Bomb', long: 'Sparkling Mocktail Bomb' }
   };
 
-  const flavors = [
-    {
-      id: 'peach-oolong', line: HOT, name: 'Peach Oolong', vn: 'Viên trà ô long đào', color: '#E8A06A',
-      image: 'assets/bomb2_rose.png',
-      notes: 'Trà ô long dịu, đào sấy ngọt nhẹ và chút hương hoa mộc.',
-      ingredients: 'Isomalt (E953), trà ô long khô, đào sấy khô, hoa mộc khô dùng cho thực phẩm.',
-      extra: 'Sản phẩm có chứa trà, có thể chứa caffeine tự nhiên.'
+  const LABEL = {
+    tea: {
+      storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
+      caution: 'Sử dụng ly chịu nhiệt. Không dùng nếu mẫn cảm với thành phần. Sản phẩm có chứa trà, có thể chứa caffeine tự nhiên.',
+      steps: [
+        ['Mở gói', 'Lấy 01 viên ra khỏi lớp bọc.'],
+        ['Chuẩn bị nước', 'Rót 250 mL nước nóng khoảng 90°C.'],
+        ['Thả viên', 'Thả viên vào ly; chờ lớp vỏ tan.'],
+        ['Ủ trà & thưởng thức', 'Ủ 5 phút.']
+      ],
+      note: 'Dùng ly chịu nhiệt. Cẩn thận khi pha với nước nóng.'
     },
-    { id: 'orange-cinnamon', line: HOT, name: 'Orange Cinnamon', vn: 'Viên trà cam quế', color: '#D4813A',
-      notes: 'Cam sấy thơm vỏ, quế ấm, hợp những tối trời se lạnh.' },
-    { id: 'mango-passion', line: HOT, name: 'Mango Passion Fruit', vn: 'Viên trà xoài chanh dây', color: '#EDB240',
-      notes: 'Xoài chín ngọt, chanh dây chua nhẹ, màu vàng nắng trong ly.' },
-    { id: 'strawberry-rose', line: HOT, name: 'Strawberry Rose', vn: 'Viên trà dâu hoa hồng', color: '#D46A7E',
-      image: 'assets/bomb4_ruby.png',
-      notes: 'Dâu đỏ và cánh hồng khô, ly trà ngả sắc hồng khi vỏ tan.' },
-    { id: 'apple-ginger', line: HOT, name: 'Apple Ginger', vn: 'Viên trà táo gừng', color: '#C7A055',
-      notes: 'Táo ngọt thanh, gừng ấm cay nhẹ ở hậu vị.' },
-    { id: 'blueberry-lavender', line: HOT, name: 'Blueberry Lavender', vn: 'Viên trà việt quất oải hương', color: '#7D6CA8',
-      image: 'assets/bomb3_lavender.png',
-      notes: 'Việt quất và oải hương, màu tím nhạt, hương thơm dịu.' },
-    { id: 'chamomile-date-goji', line: HOT, name: 'Chamomile, Red Date & Goji', vn: 'Viên trà cúc La Mã, táo đỏ, kỷ tử', color: '#E3BE6E',
-      notes: 'Hoa cúc La Mã, táo đỏ và kỷ tử, vị ngọt hiền cho buổi tối.' },
+    mocktail: {
+      storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
+      caution: 'Không dùng nếu mẫn cảm với thành phần.',
+      steps: [
+        ['Mở gói', 'Lấy 01 viên ra khỏi lớp bọc.'],
+        ['Chuẩn bị nước', 'Rót 250 mL nước có gas lạnh vào ly.'],
+        ['Thả viên', 'Thả viên, chờ sủi tan 2–3 phút.'],
+        ['Khuấy & thưởng thức', 'Khuấy nhẹ, thêm đá nếu thích.']
+      ],
+      note: 'Không pha trong chai kín. Có thể thay bằng nước lạnh.'
+    }
+  };
 
-    { id: 'wild-berry-lemon', line: COLD, name: 'Wild Berry Lemon', vn: 'Viên sủi dâu rừng chanh vàng', color: '#B44A6E',
+  const products = [
+    {
+      sku: 'TB-PO', line: 'tea', en: 'Peach Oolong', vn: 'Đào Ô Long', color: '#E8A06A',
+      notes: 'Trà ô long dịu, đào sấy ngọt nhẹ và chút hương hoa mộc.',
+      weight: '17 g',
+      ingredients: 'Isomalt (E953), trà ô long khô, đào sấy khô, hoa mộc khô dùng cho thực phẩm.',
+      lot: 'TB-PO-261101-01', mfg: '01/11/2026', exp: '01/12/2026'
+    },
+    { sku: 'TB-OC', line: 'tea', en: 'Orange Cinnamon', vn: 'Cam Quế', color: '#C9702E',
+      notes: 'Cam sấy thơm vỏ cùng quế ấm, vị trà tròn và ấm.' },
+    { sku: 'TB-MPF', line: 'tea', en: 'Mango Passion Fruit', vn: 'Xoài Chanh Dây', color: '#EDA93C',
+      notes: 'Xoài sấy ngọt, chanh dây chua nhẹ, ly trà màu vàng nắng.' },
+    { sku: 'TB-SR', line: 'tea', en: 'Strawberry Rose', vn: 'Dâu Hoa Hồng', color: '#E07E86',
+      notes: 'Dâu sấy và cánh hồng khô, vị chua ngọt, ly trà ngả hồng.' },
+    { sku: 'TB-AG', line: 'tea', en: 'Apple Ginger', vn: 'Táo Gừng', color: '#D69A4A',
+      notes: 'Táo sấy ngọt thanh, gừng ấm nhẹ ở hậu vị.' },
+    { sku: 'TB-BL', line: 'tea', en: 'Blueberry Lavender', vn: 'Việt Quất Oải Hương', color: '#6E4A78',
+      notes: 'Việt quất và oải hương, ly trà màu tím, hương dịu.' },
+    { sku: 'TB-CRG', line: 'tea', en: 'Chamomile, Red Date and Goji', vn: 'Hoa Cúc Táo Đỏ Kỷ Tử', color: '#E7B456',
+      notes: 'Hoa cúc, táo đỏ và kỷ tử, vị ngọt hiền, nhẹ nhàng.' },
+
+    { sku: 'MB-WBL', line: 'mocktail', en: 'Wild Berry Lemon', vn: 'Chanh Dâu Rừng', color: '#D98A9B',
       notes: 'Dâu rừng chua ngọt gặp chanh vàng, sủi bọt tươi mát.' },
-    { id: 'peach-mango', line: COLD, name: 'Peach Mango', vn: 'Viên sủi đào xoài', color: '#F0A35C',
-      notes: 'Đào và xoài chín, ngọt mềm, màu cam đào.' },
-    { id: 'citrus-mint', line: COLD, name: 'Citrus Mint', vn: 'Viên sủi cam chanh bạc hà', color: '#9DBF7A',
-      image: 'assets/bomb1_citrus.png',
-      notes: 'Cam chanh tươi và bạc hà mát lạnh, rất hợp ngày nóng.' },
-    { id: 'pomegranate-cherry', line: COLD, name: 'Pomegranate Cherry', vn: 'Viên sủi lựu anh đào', color: '#A8354C',
-      notes: 'Lựu và anh đào, sắc đỏ ruby, vị chua ngọt cân bằng.' }
-  ].map(f => ({ ...f, price: 30000 }));
+    { sku: 'MB-PM', line: 'mocktail', en: 'Peach Mango', vn: 'Đào Xoài', color: '#E9B43C',
+      notes: 'Đào và xoài chín, ngọt mềm, màu vàng cam.' },
+    { sku: 'MB-CM', line: 'mocktail', en: 'Citrus Mint', vn: 'Cam Chanh Bạc Hà', color: '#9DBF7A',
+      notes: 'Cam chanh tươi và bạc hà mát lạnh, hợp ngày nóng.' },
+    { sku: 'MB-PC', line: 'mocktail', en: 'Pomegranate Cherry', vn: 'Lựu Cherry', color: '#B23A5C',
+      notes: 'Lựu và cherry, sắc đỏ, vị chua ngọt cân bằng.' }
+  ].map(p => ({
+    status: 'available',
+    price: 30000,
+    image: `assets/products/${p.sku}.jpg`,
+    slug: p.sku.toLowerCase(),
+    ...p
+  }));
 
-  const byId = Object.fromEntries(flavors.map(f => [f.id, f]));
+  const bySku = Object.fromEntries(products.map(p => [p.sku, p]));
+  const bySlug = Object.fromEntries(products.map(p => [p.slug, p]));
+  const STATUS = { available: 'Còn hàng', soldout: 'Sold Out', soon: 'Coming Soon' };
 
   /* ------------------------------------------------------------------------
      2. HELPERS
@@ -73,12 +106,13 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const vnd = n => new Intl.NumberFormat('vi-VN').format(n) + '₫';
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const sphere = f => `<span class="sph is-${f.line}" style="--c:${f.color}" aria-hidden="true"></span>`;
   const store = {
     get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
   };
+  const productUrl = p => `#/san-pham/${p.slug}`;
   const plusIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>';
+  const canBuy = p => p.status === 'available';
 
   /* ------------------------------------------------------------------------
      3. HERO: load sequence + petals
@@ -92,14 +126,14 @@
 
   const petalField = $('#petal-field');
   if (petalField && !reduceMotion) {
-    const colors = ['#E9B3B4', '#DFA0A3', '#F0C9C6', '#E3C9A0', '#D9B98A'];
-    const count = window.innerWidth < 700 ? 8 : 15;
+    const colors = ['#E9B3B4', '#DFA0A3', '#F0C9C6', '#B9C9A8', '#9FB592'];
+    const count = window.innerWidth < 700 ? 6 : 12;
     let html = '';
     for (let i = 0; i < count; i++) {
       const leaf = i % 4 === 3;
       const s = leaf ? 14 + Math.random() * 10 : 10 + Math.random() * 12;
-      const t = 16 + Math.random() * 14;
-      html += `<span class="petal" style="--x:${(Math.random() * 100).toFixed(1)}%;--s:${s.toFixed(0)}px;--t:${t.toFixed(1)}s;--delay:${(-Math.random() * t).toFixed(1)}s;--dx:${(Math.random() * 160 - 80).toFixed(0)}px;--r:${(Math.random() * 540 - 270).toFixed(0)}deg;--c:${leaf ? colors[3 + (i % 2)] : colors[i % 3]};opacity:${(0.45 + Math.random() * 0.45).toFixed(2)}"><svg><use href="#i-${leaf ? 'leaf' : 'petal'}"/></svg></span>`;
+      const t = 18 + Math.random() * 14;
+      html += `<span class="petal" style="--x:${(Math.random() * 100).toFixed(1)}%;--s:${s.toFixed(0)}px;--t:${t.toFixed(1)}s;--delay:${(-Math.random() * t).toFixed(1)}s;--dx:${(Math.random() * 160 - 80).toFixed(0)}px;--r:${(Math.random() * 540 - 270).toFixed(0)}deg;--c:${leaf ? colors[3 + (i % 2)] : colors[i % 3]};opacity:${(0.4 + Math.random() * 0.4).toFixed(2)}"><svg><use href="#i-${leaf ? 'leaf' : 'petal'}"/></svg></span>`;
     }
     petalField.innerHTML = html;
   }
@@ -115,11 +149,9 @@
   function onScrollHeader() {
     const y = window.scrollY;
     header.classList.toggle('is-scrolled', y > 24);
-    const goingDown = y > lastY + 4;
-    const goingUp = y < lastY - 4;
     if (!mobileNav.classList.contains('is-open')) {
-      if (goingDown && y > 480) header.classList.add('is-hidden');
-      else if (goingUp || y < 480) header.classList.remove('is-hidden');
+      if (y > lastY + 4 && y > 520) header.classList.add('is-hidden');
+      else if (y < lastY - 4 || y < 520) header.classList.remove('is-hidden');
     }
     lastY = y;
   }
@@ -139,29 +171,30 @@
     const sectionObs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (!e.isIntersecting) return;
-        navLinks.forEach(a => a.classList.toggle('is-current', a.getAttribute('href') === '#' + e.target.id));
+        const id = e.target.id === 'gift' ? 'gift' : e.target.id;
+        navLinks.forEach(a => a.classList.toggle('is-current', a.getAttribute('href') === '#' + id));
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    ['story', 'lines', 'brew', 'menu', 'gift', 'faq', 'contact'].forEach(id => {
+    ['shop', 'how', 'gift', 'story', 'contact'].forEach(id => {
       const el = document.getElementById(id);
       if (el) sectionObs.observe(el);
     });
   }
 
   /* ------------------------------------------------------------------------
-     5. SMOOTH ANCHOR SCROLL (eased, respects header height)
+     5. SMOOTH SCROLL + ROUTER (home sections / product pages)
      ------------------------------------------------------------------------ */
   const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   let scrollAnim = null;
 
-  function scrollToEl(el) {
+  function scrollToEl(el, instant) {
     if (!el) return;
     const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 72;
     const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - (el.id === 'top' ? 0 : offset - 1));
-    if (reduceMotion) { window.scrollTo(0, target); return; }
+    if (reduceMotion || instant) { window.scrollTo(0, target); return; }
     const start = window.scrollY;
     const dist = target - start;
-    const dur = Math.min(1400, Math.max(600, Math.abs(dist) * 0.45));
+    const dur = Math.min(1400, Math.max(600, Math.abs(dist) * 0.42));
     const t0 = performance.now();
     cancelAnimationFrame(scrollAnim);
     const step = now => {
@@ -173,48 +206,92 @@
   }
   ['wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, () => cancelAnimationFrame(scrollAnim), { passive: true }));
 
+  const productPage = $('#product-page');
+  const homeSections = () => $$('#main > section:not(#product-page)');
+  let homeScrollY = 0;
+
+  function showHome() {
+    if (!document.body.classList.contains('on-product')) return;
+    document.body.classList.remove('on-product');
+    productPage.hidden = true;
+    productPage.innerHTML = '';
+    homeSections().forEach(s => { s.hidden = false; });
+    document.title = 'Meliora — Tea Bomb & Sparkling Mocktail Bomb | Chạm nước, Bung hương, Vương vị';
+  }
+
+  function route() {
+    const m = location.hash.match(/^#\/san-pham\/([a-z0-9-]+)/i);
+    if (m && bySlug[m[1].toLowerCase()]) {
+      if (!document.body.classList.contains('on-product')) homeScrollY = window.scrollY;
+      renderProductPage(bySlug[m[1].toLowerCase()]);
+      return;
+    }
+    if (document.body.classList.contains('on-product')) {
+      showHome();
+      requestAnimationFrame(() => {
+        const id = location.hash.slice(1);
+        const el = id && document.getElementById(id);
+        if (el) scrollToEl(el, true);
+        else window.scrollTo(0, homeScrollY);
+        frame();
+      });
+    }
+  }
+  window.addEventListener('hashchange', route);
+
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    const id = a.getAttribute('href').slice(1);
-    const el = id ? document.getElementById(id) : null;
-    if (!el) return;
+    const href = a.getAttribute('href');
+    if (href.startsWith('#/')) {
+      if (mobileNav.classList.contains('is-open')) setMobileNav(false);
+      closeAllOverlays();
+      return; // router handles product pages
+    }
+    const id = href.slice(1);
+    if (!id) return;
     e.preventDefault();
-    if (a.dataset.filter) setMenuFilter(a.dataset.filter);
     if (mobileNav.classList.contains('is-open')) setMobileNav(false);
     closeAllOverlays();
-    scrollToEl(el);
-    history.replaceState(null, '', '#' + id);
+    if (a.dataset.filter) setShopFilter(a.dataset.filter, true);
+    const wasProduct = document.body.classList.contains('on-product');
+    if (wasProduct) showHome();
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    history.pushState(null, '', '#' + id);
+    if (wasProduct) requestAnimationFrame(() => { scrollToEl(el, true); frame(); });
+    else scrollToEl(el);
   });
 
   /* ------------------------------------------------------------------------
      6. REVEAL + PARALLAX
      ------------------------------------------------------------------------ */
-  const revealEls = $$('[data-reveal], [data-clip]');
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    // [data-clip] starts fully clipped (zero visible area), so watch its parent instead
+  let io = null;
+  function observeReveal(root = document) {
+    const els = $$('[data-reveal]:not(.is-in), [data-clip]:not(.is-in)', root);
+    if (!io) { els.forEach(el => el.classList.add('is-in')); return; }
     const targets = new Map();
-    revealEls.forEach(el => {
+    els.forEach(el => {
       const watch = el.hasAttribute('data-clip') ? el.parentElement : el;
       if (!targets.has(watch)) targets.set(watch, []);
       targets.get(watch).push(el);
     });
-    const io = new IntersectionObserver(entries => {
+    targets.forEach((list, watch) => { watch._reveal = (watch._reveal || []).concat(list); io.observe(watch); });
+  }
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    io = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (!e.isIntersecting) return;
-        targets.get(e.target).forEach(el => el.classList.add('is-in'));
+        (e.target._reveal || []).forEach(el => el.classList.add('is-in'));
         io.unobserve(e.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    targets.forEach((_, watch) => io.observe(watch));
-  } else {
-    revealEls.forEach(el => el.classList.add('is-in'));
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
   }
+  observeReveal();
 
   const parallaxEls = reduceMotion ? [] : $$('[data-parallax]');
-  const parallaxBg = reduceMotion ? null : $('[data-parallax-bg] img');
   let ticking = false;
-
   function frame() {
     ticking = false;
     onScrollHeader();
@@ -225,30 +302,21 @@
       const k = parseFloat(el.dataset.parallax) || 0;
       el.style.transform = `translate3d(0, ${((r.top + r.height / 2 - vh / 2) * k).toFixed(1)}px, 0)`;
     });
-    if (parallaxBg) {
-      const box = parallaxBg.parentElement.getBoundingClientRect();
-      if (box.bottom > 0 && box.top < vh) {
-        const p = (vh - box.top) / (vh + box.height); // 0 → 1 while passing
-        parallaxBg.style.transform = `translate3d(0, ${(-p * 16).toFixed(2)}%, 0)`;
-      }
-    }
   }
   window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
   window.addEventListener('resize', () => requestAnimationFrame(frame));
   frame();
 
   /* ------------------------------------------------------------------------
-     7. BREWING TABS (sliding thumb)
+     7. HOW IT WORKS TABS
      ------------------------------------------------------------------------ */
   const segBtns = $$('.seg-btn');
   const segThumb = $('.seg-thumb');
-
-  function placeThumb(btn) {
+  const placeThumb = btn => {
     if (!segThumb || !btn) return;
     segThumb.style.width = btn.offsetWidth + 'px';
     segThumb.style.transform = `translateX(${btn.offsetLeft}px)`;
-  }
-
+  };
   function selectTab(btn, focus) {
     segBtns.forEach(b => {
       const on = b === btn;
@@ -262,7 +330,6 @@
     placeThumb(btn);
     if (focus) btn.focus();
   }
-
   segBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => selectTab(btn));
     btn.addEventListener('keydown', e => {
@@ -276,106 +343,211 @@
   if (document.fonts) document.fonts.ready.then(() => placeThumb($('.seg-btn.is-active')));
 
   /* ------------------------------------------------------------------------
-     8. FLAVOR MENU + STICKY PREVIEW
+     8. SHOP GRID (product card fields from brief 4.1)
      ------------------------------------------------------------------------ */
-  const menuList = $('#menu-list');
-  const previewStage = $('#preview-stage');
-  const previewImg = $('#preview-img');
-  const previewSphere = $('#preview-sphere');
-  const previewName = $('#preview-name');
-  const previewLine = $('#preview-line');
-  let menuFilter = 'all';
-  let previewId = null;
-  let swapTimer = null;
+  const shopGrid = $('#shop-grid');
+  let shopFilter = 'all';
 
-  function renderMenu() {
-    const groups = [HOT, COLD].filter(l => menuFilter === 'all' || menuFilter === l);
-    menuList.innerHTML = groups.map(line => {
-      const items = flavors.filter(f => f.line === line);
-      return `
-        <div class="menu-group">
-          <h3 class="menu-group-title">${LINE_NAME[line]} <small>${items.length} vị</small></h3>
-          ${items.map(f => `
-            <div class="flavor" data-id="${f.id}" style="--fc:${f.color}">
-              ${sphere(f)}
-              <button class="flavor-name" data-open="${f.id}" aria-label="Xem chi tiết ${esc(f.name)}">
-                <strong>${esc(f.name)}</strong>
-                <span>${esc(f.vn)}</span>
-              </button>
-              <span class="flavor-price">${vnd(f.price)}</span>
-              <button class="add-btn" data-add="${f.id}" aria-label="Thêm ${esc(f.name)} vào giỏ">${plusIcon}</button>
-            </div>`).join('')}
-        </div>`;
-    }).join('');
+  const statusBadge = p => `<span class="status status-${p.status}">${STATUS[p.status]}</span>`;
+
+  function productCard(p) {
+    return `
+      <article class="card" style="--fc:${p.color}" data-sku="${p.sku}">
+        <a class="card-img" href="${productUrl(p)}" aria-label="Xem chi tiết ${esc(p.vn)}">
+          <img src="${p.image}" alt="Viên ${esc(LINE[p.line].name)} ${esc(p.vn)}" loading="lazy" width="880" height="1100" />
+          ${statusBadge(p)}
+        </a>
+        <div class="card-body">
+          <p class="card-line card-line-${p.line}">${LINE[p.line].name}</p>
+          <h3 class="card-title"><a href="${productUrl(p)}">${esc(p.vn)}</a></h3>
+          <p class="card-en">${esc(p.en)} <span class="sku">${p.sku}</span></p>
+          <p class="card-notes">${esc(p.notes)}</p>
+          <div class="card-foot">
+            <span class="card-price">${vnd(p.price)}</span>
+            <a class="card-link" href="${productUrl(p)}">View Details</a>
+            <button class="add-btn" data-add="${p.sku}" ${canBuy(p) ? '' : 'disabled'} aria-label="Add to Cart: ${esc(p.vn)}">${plusIcon}<span>Add to Cart</span></button>
+          </div>
+        </div>
+      </article>`;
   }
 
-  function showPreview(id) {
-    if (id === previewId) return;
-    const f = byId[id];
-    if (!f) return;
-    previewId = id;
-    $$('.flavor', menuList).forEach(r => r.classList.toggle('is-hot', r.dataset.id === id));
-    clearTimeout(swapTimer);
-    previewStage.classList.add('is-swapping');
-    previewStage.style.setProperty('--pc', f.color);
-    swapTimer = setTimeout(() => {
-      if (f.image) {
-        previewImg.src = f.image;
-        previewImg.dataset.hidden = 'false';
-        previewSphere.dataset.hidden = 'true';
-      } else {
-        previewImg.dataset.hidden = 'true';
-        previewSphere.dataset.hidden = 'false';
-        previewSphere.className = `preview-sphere sph is-${f.line}`;
-        previewSphere.style.setProperty('--c', f.color);
-      }
-      previewName.textContent = f.name;
-      previewLine.textContent = LINE_NAME[f.line];
-      requestAnimationFrame(() => previewStage.classList.remove('is-swapping'));
-    }, reduceMotion ? 0 : 260);
+  function giftCard(size) {
+    const b = BOX[size];
+    return `
+      <article class="card card-gift">
+        <button class="card-img card-img-box" data-start-builder="${size}" aria-label="Chọn ${b.name}">
+          <img src="${b.image}" alt="Hộp quà Meliora ${size} viên" loading="lazy" width="1000" height="1000" />
+          <span class="status status-available">Còn hàng</span>
+        </button>
+        <div class="card-body">
+          <p class="card-line card-line-gift">Gift Set</p>
+          <h3 class="card-title"><button data-start-builder="${size}">${b.name}</button></h3>
+          <p class="card-en">${size} viên tự chọn vị <span class="sku">${b.sku}</span></p>
+          <p class="card-notes">Hộp quà Meliora có cửa sổ trong suốt, kèm thiệp và muỗng.</p>
+          <div class="card-foot">
+            <span class="card-price">${vnd(b.price)}</span>
+            <button class="btn btn-solid btn-sm" data-start-builder="${size}">Chọn Gift Set</button>
+          </div>
+        </div>
+      </article>`;
   }
 
-  function setMenuFilter(filter) {
-    if (filter === menuFilter) return;
-    menuFilter = filter;
+  function renderShop() {
+    const list = shopFilter === 'gift' ? [] : products.filter(p => shopFilter === 'all' || p.line === shopFilter);
+    const gifts = shopFilter === 'all' || shopFilter === 'gift' ? [3, 6] : [];
+    shopGrid.innerHTML = list.map(productCard).join('') + gifts.map(giftCard).join('');
+    $$('.card', shopGrid).forEach((c, i) => { c.style.animationDelay = `${Math.min(i, 8) * 45}ms`; });
+  }
+
+  function setShopFilter(filter, silent) {
+    if (filter === shopFilter && !silent) return;
+    shopFilter = filter;
     $$('.filter-btn').forEach(b => {
-      const on = b.dataset.menuFilter === filter;
+      const on = b.dataset.shopFilter === filter;
       b.classList.toggle('is-active', on);
       b.setAttribute('aria-pressed', String(on));
     });
-    menuList.classList.add('is-filtering');
-    setTimeout(() => {
-      renderMenu();
-      previewId = null;
-      showPreview(flavors.find(f => filter === 'all' || f.line === filter).id);
-      requestAnimationFrame(() => menuList.classList.remove('is-filtering'));
-    }, reduceMotion ? 0 : 300);
+    if (silent || reduceMotion) { renderShop(); return; }
+    shopGrid.classList.add('is-filtering');
+    setTimeout(() => { renderShop(); shopGrid.classList.remove('is-filtering'); }, 220);
   }
 
-  $$('.filter-btn').forEach(b => b.addEventListener('click', () => setMenuFilter(b.dataset.menuFilter)));
+  $$('.filter-btn').forEach(b => b.addEventListener('click', () => setShopFilter(b.dataset.shopFilter)));
+  $('[data-count="all"]').textContent = products.length + 2;
+  $('[data-count="tea"]').textContent = products.filter(p => p.line === 'tea').length;
+  $('[data-count="mocktail"]').textContent = products.filter(p => p.line === 'mocktail').length;
+  $('[data-count="gift"]').textContent = 2;
+  renderShop();
 
-  menuList.addEventListener('pointerover', e => {
-    const row = e.target.closest('.flavor');
-    if (row) showPreview(row.dataset.id);
-  });
-  menuList.addEventListener('focusin', e => {
-    const row = e.target.closest('.flavor');
-    if (row) showPreview(row.dataset.id);
-  });
-  menuList.addEventListener('click', e => {
+  document.addEventListener('click', e => {
     const add = e.target.closest('[data-add]');
-    const open = e.target.closest('[data-open]');
-    if (add) addFlavor(add.dataset.add, 1, add);
-    else if (open) openProduct(open.dataset.open, open);
+    if (add && !add.disabled) { addProduct(add.dataset.add, 1, add); return; }
+    const start = e.target.closest('[data-start-builder]');
+    if (start) startBuilder(Number(start.dataset.startBuilder));
   });
-
-  renderMenu();
-  showPreview(flavors[0].id);
 
   /* ------------------------------------------------------------------------
-     9. OVERLAYS (modals + drawer) with focus handling
+     9. PRODUCT DETAIL PAGE (brief 4.2)
+     ------------------------------------------------------------------------ */
+  function renderProductPage(p) {
+    closeAllOverlays();
+    document.body.classList.add('on-product');
+    homeSections().forEach(s => { s.hidden = true; });
+    productPage.hidden = false;
+    document.title = `${p.vn} (${p.en}) — ${LINE[p.line].long} | Meliora`;
+
+    const label = LABEL[p.line];
+    const gallery = [
+      { src: p.image, alt: `Viên ${p.vn}`, cap: 'Viên nguyên vẹn' },
+      { src: BOX[3].image, alt: 'Hộp quà Meliora 3 viên', cap: 'Hộp quà 3 viên' },
+      { src: BOX[6].image, alt: 'Hộp quà Meliora 6 viên', cap: 'Hộp quà 6 viên' }
+    ];
+    const rows = [
+      ['Tên sản phẩm', `Viên ${p.line === 'tea' ? 'trà' : 'sủi'} ${p.vn}`],
+      ['SKU', p.sku],
+      ['Dòng', LINE[p.line].long],
+      ['Giá / khối lượng', `${vnd(p.price)}/viên${p.weight ? ' · ' + p.weight : ''}`],
+      ['Thành phần', p.ingredients || 'Đang cập nhật, in trên nhãn sản phẩm.'],
+      ['Bảo quản', label.storage],
+      ['Lưu ý', label.caution],
+      ...(p.lot ? [['Số lô', p.lot], ['NSX / HSD', `${p.mfg} / ${p.exp}`]] : []),
+      ['Xuất xứ', 'Việt Nam'],
+      ['Đơn vị chịu trách nhiệm', 'Meliora Vietnam Company Limited'],
+      ['Địa chỉ', '04 Nguyễn Bình, Hoà Cường, Hải Châu, Đà Nẵng'],
+      ['Hotline / Email', `${CONTACT.phone} · ${CONTACT.email}`]
+    ];
+    const similar = products.filter(x => x.line === p.line && x.sku !== p.sku).slice(0, 4);
+
+    productPage.innerHTML = `
+      <div class="pp wrap" style="--fc:${p.color}">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="#top">Trang chủ</a><span aria-hidden="true">/</span>
+          <a href="#shop" data-filter="${p.line}">${LINE[p.line].name}s</a><span aria-hidden="true">/</span>
+          <span aria-current="page">${esc(p.vn)}</span>
+        </nav>
+
+        <div class="pp-grid">
+          <div class="pp-gallery">
+            <div class="pp-main"><img id="pp-main-img" src="${gallery[0].src}" alt="${esc(gallery[0].alt)}" width="880" height="1100" /></div>
+            <div class="pp-thumbs" role="group" aria-label="Ảnh sản phẩm">
+              ${gallery.map((g, i) => `
+                <button class="pp-thumb${i === 0 ? ' is-on' : ''}" data-src="${g.src}" data-alt="${esc(g.alt)}" aria-label="${esc(g.cap)}">
+                  <img src="${g.src}" alt="" loading="lazy" /><span>${esc(g.cap)}</span>
+                </button>`).join('')}
+            </div>
+          </div>
+
+          <div class="pp-info">
+            <p class="card-line card-line-${p.line}">${LINE[p.line].long}</p>
+            <h1 class="pp-title">${esc(p.vn)}</h1>
+            <p class="pp-en">${esc(p.en)} <span class="sku">SKU ${p.sku}</span></p>
+            <p class="pp-notes">${esc(p.notes)}</p>
+            <div class="pp-price-row">
+              <span class="pp-price">${vnd(p.price)}<small> / viên${p.weight ? ' · ' + p.weight : ''}</small></span>
+              ${statusBadge(p)}
+            </div>
+
+            <div class="pp-buy">
+              <div class="qty qty-lg" aria-label="Số lượng">
+                <button type="button" data-pq="-1" aria-label="Giảm">−</button>
+                <span id="pp-qty" aria-live="polite">1</span>
+                <button type="button" data-pq="1" aria-label="Tăng">+</button>
+              </div>
+              <button class="btn btn-line" id="pp-add" ${canBuy(p) ? '' : 'disabled'}>Add to Cart</button>
+              <button class="btn btn-solid" id="pp-order" ${canBuy(p) ? '' : 'disabled'}>Order Now</button>
+            </div>
+            ${canBuy(p) ? '' : `<p class="pp-unavail">${p.status === 'soon' ? 'Vị này sắp mở bán.' : 'Vị này tạm hết hàng.'} Nhắn Meliora qua <a href="${CONTACT.zalo}" target="_blank" rel="noopener">Zalo</a> để được báo khi có hàng.</p>`}
+
+            <div class="pp-brew">
+              <h2>Cách pha</h2>
+              <ol>${label.steps.map((s, i) => `<li><span>0${i + 1}</span><strong>${s[0]}</strong> — ${s[1]}</li>`).join('')}</ol>
+              <p class="pp-brew-note"><strong>Lưu ý:</strong> ${label.note}</p>
+            </div>
+
+            <dl class="pp-label">
+              ${rows.map(r => `<div><dt>${r[0]}</dt><dd>${esc(r[1])}</dd></div>`).join('')}
+            </dl>
+          </div>
+        </div>
+
+        <section class="pp-similar" aria-labelledby="similar-title">
+          <h2 id="similar-title">Bạn có thể thích</h2>
+          <div class="shop-grid shop-grid-4">${similar.map(productCard).join('')}</div>
+        </section>
+      </div>`;
+
+    let qty = 1;
+    const qtyEl = $('#pp-qty');
+    $$('[data-pq]', productPage).forEach(b => b.addEventListener('click', () => {
+      qty = Math.max(1, Math.min(30, qty + Number(b.dataset.pq)));
+      qtyEl.textContent = qty;
+    }));
+    $('#pp-add').addEventListener('click', e => addProduct(p.sku, qty, e.currentTarget));
+    $('#pp-order').addEventListener('click', e => { addProduct(p.sku, qty, null, true); openCheckout(e.currentTarget); });
+
+    const mainImg = $('#pp-main-img');
+    $$('.pp-thumb', productPage).forEach(t => t.addEventListener('click', () => {
+      $$('.pp-thumb', productPage).forEach(x => x.classList.toggle('is-on', x === t));
+      mainImg.classList.add('is-swapping');
+      setTimeout(() => {
+        mainImg.src = t.dataset.src;
+        mainImg.alt = t.dataset.alt;
+        mainImg.classList.remove('is-swapping');
+      }, reduceMotion ? 0 : 180);
+    }));
+
+    window.scrollTo(0, 0);
+    header.classList.remove('is-hidden');
+    $('.pp-title').setAttribute('tabindex', '-1');
+    $('.pp-title').focus({ preventScroll: true });
+  }
+
+  /* ------------------------------------------------------------------------
+     10. OVERLAYS (drawer + modals) with focus handling
      ------------------------------------------------------------------------ */
   const overlayStack = [];
+  const cartDrawer = $('#cart-drawer');
+  const cartScrim = $('#cart-scrim');
 
   function openOverlay(el, opener) {
     el.classList.add('is-open');
@@ -388,7 +560,7 @@
     }, 60);
   }
 
-  function closeOverlay(el) {
+  function closeOverlay(el, keepFocus) {
     const idx = overlayStack.findIndex(o => o.el === el);
     if (idx === -1) return;
     const { opener } = overlayStack.splice(idx, 1)[0];
@@ -396,18 +568,14 @@
     el.setAttribute('aria-hidden', 'true');
     if (el === cartDrawer) cartScrim.classList.remove('is-open');
     if (!overlayStack.length && !mobileNav.classList.contains('is-open')) document.body.style.overflow = '';
-    if (opener && document.contains(opener)) opener.focus({ preventScroll: true });
+    if (!keepFocus && opener && document.contains(opener)) opener.focus({ preventScroll: true });
   }
 
-  function closeAllOverlays() {
-    [...overlayStack].reverse().forEach(o => closeOverlay(o.el));
-  }
+  function closeAllOverlays() { [...overlayStack].reverse().forEach(o => closeOverlay(o.el, true)); }
 
-  $$('.modal').forEach(m => {
-    m.addEventListener('click', e => {
-      if (e.target === m || e.target.closest('[data-close]')) closeOverlay(m);
-    });
-  });
+  $$('.modal').forEach(m => m.addEventListener('click', e => {
+    if (e.target === m || e.target.closest('[data-close]')) closeOverlay(m);
+  }));
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
@@ -416,67 +584,15 @@
     }
     if (e.key === 'Tab' && overlayStack.length) {
       const top = overlayStack[overlayStack.length - 1].el;
-      const focusables = $$('button:not([disabled]), a[href], input, textarea', top).filter(x => x.offsetParent !== null);
-      if (!focusables.length) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      const f = $$('button:not([disabled]), a[href], input, textarea', top).filter(x => x.offsetParent !== null);
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
     }
   });
 
   /* ------------------------------------------------------------------------
-     10. PRODUCT MODAL (styled after the round ingredient card)
-     ------------------------------------------------------------------------ */
-  const productModal = $('#product-modal');
-  const pmBody = $('#pm-body');
-
-  function openProduct(id, opener) {
-    const f = byId[id];
-    if (!f) return;
-    const label = f.line === HOT ? TEA_LABEL : COLD_LABEL;
-    pmBody.style.setProperty('--fc', f.color);
-    pmBody.innerHTML = `
-      <div class="pm-visual">
-        ${f.image ? `<img src="${f.image}" alt="${esc(f.vn)}" />` : sphere(f)}
-      </div>
-      <div class="pm-text">
-        <p class="pm-line">${LINE_NAME[f.line]}</p>
-        <h3 id="pm-title">${esc(f.name)}</h3>
-        <p class="pm-vn">${esc(f.vn)}</p>
-        <p class="pm-notes">${esc(f.notes)}</p>
-        <dl class="pm-label">
-          <div><dt>Thành phần</dt><dd>${f.ingredients ? esc(f.ingredients) : 'Thành phần chi tiết in trên card sản phẩm đi kèm.'}</dd></div>
-          <div><dt>Cách pha</dt><dd>${label.brew}</dd></div>
-          <div><dt>Bảo quản</dt><dd>${label.storage}</dd></div>
-          <div><dt>Lưu ý</dt><dd>${label.caution}${f.extra ? ' ' + esc(f.extra) : ''}</dd></div>
-        </dl>
-        <div class="pm-buy">
-          <span class="pm-price">${vnd(f.price)}</span>
-          <div class="qty" aria-label="Số lượng">
-            <button type="button" data-q="-1" aria-label="Giảm">−</button>
-            <span id="pm-qty">1</span>
-            <button type="button" data-q="1" aria-label="Tăng">+</button>
-          </div>
-          <button class="btn btn-solid" id="pm-add" type="button">Thêm vào giỏ</button>
-        </div>
-      </div>`;
-
-    let qty = 1;
-    const qtyEl = $('#pm-qty', pmBody);
-    $$('[data-q]', pmBody).forEach(b => b.addEventListener('click', () => {
-      qty = Math.max(1, Math.min(20, qty + Number(b.dataset.q)));
-      qtyEl.textContent = qty;
-    }));
-    $('#pm-add', pmBody).addEventListener('click', () => {
-      closeOverlay(productModal);
-      addFlavor(f.id, qty);
-    });
-    openOverlay(productModal, opener);
-  }
-
-  /* ------------------------------------------------------------------------
-     11. GIFT BOX BUILDER
+     11. GIFT BUILDER (brief 4.4)
      ------------------------------------------------------------------------ */
   const giftBox = $('#gift-box');
   const wellsEl = $('#box-wells');
@@ -484,38 +600,39 @@
   const builderTotal = $('#builder-total');
   const builderAdd = $('#builder-add');
   const giftNote = $('#gift-note');
+  const noteCount = $('#note-count');
   let boxSize = 3;
   let slots = [null, null, null];
 
+  const bombThumb = p => `<span class="bomb-thumb" style="--fc:${p.color}"><img src="${p.image}" alt="" loading="lazy" /></span>`;
+
   function renderChips() {
-    [HOT, COLD].forEach(line => {
-      $('#chips-' + line).innerHTML = flavors.filter(f => f.line === line).map(f =>
-        `<button type="button" class="chip" data-chip="${f.id}">${sphere(f)}${esc(f.name)}</button>`).join('');
+    ['tea', 'mocktail'].forEach(line => {
+      $('#chips-' + line).innerHTML = products.filter(p => p.line === line).map(p =>
+        `<button type="button" class="chip" data-chip="${p.sku}" ${canBuy(p) ? '' : 'disabled'}>${bombThumb(p)}${esc(p.vn)}</button>`).join('');
     });
   }
 
-  function renderWells(animateId = null) {
-    const nextEmpty = slots.indexOf(null);
-    wellsEl.innerHTML = slots.map((id, i) => {
-      const f = id && byId[id];
-      return `<div class="well" style="animation-delay:${i * 40}ms">
-        <button type="button" class="well-btn${i === nextEmpty ? ' is-next' : ''}" data-well="${i}" ${f ? '' : 'disabled'}
-          aria-label="${f ? `Ô ${i + 1}: ${esc(f.name)}. Bấm để lấy ra` : `Ô ${i + 1} trống`}">
-          ${f ? `<span class="sph is-${f.line}" style="--c:${f.color};${i === animateId ? '' : 'animation:none'}"></span>` : '<span class="well-empty"></span>'}
+  function renderWells(animateIndex = null, regrid = false) {
+    const next = slots.indexOf(null);
+    wellsEl.innerHTML = slots.map((sku, i) => {
+      const p = sku && bySku[sku];
+      return `<div class="well"${regrid ? ` style="animation-delay:${i * 40}ms"` : ' style="animation:none"'}>
+        <button type="button" class="well-btn${i === next ? ' is-next' : ''}" data-well="${i}" ${p ? '' : 'disabled'}
+          aria-label="${p ? `Ô ${i + 1}: ${esc(p.vn)}. Bấm để lấy ra` : `Ô ${i + 1} trống`}">
+          ${p ? `<span class="well-bomb${i === animateIndex ? ' is-dropping' : ''}"><img src="${p.image}" alt="" /></span>` : '<span class="well-empty"></span>'}
         </button>
       </div>`;
     }).join('');
-    // keep the wells' entrance animation only when the grid itself changes size
-    if (animateId !== 'resize') $$('.well', wellsEl).forEach(w => { w.style.animation = 'none'; });
     updateBuilder();
   }
 
   function updateBuilder() {
     const empty = slots.filter(s => !s).length;
     boxStatus.textContent = empty ? `Còn trống ${empty} ô` : 'Hộp đã đủ viên';
-    builderTotal.textContent = vnd(BOX_PRICE[boxSize]);
+    builderTotal.textContent = vnd(BOX[boxSize].price);
     builderAdd.disabled = empty > 0;
-    $$('.chip').forEach(c => { c.disabled = empty === 0; });
+    $$('.chip').forEach(c => { c.disabled = empty === 0 || !canBuy(bySku[c.dataset.chip]); });
   }
 
   function setBoxSize(size) {
@@ -529,7 +646,13 @@
       o.setAttribute('aria-checked', String(on));
       o.tabIndex = on ? 0 : -1;
     });
-    renderWells('resize');
+    renderWells(null, true);
+  }
+
+  function startBuilder(size) {
+    if (document.body.classList.contains('on-product')) { showHome(); history.pushState(null, '', '#gift'); }
+    setBoxSize(size);
+    requestAnimationFrame(() => scrollToEl($('#builder')));
   }
 
   $$('.size-opt').forEach((o, i, all) => {
@@ -545,7 +668,7 @@
 
   document.addEventListener('click', e => {
     const chip = e.target.closest('[data-chip]');
-    if (chip) {
+    if (chip && !chip.disabled) {
       const i = slots.indexOf(null);
       if (i === -1) return;
       slots[i] = chip.dataset.chip;
@@ -555,51 +678,56 @@
     const well = e.target.closest('[data-well]');
     if (well && !well.disabled) {
       const i = Number(well.dataset.well);
-      const sph = well.querySelector('.sph');
+      const b = well.querySelector('.well-bomb');
       const done = () => { slots[i] = null; renderWells(); };
-      if (sph && !reduceMotion) { sph.classList.add('is-leaving'); sph.style.animation = ''; setTimeout(done, 330); } else done();
+      if (b && !reduceMotion) { b.classList.add('is-leaving'); setTimeout(done, 300); } else done();
     }
   });
+
+  giftNote.addEventListener('input', () => { noteCount.textContent = giftNote.value.length; });
 
   $('#builder-clear').addEventListener('click', () => {
     slots = slots.map(() => null);
     giftNote.value = '';
+    noteCount.textContent = '0';
     renderWells();
   });
 
   builderAdd.addEventListener('click', () => {
     if (slots.includes(null)) return;
-    const note = giftNote.value.trim().slice(0, 150);
+    const b = BOX[boxSize];
     cart.push({
       key: 'box-' + Date.now(),
       kind: 'box',
-      name: `Hộp quà ${boxSize} viên`,
-      price: BOX_PRICE[boxSize],
+      sku: b.sku,
+      size: boxSize,
+      name: b.name,
+      price: b.price,
       qty: 1,
       flavors: [...slots],
-      note
+      note: giftNote.value.trim().slice(0, 150)
     });
     saveCart();
     renderCart(true);
-    toast(`Đã thêm hộp ${boxSize} viên vào giỏ`);
+    toast(`Đã thêm ${b.name} vào giỏ`);
     slots = slots.map(() => null);
     giftNote.value = '';
+    noteCount.textContent = '0';
     renderWells();
     openCart(builderAdd);
   });
 
   renderChips();
-  renderWells('resize');
+  renderWells(null, true);
 
   /* ------------------------------------------------------------------------
-     12. CART
+     12. CART (F04)
      ------------------------------------------------------------------------ */
-  const cartDrawer = $('#cart-drawer');
-  const cartScrim = $('#cart-scrim');
   const cartItems = $('#cart-items');
-  let cart = store.get('meliora_cart_v2', []).filter(i => i && (i.kind === 'box' || byId[i.id]));
+  const cartFoot = $('#cart-foot');
+  let cart = store.get('meliora_cart_v3', []).filter(i => i && (i.kind === 'box' ? BOX[i.size] : bySku[i.sku]));
 
-  const saveCart = () => store.set('meliora_cart_v2', cart);
+  const saveCart = () => store.set('meliora_cart_v3', cart);
   const subtotal = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   function openCart(opener) {
@@ -610,24 +738,36 @@
   $('#close-cart-btn').addEventListener('click', () => closeOverlay(cartDrawer));
   cartScrim.addEventListener('click', () => closeOverlay(cartDrawer));
 
-  function addFlavor(id, qty = 1, opener) {
-    const f = byId[id];
-    if (!f) return;
-    const row = cart.find(i => i.kind === 'single' && i.id === id);
+  function addProduct(sku, qty = 1, opener, quiet) {
+    const p = bySku[sku];
+    if (!p || !canBuy(p)) return;
+    const row = cart.find(i => i.kind === 'single' && i.sku === sku);
     if (row) row.qty += qty;
-    else cart.push({ key: 'f-' + id, kind: 'single', id, name: f.name, price: f.price, qty });
+    else cart.push({ key: 'p-' + sku, kind: 'single', sku, name: p.vn, price: p.price, qty });
     saveCart();
     renderCart(true);
-    toast(`Đã thêm ${qty} viên ${f.name} vào giỏ`);
-    openCart(opener);
+    if (quiet) return;
+    toast(`Đã thêm ${qty} viên ${p.vn} vào giỏ`);
+    if (opener) {
+      opener.classList.remove('is-added');
+      void opener.offsetWidth;
+      opener.classList.add('is-added');
+    }
   }
 
-  function thumb(item) {
+  function cartThumb(item) {
+    if (item.kind === 'box') return `<div class="cart-thumb cart-thumb-box"><img src="${BOX[item.size].image}" alt="" /></div>`;
+    const p = bySku[item.sku];
+    return `<div class="cart-thumb"><img src="${p.image}" alt="" /></div>`;
+  }
+
+  function itemDetail(item) {
     if (item.kind === 'box') {
-      return `<div class="cart-thumb"><span class="mini-box">${item.flavors.map(id => `<i style="--c:${byId[id] ? byId[id].color : '#ccc'}"></i>`).join('')}</span></div>`;
+      return `<p class="cart-sub">${item.flavors.map(s => esc(bySku[s] ? bySku[s].vn : s)).join(', ')}</p>
+        ${item.note ? `<p class="cart-sub">Thiệp: “${esc(item.note)}”</p>` : ''}`;
     }
-    const f = byId[item.id];
-    return `<div class="cart-thumb" style="--fc:${f.color}">${f.image ? `<img src="${f.image}" alt="" />` : sphere(f)}</div>`;
+    const p = bySku[item.sku];
+    return `<p class="cart-sub">${LINE[p.line].name} · ${p.sku}</p>`;
   }
 
   function renderCart(bump = false) {
@@ -640,42 +780,33 @@
         b.classList.add('bump');
       }
     });
-
-    const sub = subtotal();
-    $('#cart-subtotal').textContent = vnd(sub);
-    const pct = Math.min(100, Math.round((sub / FREE_SHIP) * 100));
-    $('#ship-fill').style.width = pct + '%';
-    $('#ship-text').textContent = sub >= FREE_SHIP
-      ? 'Đơn của bạn được freeship.'
-      : `Thêm ${vnd(FREE_SHIP - sub)} để được freeship.`;
+    $('#cart-subtotal').textContent = vnd(subtotal());
+    cartFoot.hidden = !cart.length;
 
     if (!cart.length) {
       cartItems.innerHTML = `
         <div class="cart-empty">
-          ${sphere(byId['strawberry-rose'])}
-          <p>Giỏ hàng đang trống. Chọn một vị để bắt đầu.</p>
-          <a href="#menu" class="btn btn-line">Xem hương vị</a>
+          <img src="assets/logo-mark.png" alt="" width="90" />
+          <p>Giỏ hàng đang trống. Chọn một vị hoặc một hộp quà để bắt đầu.</p>
+          <a href="#shop" class="btn btn-line">Xem hương vị</a>
         </div>`;
       return;
     }
 
     cartItems.innerHTML = cart.map(item => `
       <div class="cart-row" data-key="${item.key}">
-        ${thumb(item)}
+        ${cartThumb(item)}
         <div class="cart-info">
           <h4>${esc(item.name)}</h4>
-          ${item.kind === 'box'
-            ? `<p class="cart-sub">${item.flavors.map(id => esc(byId[id] ? byId[id].name : id)).join(', ')}</p>
-               ${item.note ? `<p class="cart-sub">Lời nhắn: “${esc(item.note)}”</p>` : ''}`
-            : `<p class="cart-sub">${esc(byId[item.id].vn)}</p>`}
-          <p class="cart-price">${vnd(item.price * item.qty)}</p>
+          ${itemDetail(item)}
+          <p class="cart-price">${vnd(item.price)} × ${item.qty} = <strong>${vnd(item.price * item.qty)}</strong></p>
           <div class="qty">
-            <button type="button" data-cart-q="-1" aria-label="Giảm số lượng">−</button>
+            <button type="button" data-cart-q="-1" aria-label="Giảm số lượng ${esc(item.name)}">−</button>
             <span>${item.qty}</span>
-            <button type="button" data-cart-q="1" aria-label="Tăng số lượng">+</button>
+            <button type="button" data-cart-q="1" aria-label="Tăng số lượng ${esc(item.name)}">+</button>
           </div>
         </div>
-        <button type="button" class="cart-remove" data-cart-remove>Xoá</button>
+        <button type="button" class="cart-remove" data-cart-remove aria-label="Xoá ${esc(item.name)}">Xoá</button>
       </div>`).join('');
   }
 
@@ -684,15 +815,15 @@
     if (!row) return;
     const item = cart.find(i => i.key === row.dataset.key);
     if (!item) return;
-    const q = e.target.closest('[data-cart-q]');
     const remove = () => {
       const finish = () => { cart = cart.filter(i => i !== item); saveCart(); renderCart(); };
       if (reduceMotion) finish();
-      else { row.classList.add('is-removing'); setTimeout(finish, 380); }
+      else { row.classList.add('is-removing'); setTimeout(finish, 360); }
     };
+    const q = e.target.closest('[data-cart-q]');
     if (q) {
       item.qty += Number(q.dataset.cartQ);
-      if (item.qty <= 0) { item.qty = 0; remove(); return; }
+      if (item.qty <= 0) { remove(); return; }
       saveCart();
       renderCart();
       $$('.cart-row', cartItems).forEach(r => { r.style.animation = 'none'; });
@@ -705,105 +836,146 @@
   $$('.cart-row', cartItems).forEach(r => { r.style.animation = 'none'; });
 
   /* ------------------------------------------------------------------------
-     13. CHECKOUT
+     13. CHECKOUT → SEND ORDER (F06, F07)
+     No backend yet: the order is handed to Meliora through Zalo / Messenger.
+     The page only says the order is complete after the customer confirms they sent it.
      ------------------------------------------------------------------------ */
   const checkoutModal = $('#checkout-modal');
-  const confirmModal = $('#confirm-modal');
+  const sendModal = $('#send-modal');
   const checkoutForm = $('#checkout-form');
   const orderError = $('#order-error');
+  const PHONE_RE = /^(\+?84|0)\d{9,10}$/;
+  let pendingOrder = null;
 
-  const shipFee = sub => (sub >= FREE_SHIP ? 0 : SHIP_FEE);
-
-  $('#checkout-btn').addEventListener('click', e => {
-    if (!cart.length) { toast('Giỏ hàng đang trống'); return; }
-    const sub = subtotal();
-    const fee = shipFee(sub);
-    $('#co-summary').innerHTML = `
+  function summaryHtml() {
+    return `
       ${cart.map(i => `<div class="co-row"><span>${esc(i.name)} × ${i.qty}</span><span>${vnd(i.price * i.qty)}</span></div>`).join('')}
-      <div class="co-row"><span>Phí giao hàng</span><span>${fee ? vnd(fee) : 'Miễn phí'}</span></div>
-      <div class="co-row total"><span>Tổng</span><span>${vnd(sub + fee)}</span></div>`;
+      <div class="co-row"><span>Phí giao hàng</span><span>Báo khi xác nhận</span></div>
+      <div class="co-row total"><span>Tạm tính</span><span>${vnd(subtotal())}</span></div>`;
+  }
+
+  function openCheckout(opener) {
+    if (!cart.length) { toast('Giỏ hàng đang trống'); return; }
+    $('#co-summary').innerHTML = summaryHtml();
     orderError.textContent = '';
-    closeOverlay(cartDrawer);
-    openOverlay(checkoutModal, e.currentTarget);
-  });
+    closeOverlay(cartDrawer, true);
+    openOverlay(checkoutModal, opener);
+  }
+  $('#checkout-btn').addEventListener('click', e => openCheckout(e.currentTarget));
+
+  function orderText(o) {
+    const lines = o.items.map(i => {
+      if (i.kind === 'box') {
+        return `- ${i.name} x${i.qty} (${vnd(i.price * i.qty)}): ${i.flavors.map(s => bySku[s] ? bySku[s].vn : s).join(', ')}${i.note ? ` | Thiệp: "${i.note}"` : ''}`;
+      }
+      return `- ${i.name} [${i.sku}] x${i.qty} (${vnd(i.price * i.qty)})`;
+    });
+    return [
+      `ĐƠN HÀNG MELIORA ${o.code}`,
+      ...lines,
+      `Tạm tính: ${vnd(o.subtotal)} (chưa gồm phí giao)`,
+      `Người nhận: ${o.customer.name}`,
+      `SĐT: ${o.customer.phone}`,
+      `Địa chỉ: ${o.customer.address}`,
+      `Thanh toán: ${o.pay === 'bank' ? 'Chuyển khoản' : 'COD'}`,
+      o.customer.note ? `Ghi chú: ${o.customer.note}` : ''
+    ].filter(Boolean).join('\n');
+  }
+
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; } catch { /* fall back */ }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch { ok = false; }
+    ta.remove();
+    return ok;
+  }
 
   checkoutForm.addEventListener('submit', e => {
     e.preventDefault();
     const name = $('#order-name').value.trim();
-    const phone = $('#order-phone').value.replace(/\s|\./g, '');
+    const phone = $('#order-phone').value.replace(/[\s.]/g, '');
     const address = $('#order-address').value.trim();
     const note = $('#order-note').value.trim();
     const pay = $('input[name="pay"]:checked', checkoutForm).value;
 
     $$('.field', checkoutForm).forEach(f => f.classList.remove('has-error'));
-    const missing = [];
-    if (!name) missing.push('#order-name');
-    if (!/^(\+?84|0)\d{9,10}$/.test(phone)) missing.push('#order-phone');
-    if (!address) missing.push('#order-address');
-    if (missing.length) {
-      missing.forEach(s => $(s).closest('.field').classList.add('has-error'));
-      orderError.textContent = missing.includes('#order-phone') && missing.length === 1
+    const bad = [];
+    if (!name) bad.push('#order-name');
+    if (!PHONE_RE.test(phone)) bad.push('#order-phone');
+    if (!address) bad.push('#order-address');
+    if (bad.length) {
+      bad.forEach(s => $(s).closest('.field').classList.add('has-error'));
+      orderError.textContent = bad.length === 1 && bad[0] === '#order-phone'
         ? 'Số điện thoại chưa đúng. Nhập 10 số, ví dụ 0842097274.'
         : 'Vui lòng điền họ tên, số điện thoại và địa chỉ nhận hàng.';
-      $(missing[0]).focus();
+      $(bad[0]).focus();
       return;
     }
 
-    const sub = subtotal();
-    const fee = shipFee(sub);
-    const order = {
-      code: 'MEL-' + Math.floor(100000 + Math.random() * 900000),
-      createdAt: new Date().toLocaleString('vi-VN'),
+    pendingOrder = {
+      code: 'MEL-' + new Date().toISOString().slice(2, 10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000),
       customer: { name, phone, address, note },
       pay,
       items: cart.map(i => ({ ...i })),
-      subtotal: sub,
-      shippingFee: fee,
-      total: sub + fee
+      subtotal: subtotal()
     };
-    const history = store.get('meliora_orders', []);
-    history.unshift(order);
-    store.set('meliora_orders', history);
+    closeOverlay(checkoutModal, true);
+    showSendStep();
+  });
 
+  function showSendStep() {
+    const o = pendingOrder;
+    const text = orderText(o);
+    $('#send-body').innerHTML = `
+      <h3 id="send-title">Gửi đơn cho Meliora</h3>
+      <ol class="co-steps" aria-label="Các bước đặt hàng"><li class="is-done">Thông tin</li><li class="is-on">Gửi đơn</li></ol>
+      <p class="send-lead">Đơn <strong>${o.code}</strong> <strong>chưa được gửi</strong>. Nội dung đơn đã được sao chép.
+        Mở Zalo hoặc Messenger của Meliora, dán vào khung chat và bấm gửi. Meliora sẽ nhắn lại để xác nhận đơn và phí giao.</p>
+      <pre class="order-text" tabindex="0" aria-label="Nội dung đơn hàng">${esc(text)}</pre>
+      <div class="send-actions">
+        <a class="btn btn-solid" href="${CONTACT.zalo}" target="_blank" rel="noopener" data-send="zalo">Mở Zalo để gửi đơn</a>
+        <a class="btn btn-solid" href="${CONTACT.messenger}?text=${encodeURIComponent(text)}" target="_blank" rel="noopener" data-send="messenger">Mở Messenger để gửi đơn</a>
+        <button type="button" class="btn btn-line" id="copy-order">Sao chép lại nội dung đơn</button>
+      </div>
+      <p class="send-alt">Không dùng Zalo hay Messenger? Gọi <a href="tel:${CONTACT.tel}">${CONTACT.phone}</a> và đọc mã đơn.</p>
+      <div class="send-confirm">
+        <button type="button" class="btn btn-ghost" id="back-edit">Sửa thông tin</button>
+        <button type="button" class="btn btn-line" id="sent-done">Tôi đã gửi đơn</button>
+      </div>`;
+    openOverlay(sendModal);
+
+    copyText(text).then(ok => toast(ok ? 'Đã sao chép nội dung đơn' : 'Hãy chọn và sao chép nội dung đơn bên dưới'));
+    $('#copy-order').addEventListener('click', () => copyText(text).then(ok => toast(ok ? 'Đã sao chép nội dung đơn' : 'Không sao chép được, hãy chọn nội dung đơn để sao chép')));
+    $$('[data-send]', sendModal).forEach(a => a.addEventListener('click', () => copyText(text)));
+    $('#back-edit').addEventListener('click', () => { closeOverlay(sendModal, true); openCheckout(); });
+    $('#sent-done').addEventListener('click', confirmSent);
+  }
+
+  function confirmSent() {
+    const o = pendingOrder;
+    const history = store.get('meliora_orders', []);
+    history.unshift({ ...o, sentAt: new Date().toLocaleString('vi-VN') });
+    store.set('meliora_orders', history.slice(0, 20));
     cart = [];
     saveCart();
     renderCart();
     checkoutForm.reset();
-    closeOverlay(checkoutModal);
-    showConfirm(order);
-  });
-
-  function showConfirm(order) {
-    const lines = order.items.map(i => `${i.name} x${i.qty}${i.kind === 'box' ? ` (${i.flavors.map(id => byId[id] ? byId[id].name : id).join(', ')})` : ''}`);
-    const zaloText = encodeURIComponent(
-      `Chào Meliora, mình vừa đặt đơn ${order.code} trên website.\n` +
-      `Người nhận: ${order.customer.name} (${order.customer.phone})\n` +
-      `Địa chỉ: ${order.customer.address}\n` +
-      `Đơn: ${lines.join('; ')}\n` +
-      `Tổng: ${vnd(order.total)}` + (order.customer.note ? `\nGhi chú: ${order.customer.note}` : '')
-    );
-    const next = {
-      cod: 'Meliora sẽ gọi để xác nhận đơn, bạn thanh toán khi nhận hàng.',
-      bank: 'Meliora sẽ gọi xác nhận đơn và gửi thông tin chuyển khoản cho bạn.',
-      zalo: 'Bấm nút bên dưới để gửi đơn qua Zalo cho Meliora.'
-    }[order.pay];
-
-    $('#confirm-body').innerHTML = `
-      <img src="assets/logo-mark.png" alt="" class="confirm-mark" />
-      <h3 id="cf-title">Đã nhận đơn của bạn</h3>
-      <p class="confirm-code">Mã đơn <strong>${order.code}</strong></p>
-      <div class="confirm-list">
-        ${order.items.map(i => `<div class="co-row"><span>${esc(i.name)} × ${i.qty}</span><span>${vnd(i.price * i.qty)}</span></div>`).join('')}
-        <div class="co-row"><span>Phí giao hàng</span><span>${order.shippingFee ? vnd(order.shippingFee) : 'Miễn phí'}</span></div>
-        <div class="co-row total"><span>Tổng</span><span>${vnd(order.total)}</span></div>
-      </div>
-      <p class="confirm-next">${next}</p>
-      <div class="confirm-actions">
-        <a class="btn ${order.pay === 'zalo' ? 'btn-solid' : 'btn-line'}" href="https://zalo.me/${HOTLINE}?text=${zaloText}" target="_blank" rel="noopener">Gửi đơn qua Zalo</a>
-        <button type="button" class="btn btn-ghost" data-close-confirm>Tiếp tục xem</button>
+    $('#send-body').innerHTML = `
+      <div class="sent-ok">
+        <img src="assets/logo-mark.png" alt="" class="confirm-mark" />
+        <h3 id="send-title">Cảm ơn bạn</h3>
+        <p>Mã đơn của bạn là <strong>${o.code}</strong>. Meliora sẽ trả lời tin nhắn của bạn để xác nhận đơn, phí giao và thời gian giao.</p>
+        <p class="send-alt">Chưa thấy Meliora trả lời? Gọi <a href="tel:${CONTACT.tel}">${CONTACT.phone}</a>.</p>
+        <button type="button" class="btn btn-solid" data-close>Tiếp tục xem</button>
       </div>`;
-    $('[data-close-confirm]').addEventListener('click', () => closeOverlay(confirmModal));
-    openOverlay(confirmModal);
+    pendingOrder = null;
+    $('[data-close]', sendModal).focus();
   }
 
   /* ------------------------------------------------------------------------
@@ -821,55 +993,18 @@
         $$('.faq-item[open]').forEach(o => { if (o !== d) o.querySelector('summary').click(); });
         d.open = true;
         const h = body.scrollHeight;
-        body.animate([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.22,1,.36,1)' })
+        body.animate([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.22,1,.36,1)' })
           .onfinish = () => delete d.dataset.busy;
       } else {
         const h = body.scrollHeight;
-        body.animate([{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.45,0,.2,1)' })
+        body.animate([{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 340, easing: 'cubic-bezier(.45,0,.2,1)' })
           .onfinish = () => { d.open = false; delete d.dataset.busy; };
       }
     });
   });
 
   /* ------------------------------------------------------------------------
-     15. CONTACT + NEWSLETTER
-     ------------------------------------------------------------------------ */
-  const contactForm = $('#contact-form');
-  contactForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = $('#contact-name').value.trim();
-    const phone = $('#contact-phone').value.replace(/\s|\./g, '');
-    const msg = $('#contact-msg').value.trim();
-    const err = $('#contact-error');
-    $$('.field', contactForm).forEach(f => f.classList.remove('has-error'));
-    if (!name || !/^(\+?84|0)\d{9,10}$/.test(phone)) {
-      if (!name) $('#contact-name').closest('.field').classList.add('has-error');
-      if (!/^(\+?84|0)\d{9,10}$/.test(phone)) $('#contact-phone').closest('.field').classList.add('has-error');
-      err.textContent = 'Vui lòng nhập tên và số điện thoại (10 số) để Meliora gọi lại.';
-      return;
-    }
-    err.textContent = '';
-    const list = store.get('meliora_inquiries', []);
-    list.push({ name, phone, msg, date: new Date().toLocaleString('vi-VN') });
-    store.set('meliora_inquiries', list);
-    contactForm.reset();
-    toast(`Đã gửi. Meliora sẽ gọi lại cho ${name} sớm.`);
-  });
-
-  $('#newsletter-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const input = $('#newsletter-email');
-    const email = input.value.trim();
-    if (!input.checkValidity()) { toast('Email chưa đúng định dạng'); return; }
-    const subs = store.get('meliora_subscribers', []);
-    if (!subs.includes(email)) subs.push(email);
-    store.set('meliora_subscribers', subs);
-    input.value = '';
-    toast('Đã đăng ký. Meliora sẽ báo khi có vị mới.');
-  });
-
-  /* ------------------------------------------------------------------------
-     16. TOAST
+     15. TOAST
      ------------------------------------------------------------------------ */
   const toastEl = $('#toast');
   let toastTimer;
@@ -877,6 +1012,9 @@
     toastEl.textContent = msg;
     toastEl.classList.add('is-on');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('is-on'), 2800);
+    toastTimer = setTimeout(() => toastEl.classList.remove('is-on'), 2600);
   }
+
+  /* initial route (deep link to a product page) */
+  route();
 })();

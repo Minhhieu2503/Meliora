@@ -1,23 +1,3 @@
-Thả ảnh thật của từng vị vào thư mục này, đặt tên đúng như dưới đây
-(đuôi .png, .jpg, .jpeg hoặc .webp đều được). Trang web tự nhận ảnh,
-không cần sửa code.
-
-Trà nóng (Hot-Infusion Tea Bomb):
-  orange-cinnamon        -> Orange Cinnamon
-  mango-passion          -> Mango Passion Fruit
-  apple-ginger           -> Apple Ginger
-  chamomile-date-goji    -> Chamomile, Red Date & Goji
-
-Sủi bọt (Sparkling Mocktail Bomb):
-  wild-berry-lemon       -> Wild Berry Lemon
-  peach-mango            -> Peach Mango
-  pomegranate-cherry     -> Pomegranate Cherry
-
-4 vị đã có ảnh (dùng ảnh trong thư mục assets/):
-  Peach Oolong, Strawberry Rose, Blueberry Lavender, Citrus Mint.
-  Muốn đổi ảnh cho 4 vị này, cũng đặt file ở đây theo tên:
-  peach-oolong, strawberry-rose, blueberry-lavender, citrus-mint
-  rồi xoá dòng "image:" của vị đó trong app.js.
-
-Gợi ý: ảnh vuông, viên nằm giữa, nền trắng hoặc nền trong suốt (PNG)
-là đẹp nhất, vì nền trắng sẽ tự hoà vào màu nền của trang.
+Thu muc nay khong con duoc dung.
+Anh san pham hien nam trong assets/products/ (dat ten theo SKU, vd TB-PO.jpg).
+Ban co the xoa thu muc flavors nay.
