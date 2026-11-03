@@ -149,11 +149,7 @@
   function onScrollHeader() {
     const y = window.scrollY;
     header.classList.toggle('is-scrolled', y > 24);
-    if (!mobileNav.classList.contains('is-open')) {
-      if (y > lastY + 4 && y > 520) header.classList.add('is-hidden');
-      else if (y < lastY - 4 || y < 520) header.classList.remove('is-hidden');
-    }
-    lastY = y;
+    lastY = y; // header stays fixed and visible at all times
   }
 
   function setMobileNav(open) {
@@ -345,7 +341,15 @@
   /* ------------------------------------------------------------------------
      8. SHOP GRID (product card fields from brief 4.1)
      ------------------------------------------------------------------------ */
-  const shopGrid = $('#shop-grid');
+  const shopTrack = $('#shop-track');
+  const shopViewport = $('#shop-viewport');
+  const shopPrev = $('#shop-prev');
+  const shopNext = $('#shop-next');
+  const shopDots = $('#shop-dots');
+  const shopCounter = $('#shop-counter');
+  const PER_PAGE = 4;
+  let shopPage = 0;
+  let shopPages = 1;
   let shopFilter = 'all';
 
   const statusBadge = p => `<span class="status status-${p.status}">${STATUS[p.status]}</span>`;
@@ -362,10 +366,10 @@
           <h3 class="card-title"><a href="${productUrl(p)}">${esc(p.vn)}</a></h3>
           <p class="card-en">${esc(p.en)} <span class="sku">${p.sku}</span></p>
           <p class="card-notes">${esc(p.notes)}</p>
-          <div class="card-foot">
-            <span class="card-price">${vnd(p.price)}</span>
-            <a class="card-link" href="${productUrl(p)}">View Details</a>
-            <button class="add-btn" data-add="${p.sku}" ${canBuy(p) ? '' : 'disabled'} aria-label="Add to Cart: ${esc(p.vn)}">${plusIcon}<span>Add to Cart</span></button>
+          <p class="card-price">${vnd(p.price)}</p>
+          <div class="card-actions">
+            <a class="btn btn-line btn-sm" href="${productUrl(p)}" aria-label="View Details: ${esc(p.vn)}">View Details</a>
+            <button class="btn btn-solid btn-sm add-btn" data-add="${p.sku}" ${canBuy(p) ? '' : 'disabled'} aria-label="Add to Cart: ${esc(p.vn)}">${canBuy(p) ? plusIcon + '<span>Add to Cart</span>' : STATUS[p.status]}</button>
           </div>
         </div>
       </article>`;
@@ -384,8 +388,8 @@
           <h3 class="card-title"><button data-start-builder="${size}">${b.name}</button></h3>
           <p class="card-en">${size} viên tự chọn vị <span class="sku">${b.sku}</span></p>
           <p class="card-notes">Hộp quà Meliora có cửa sổ trong suốt, kèm thiệp và muỗng.</p>
-          <div class="card-foot">
-            <span class="card-price">${vnd(b.price)}</span>
+          <p class="card-price">${vnd(b.price)}</p>
+          <div class="card-actions card-actions-one">
             <button class="btn btn-solid btn-sm" data-start-builder="${size}">Chọn Gift Set</button>
           </div>
         </div>
@@ -395,9 +399,54 @@
   function renderShop() {
     const list = shopFilter === 'gift' ? [] : products.filter(p => shopFilter === 'all' || p.line === shopFilter);
     const gifts = shopFilter === 'all' || shopFilter === 'gift' ? [3, 6] : [];
-    shopGrid.innerHTML = list.map(productCard).join('') + gifts.map(giftCard).join('');
-    $$('.card', shopGrid).forEach((c, i) => { c.style.animationDelay = `${Math.min(i, 8) * 45}ms`; });
+    const cards = list.map(productCard).concat(gifts.map(giftCard));
+    shopPages = Math.max(1, Math.ceil(cards.length / PER_PAGE));
+    let html = '';
+    for (let i = 0; i < shopPages; i++) {
+      html += `<div class="shop-page" role="group" aria-roledescription="trang" aria-label="Trang ${i + 1} / ${shopPages}">${cards.slice(i * PER_PAGE, (i + 1) * PER_PAGE).join('')}</div>`;
+    }
+    shopTrack.innerHTML = html;
+    shopDots.innerHTML = Array.from({ length: shopPages }, (_, i) =>
+      `<button class="dot" data-page="${i}" aria-label="Trang ${i + 1}"></button>`).join('');
+    $$('.shop-page', shopTrack).forEach(pg => $$('.card', pg).forEach((c, i) => { c.style.animationDelay = `${i * 60}ms`; }));
+    goShopPage(0, true);
   }
+
+  function goShopPage(n, instant) {
+    shopPage = Math.max(0, Math.min(shopPages - 1, n));
+    const pages = $$('.shop-page', shopTrack);
+    shopTrack.style.transition = instant || reduceMotion ? 'none' : '';
+    shopTrack.style.transform = `translateX(calc(${-shopPage} * (100% + var(--page-gap))))`;
+    pages.forEach((pg, i) => {
+      const on = i === shopPage;
+      pg.setAttribute('aria-hidden', String(!on));
+      pg.inert = !on;
+    });
+    if (pages[shopPage]) shopViewport.style.height = pages[shopPage].offsetHeight + 'px';
+    shopPrev.disabled = shopPage === 0;
+    shopNext.disabled = shopPage === shopPages - 1;
+    shopCounter.textContent = `${shopPage + 1} / ${shopPages}`;
+    $$('.dot', shopDots).forEach((d, i) => { d.classList.toggle('is-on', i === shopPage); d.setAttribute('aria-current', i === shopPage ? 'true' : 'false'); });
+    $('.shop-nav').hidden = shopPages < 2;
+  }
+
+  shopPrev.addEventListener('click', () => goShopPage(shopPage - 1));
+  shopNext.addEventListener('click', () => goShopPage(shopPage + 1));
+  shopDots.addEventListener('click', e => { const d = e.target.closest('[data-page]'); if (d) goShopPage(Number(d.dataset.page)); });
+  window.addEventListener('resize', () => goShopPage(shopPage, true));
+  shopViewport.addEventListener('load', () => goShopPage(shopPage, true), true);
+
+  // swipe on touch screens
+  let swipeX = null;
+  let swipeY = null;
+  shopViewport.addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; swipeY = e.touches[0].clientY; }, { passive: true });
+  shopViewport.addEventListener('touchend', e => {
+    if (swipeX === null) return;
+    const dx = e.changedTouches[0].clientX - swipeX;
+    const dy = e.changedTouches[0].clientY - swipeY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) goShopPage(shopPage + (dx < 0 ? 1 : -1));
+    swipeX = null;
+  });
 
   function setShopFilter(filter, silent) {
     if (filter === shopFilter && !silent) return;
@@ -408,8 +457,8 @@
       b.setAttribute('aria-pressed', String(on));
     });
     if (silent || reduceMotion) { renderShop(); return; }
-    shopGrid.classList.add('is-filtering');
-    setTimeout(() => { renderShop(); shopGrid.classList.remove('is-filtering'); }, 220);
+    shopViewport.classList.add('is-filtering');
+    setTimeout(() => { renderShop(); shopViewport.classList.remove('is-filtering'); }, 220);
   }
 
   $$('.filter-btn').forEach(b => b.addEventListener('click', () => setShopFilter(b.dataset.shopFilter)));
