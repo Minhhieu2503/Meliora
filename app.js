@@ -1,1130 +1,882 @@
 /* ==========================================================================
-   MELIORA — Artisan Beverage Bombs Interactive Application
+   MELIORA — Artisan Beverage Bombs
+   Catalog, flavor menu, gift-box builder, cart, checkout and page motion.
    ========================================================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. PRODUCT CATALOG DATA WITH VERIFIED ASSET PATHS
-  const catalog = {
-    'citrus-matcha': {
-      id: 'citrus-matcha',
-      sku: 'MEL-MCK-01',
-      name: 'Citrus & Matcha Fizz Bomb',
-      category: 'mocktail',
-      categoryLabel: 'Mocktail Bomb (Đồ Uống Sủi)',
-      badge: 'Mát Lạnh Sảng Khoái',
-      price: 30000,
-      image: 'assets/bomb1_citrus.png',
-      netWeight: '35g (01 viên)',
-      tastingNotes: 'Tươi mát bùng nổ từ tinh chất cam chanh mọng nước kết hợp vị matcha thanh khiết cùng bọt sủi sống động.',
-      ingredients: 'Bột sủi khoáng thảo mộc, bột Matcha Uji cao cấp, tinh chất vỏ cam vàng và chanh sấy thăng hoa, đường Isomalt.',
-      brewing: 'Cho đá viên vào 2/3 ly. Rót 200 - 250ml soda hoặc nước có ga lạnh. Thả viên bomb vào, ngắm bọt sủi trong 30s và khuấy đều.',
-      shelfLife: '03 tháng kể từ ngày sản xuất khi bảo quản kín khí.',
-      storage: 'Bảo quản nơi khô ráo thoáng mát, tránh tiếp xúc không khí ẩm trước khi pha.',
-      allergen: 'Sử dụng bột Matcha nguyên chất, phù hợp cho người ăn thuần chay.'
-    },
-    'rose-amber': {
-      id: 'rose-amber',
-      sku: 'MEL-TEA-01',
-      name: 'Rose Amber Herbal Bomb',
-      category: 'tea',
-      categoryLabel: 'Tea Bomb (Trà Nóng)',
-      badge: 'Bán Chạy Nhất',
-      price: 30000,
+(() => {
+  'use strict';
+
+  const HOTLINE = '0842097274';
+  const FREE_SHIP = 200000;
+  const SHIP_FEE = 25000;
+  const BOX_PRICE = { 3: 100000, 6: 190000 };
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------------------------------
+     1. CATALOG — flavors from the Meliora brief (7 hot tea, 4 sparkling)
+     ------------------------------------------------------------------------ */
+  const HOT = 'tea';
+  const COLD = 'mocktail';
+  const LINE_NAME = { tea: 'Hot-Infusion Tea Bomb', mocktail: 'Sparkling Mocktail Bomb' };
+
+  const TEA_LABEL = {
+    storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
+    caution: 'Sử dụng ly chịu nhiệt. Không dùng nếu mẫn cảm với thành phần.',
+    brew: 'Rót 250 mL nước nóng khoảng 90°C, thả viên, ủ 5 phút.'
+  };
+  const COLD_LABEL = {
+    storage: 'Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi sử dụng ngay.',
+    caution: 'Không pha trong chai kín. Không dùng nếu mẫn cảm với thành phần.',
+    brew: 'Rót 250 mL nước có gas lạnh, thả viên, chờ sủi tan 2–3 phút rồi khuấy nhẹ.'
+  };
+
+  const flavors = [
+    {
+      id: 'peach-oolong', line: HOT, name: 'Peach Oolong', vn: 'Viên trà ô long đào', color: '#E8A06A',
       image: 'assets/bomb2_rose.png',
-      netWeight: '35g (01 viên)',
-      tastingNotes: 'Hương hoa hồng Damascus nồng nàn quyện cùng thảo mộc hổ phách ấm áp và vị ngọt thanh nhẹ tao nhã.',
-      ingredients: 'Vỏ đường Isomalt thực vật từ củ cải đường, nụ hoa hồng Damascus khô, lá trà đen Shan Tuyết cổ thụ, hổ phách thảo mộc.',
-      brewing: 'Cho vào ly thủy tinh, rót 250 - 300ml nước sôi ở 85°C - 90°C. Đợi 45 - 60s để hoa nở bung và thưởng thức.',
-      shelfLife: '03 tháng kể từ ngày sản xuất khi bảo quản trong túi nhôm kín.',
-      storage: 'Bảo quản nơi khô ráo thoáng mát (dưới 28°C), tránh ẩm ướt và ánh nắng trực tiếp. Không để trong tủ lạnh.',
-      allergen: 'Không chứa chất bảo quản nhân tạo, không phẩm màu tổng hợp, không chứa gluten.'
+      notes: 'Trà ô long dịu, đào sấy ngọt nhẹ và chút hương hoa mộc.',
+      ingredients: 'Isomalt (E953), trà ô long khô, đào sấy khô, hoa mộc khô dùng cho thực phẩm.',
+      extra: 'Sản phẩm có chứa trà, có thể chứa caffeine tự nhiên.'
     },
-    'lavender-pea': {
-      id: 'lavender-pea',
-      sku: 'MEL-TEA-02',
-      name: 'Lavender Butterfly Pea Bomb',
-      category: 'tea',
-      categoryLabel: 'Tea Bomb (Trà Nóng)',
-      badge: 'Thư Giãn Tinh Thần',
-      price: 30000,
-      image: 'assets/bomb3_lavender.png',
-      netWeight: '35g (01 viên)',
-      tastingNotes: 'Nốt hương oải hương thư thái kết hợp sắc xanh lam quyến rũ từ hoa đậu biếc tự nhiên, mang lại cảm giác bình yên sâu lắng.',
-      ingredients: 'Vỏ Isomalt thực vật, hoa đậu biếc sấy lạnh nguyên bông, nụ hoa Lavender Pháp, lá trà thảo mộc hoa cúc la mã.',
-      brewing: 'Dùng với 250 - 300ml nước sôi 85°C - 90°C. Ngắm sắc xanh huyền ảo chuyển động trong ly khi vỏ tan dần.',
-      shelfLife: '03 tháng kể từ NSX.',
-      storage: 'Bảo quản nơi khô ráo, tránh ánh sáng chiếu trực tiếp.',
-      allergen: '100% thảo mộc tự nhiên, không caffein, thích hợp uống thư giãn buổi tối.'
-    },
-    'ruby-hibiscus': {
-      id: 'ruby-hibiscus',
-      sku: 'MEL-MCK-02',
-      name: 'Ruby Hibiscus Blossom Bomb',
-      category: 'mocktail',
-      categoryLabel: 'Mocktail Bomb (Đồ Uống Sủi)',
-      badge: 'Màu Sắc Kiêu Kỳ',
-      price: 30000,
+    { id: 'orange-cinnamon', line: HOT, name: 'Orange Cinnamon', vn: 'Viên trà cam quế', color: '#D4813A',
+      notes: 'Cam sấy thơm vỏ, quế ấm, hợp những tối trời se lạnh.' },
+    { id: 'mango-passion', line: HOT, name: 'Mango Passion Fruit', vn: 'Viên trà xoài chanh dây', color: '#EDB240',
+      notes: 'Xoài chín ngọt, chanh dây chua nhẹ, màu vàng nắng trong ly.' },
+    { id: 'strawberry-rose', line: HOT, name: 'Strawberry Rose', vn: 'Viên trà dâu hoa hồng', color: '#D46A7E',
       image: 'assets/bomb4_ruby.png',
-      netWeight: '35g (01 viên)',
-      tastingNotes: 'Sắc đỏ hồng ngọc kiêu sa từ hoa atiso đỏ (hibiscus), vị chua ngọt thanh mát đánh thức mọi giác quan tràn đầy sức sống.',
-      ingredients: 'Bột sủi khoáng hữu cơ, đài hoa Hibiscus đỏ hữu cơ sấy thăng hoa, chiết xuất dâu rừng tự nhiên, Isomalt.',
-      brewing: 'Cho đá vào ly, rót 200 - 250ml soda lạnh. Thả viên bomb vào ngắm dòng thác bọt sủi đỏ ruby rực rỡ.',
-      shelfLife: '03 tháng kể từ NSX.',
-      storage: 'Để nơi khô ráo, thoáng mát dưới 28°C.',
-      allergen: 'Giàu vitamin C tự nhiên từ hoa atiso đỏ.'
-    },
-    'gift-set-3': {
-      id: 'gift-set-3',
-      sku: 'MEL-SET-03',
-      name: 'Hộp Quà 3 Viên Tùy Chọn (Gift Set)',
-      category: 'gifts',
-      categoryLabel: 'Hộp Quà Tặng',
-      badge: 'Lựa Chọn Phổ Biến',
-      price: 100000,
-      image: 'assets/tier2_set3.jpg',
-      netWeight: '105g (03 viên)',
-      tastingNotes: 'Hộp quà cứng cao cấp phủ nhũ kim sang trọng, tùy chọn 3 vị bất kỳ kết hợp cùng thiệp viết tay và muỗng khuấy nghệ thuật.',
-      ingredients: 'Bao gồm: 03 viên Beverage Bombs tự chọn, 01 hộp quà cao cấp, 01 thiệp viết tay lời chúc, 01 muỗng khuấy vàng đồng.',
-      brewing: 'Tùy theo vị trà hoặc mocktail trong hộp, tham khảo hướng dẫn pha chuẩn đi kèm bên trong nắp hộp.',
-      shelfLife: '03 tháng kể từ ngày đóng gói.',
-      storage: 'Bảo quản hộp nơi khô mát, tránh ẩm.',
-      allergen: 'Tùy theo các vị bạn lựa chọn trong hộp.'
-    },
-    'gift-set-6': {
-      id: 'gift-set-6',
-      sku: 'MEL-SET-06',
-      name: 'Hộp Quà 6 Viên Tinh Tuyển (Gift Set)',
-      category: 'gifts',
-      categoryLabel: 'Hộp Quà Tặng',
-      badge: 'Trọn Vẹn & Sang Trọng',
-      price: 190000,
-      image: 'assets/tier3_set6.jpg',
-      netWeight: '210g (06 viên)',
-      tastingNotes: 'Bộ sưu tập đầy đủ các vị Tea Bombs & Mocktail Bombs cao cấp trong hộp nắp nam châm tinh xảo, ruy băng lụa trang nhã.',
-      ingredients: 'Bao gồm: 06 viên Beverage Bombs (đầy đủ các hương vị), hộp nắp nam châm, thiệp viết tay trang trọng, muỗng khuấy mạ vàng.',
-      brewing: 'Kèm sổ tay hướng dẫn thưởng thức nghệ thuật đồ uống Meliora chi tiết.',
-      shelfLife: '03 tháng kể từ ngày đóng gói.',
-      storage: 'Bảo quản nơi khô ráo thoáng mát.',
-      allergen: 'Thảo mộc tự nhiên tuyển chọn.'
-    }
+      notes: 'Dâu đỏ và cánh hồng khô, ly trà ngả sắc hồng khi vỏ tan.' },
+    { id: 'apple-ginger', line: HOT, name: 'Apple Ginger', vn: 'Viên trà táo gừng', color: '#C7A055',
+      notes: 'Táo ngọt thanh, gừng ấm cay nhẹ ở hậu vị.' },
+    { id: 'blueberry-lavender', line: HOT, name: 'Blueberry Lavender', vn: 'Viên trà việt quất oải hương', color: '#7D6CA8',
+      image: 'assets/bomb3_lavender.png',
+      notes: 'Việt quất và oải hương, màu tím nhạt, hương thơm dịu.' },
+    { id: 'chamomile-date-goji', line: HOT, name: 'Chamomile, Red Date & Goji', vn: 'Viên trà cúc La Mã, táo đỏ, kỷ tử', color: '#E3BE6E',
+      notes: 'Hoa cúc La Mã, táo đỏ và kỷ tử, vị ngọt hiền cho buổi tối.' },
+
+    { id: 'wild-berry-lemon', line: COLD, name: 'Wild Berry Lemon', vn: 'Viên sủi dâu rừng chanh vàng', color: '#B44A6E',
+      notes: 'Dâu rừng chua ngọt gặp chanh vàng, sủi bọt tươi mát.' },
+    { id: 'peach-mango', line: COLD, name: 'Peach Mango', vn: 'Viên sủi đào xoài', color: '#F0A35C',
+      notes: 'Đào và xoài chín, ngọt mềm, màu cam đào.' },
+    { id: 'citrus-mint', line: COLD, name: 'Citrus Mint', vn: 'Viên sủi cam chanh bạc hà', color: '#9DBF7A',
+      image: 'assets/bomb1_citrus.png',
+      notes: 'Cam chanh tươi và bạc hà mát lạnh, rất hợp ngày nóng.' },
+    { id: 'pomegranate-cherry', line: COLD, name: 'Pomegranate Cherry', vn: 'Viên sủi lựu anh đào', color: '#A8354C',
+      notes: 'Lựu và anh đào, sắc đỏ ruby, vị chua ngọt cân bằng.' }
+  ].map(f => ({ ...f, price: 30000 }));
+
+  const byId = Object.fromEntries(flavors.map(f => [f.id, f]));
+
+  /* ------------------------------------------------------------------------
+     2. HELPERS
+     ------------------------------------------------------------------------ */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const vnd = n => new Intl.NumberFormat('vi-VN').format(n) + '₫';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const sphere = f => `<span class="sph is-${f.line}" style="--c:${f.color}" aria-hidden="true"></span>`;
+  const store = {
+    get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
   };
+  const plusIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>';
 
-  // 2. HELPER FUNCTIONS
-  const formatVND = (amount) => {
-    return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
-  };
-
-  // 3. CART STATE (Saved to localStorage)
-  let cart = [];
-  try {
-    const savedCart = localStorage.getItem('meliora_cart');
-    if (savedCart) {
-      cart = JSON.parse(savedCart);
-    }
-  } catch (err) {
-    console.error('Could not load cart from storage', err);
-    cart = [];
-  }
-
-  function saveCart() {
-    try {
-      localStorage.setItem('meliora_cart', JSON.stringify(cart));
-    } catch (e) {
-      console.warn('Storage save failed', e);
-    }
-  }
-
-  // 4. DOM ELEMENTS
-  const header = document.getElementById('main-header');
-  const openCartBtn = document.getElementById('open-cart-btn');
-  const headerCartBtn = document.getElementById('header-cart-btn');
-  const closeCartBtn = document.getElementById('close-cart-btn');
-  const cartDrawer = document.getElementById('cart-drawer');
-  const cartOverlay = document.getElementById('cart-overlay');
-  const cartCountBadges = [
-    document.getElementById('cart-count'),
-    document.getElementById('header-cart-count'),
-    document.getElementById('mobile-cart-qty')
-  ].filter(Boolean);
-  const cartItemsQty = document.getElementById('cart-items-qty');
-  const cartItemsList = document.getElementById('cart-items-list');
-  const cartSubtotalVal = document.getElementById('cart-subtotal-val');
-  const shippingProgress = document.getElementById('shipping-progress');
-  const shippingText = document.getElementById('shipping-text');
-  const checkoutBtn = document.getElementById('checkout-btn');
-  const toast = document.getElementById('toast-notif');
-  const toastMsg = toast.querySelector('.toast-msg');
-
-  // Mobile Drawer elements
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-  const mobileNavDrawer = document.getElementById('mobile-drawer');
-  const mobileOverlay = document.getElementById('mobile-overlay');
-  const mobileDrawerClose = document.getElementById('mobile-drawer-close');
-  const mobileCartAction = document.getElementById('mobile-cart-action');
-  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
-  // Product Modal elements
-  const productModal = document.getElementById('product-detail-modal');
-  const productModalBody = document.getElementById('product-modal-body');
-  const closeProductModalBtn = document.getElementById('close-product-modal');
-
-  // Checkout Modal elements
-  const checkoutModal = document.getElementById('checkout-modal');
-  const closeCheckoutModalBtn = document.getElementById('close-checkout-modal');
-  const checkoutMiniSummary = document.getElementById('checkout-mini-summary');
-  const checkoutOrderForm = document.getElementById('checkout-order-form');
-
-  // Order Confirm Modal elements
-  const orderConfirmModal = document.getElementById('order-confirm-modal');
-  const confirmModalBody = document.getElementById('confirm-modal-body');
-
-  /* --------------------------------------------------------------------------
-     5. SCROLL EFFECTS: PROGRESS BAR, HEADER SCROLLED & REVEAL ON SCROLL
-     -------------------------------------------------------------------------- */
-  const scrollProgressBar = document.getElementById('scroll-progress');
-
-  window.addEventListener('scroll', () => {
-    // Scroll progress bar
-    if (scrollProgressBar) {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      scrollProgressBar.style.width = scrolled + '%';
-    }
-
-    // Header scrolled state
-    if (window.scrollY > 20) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  });
-
-  // Reveal On Scroll with IntersectionObserver
-  const revealElements = document.querySelectorAll('.reveal-on-scroll');
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      root: null,
-      threshold: 0.15,
-      rootMargin: '0px 0px -40px 0px'
-    });
-
-    revealElements.forEach(el => revealObserver.observe(el));
+  /* ------------------------------------------------------------------------
+     3. HERO: load sequence + petals
+     ------------------------------------------------------------------------ */
+  const startHero = () => document.body.classList.add('is-loaded');
+  if (document.fonts && document.fonts.ready) {
+    Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 900))]).then(() => requestAnimationFrame(startHero));
   } else {
-    revealElements.forEach(el => el.classList.add('is-revealed'));
+    requestAnimationFrame(startHero);
   }
 
-  /* --------------------------------------------------------------------------
-     6. MOBILE MENU DRAWER
-     -------------------------------------------------------------------------- */
-  function openMobileMenu() {
-    mobileNavDrawer.classList.add('open');
-    mobileOverlay.classList.add('open');
-    mobileNavDrawer.setAttribute('aria-hidden', 'false');
-    mobileOverlay.setAttribute('aria-hidden', 'false');
-    mobileMenuToggle.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
+  const petalField = $('#petal-field');
+  if (petalField && !reduceMotion) {
+    const colors = ['#E9B3B4', '#DFA0A3', '#F0C9C6', '#E3C9A0', '#D9B98A'];
+    const count = window.innerWidth < 700 ? 8 : 15;
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      const leaf = i % 4 === 3;
+      const s = leaf ? 14 + Math.random() * 10 : 10 + Math.random() * 12;
+      const t = 16 + Math.random() * 14;
+      html += `<span class="petal" style="--x:${(Math.random() * 100).toFixed(1)}%;--s:${s.toFixed(0)}px;--t:${t.toFixed(1)}s;--delay:${(-Math.random() * t).toFixed(1)}s;--dx:${(Math.random() * 160 - 80).toFixed(0)}px;--r:${(Math.random() * 540 - 270).toFixed(0)}deg;--c:${leaf ? colors[3 + (i % 2)] : colors[i % 3]};opacity:${(0.45 + Math.random() * 0.45).toFixed(2)}"><svg><use href="#i-${leaf ? 'leaf' : 'petal'}"/></svg></span>`;
+    }
+    petalField.innerHTML = html;
   }
 
-  function closeMobileMenu() {
-    mobileNavDrawer.classList.remove('open');
-    mobileOverlay.classList.remove('open');
-    mobileNavDrawer.setAttribute('aria-hidden', 'true');
-    mobileOverlay.setAttribute('aria-hidden', 'true');
-    mobileMenuToggle.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+  /* ------------------------------------------------------------------------
+     4. HEADER, NAV HIGHLIGHT, MOBILE MENU
+     ------------------------------------------------------------------------ */
+  const header = $('#site-header');
+  const mobileNav = $('#mobile-nav');
+  const menuToggle = $('#menu-toggle');
+  let lastY = window.scrollY;
+
+  function onScrollHeader() {
+    const y = window.scrollY;
+    header.classList.toggle('is-scrolled', y > 24);
+    const goingDown = y > lastY + 4;
+    const goingUp = y < lastY - 4;
+    if (!mobileNav.classList.contains('is-open')) {
+      if (goingDown && y > 480) header.classList.add('is-hidden');
+      else if (goingUp || y < 480) header.classList.remove('is-hidden');
+    }
+    lastY = y;
   }
 
-  if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openMobileMenu);
-  if (mobileDrawerClose) mobileDrawerClose.addEventListener('click', closeMobileMenu);
-  if (mobileOverlay) mobileOverlay.addEventListener('click', closeMobileMenu);
-  mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+  function setMobileNav(open) {
+    mobileNav.classList.toggle('is-open', open);
+    mobileNav.setAttribute('aria-hidden', String(!open));
+    menuToggle.setAttribute('aria-expanded', String(open));
+    menuToggle.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+    header.classList.remove('is-hidden');
+  }
+  menuToggle.addEventListener('click', () => setMobileNav(!mobileNav.classList.contains('is-open')));
 
-  if (mobileCartAction) {
-    mobileCartAction.addEventListener('click', () => {
-      closeMobileMenu();
-      openCart();
+  const navLinks = $$('.main-nav a');
+  if ('IntersectionObserver' in window) {
+    const sectionObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(a => a.classList.toggle('is-current', a.getAttribute('href') === '#' + e.target.id));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['story', 'lines', 'brew', 'menu', 'gift', 'faq', 'contact'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) sectionObs.observe(el);
     });
   }
 
-  /* --------------------------------------------------------------------------
-     7. INTERACTIVE LIFESTYLE TABS (Scallop Blob Photo Switching)
-     -------------------------------------------------------------------------- */
-  const lifestyleTabBtns = document.querySelectorAll('.tab-btn');
-  const lifestyleTabPanels = document.querySelectorAll('.tab-panel');
+  /* ------------------------------------------------------------------------
+     5. SMOOTH ANCHOR SCROLL (eased, respects header height)
+     ------------------------------------------------------------------------ */
+  const easeInOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  let scrollAnim = null;
 
-  lifestyleTabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetTab = btn.getAttribute('data-tab');
-      lifestyleTabBtns.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
+  function scrollToEl(el) {
+    if (!el) return;
+    const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 72;
+    const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - (el.id === 'top' ? 0 : offset - 1));
+    if (reduceMotion) { window.scrollTo(0, target); return; }
+    const start = window.scrollY;
+    const dist = target - start;
+    const dur = Math.min(1400, Math.max(600, Math.abs(dist) * 0.45));
+    const t0 = performance.now();
+    cancelAnimationFrame(scrollAnim);
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      window.scrollTo(0, start + dist * easeInOut(p));
+      if (p < 1) scrollAnim = requestAnimationFrame(step);
+    };
+    scrollAnim = requestAnimationFrame(step);
+  }
+  ['wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, () => cancelAnimationFrame(scrollAnim), { passive: true }));
 
-      lifestyleTabPanels.forEach(panel => {
-        panel.classList.remove('active');
-        if (panel.id === `tab-${targetTab}`) {
-          panel.classList.add('active');
-        }
-      });
-    });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href').slice(1);
+    const el = id ? document.getElementById(id) : null;
+    if (!el) return;
+    e.preventDefault();
+    if (a.dataset.filter) setMenuFilter(a.dataset.filter);
+    if (mobileNav.classList.contains('is-open')) setMobileNav(false);
+    closeAllOverlays();
+    scrollToEl(el);
+    history.replaceState(null, '', '#' + id);
   });
 
-  const exploreShopBtn = document.querySelector('[data-action="explore-shop"]');
-  if (exploreShopBtn) {
-    exploreShopBtn.addEventListener('click', () => {
-      document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+  /* ------------------------------------------------------------------------
+     6. REVEAL + PARALLAX
+     ------------------------------------------------------------------------ */
+  const revealEls = $$('[data-reveal], [data-clip]');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    // [data-clip] starts fully clipped (zero visible area), so watch its parent instead
+    const targets = new Map();
+    revealEls.forEach(el => {
+      const watch = el.hasAttribute('data-clip') ? el.parentElement : el;
+      if (!targets.has(watch)) targets.set(watch, []);
+      targets.get(watch).push(el);
     });
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        targets.get(e.target).forEach(el => el.classList.add('is-in'));
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    targets.forEach((_, watch) => io.observe(watch));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-in'));
   }
 
-  /* --------------------------------------------------------------------------
-     8. PRODUCT CATALOG RENDER & FILTER (Hiện 4 sản phẩm, có nút chuyển qua)
-     -------------------------------------------------------------------------- */
-  const productsCatalogContainer = document.getElementById('products-catalog');
-  const filterButtons = document.querySelectorAll('.filter-tab-btn');
-  const catalogPrevBtn = document.getElementById('catalog-prev-btn');
-  const catalogNextBtn = document.getElementById('catalog-next-btn');
-  const catalogPageCounter = document.getElementById('catalog-page-counter');
-  const catalogPaginationWrap = document.getElementById('catalog-pagination-wrap');
+  const parallaxEls = reduceMotion ? [] : $$('[data-parallax]');
+  const parallaxBg = reduceMotion ? null : $('[data-parallax-bg] img');
+  let ticking = false;
 
-  let currentCatalogFilter = 'all';
-  let currentCatalogPage = 1;
-  const PRODUCTS_PER_PAGE = 4;
-
-  function renderCatalog(filter = currentCatalogFilter, page = currentCatalogPage) {
-    if (!productsCatalogContainer) return;
-    currentCatalogFilter = filter;
-    currentCatalogPage = page;
-
-    const filteredItems = Object.values(catalog).filter(item => {
-      if (filter === 'all') return true;
-      return item.category === filter;
+  function frame() {
+    ticking = false;
+    onScrollHeader();
+    const vh = window.innerHeight;
+    parallaxEls.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const k = parseFloat(el.dataset.parallax) || 0;
+      el.style.transform = `translate3d(0, ${((r.top + r.height / 2 - vh / 2) * k).toFixed(1)}px, 0)`;
     });
-
-    const totalPages = Math.ceil(filteredItems.length / PRODUCTS_PER_PAGE) || 1;
-    if (currentCatalogPage > totalPages) currentCatalogPage = 1;
-    if (currentCatalogPage < 1) currentCatalogPage = 1;
-
-    const startIndex = (currentCatalogPage - 1) * PRODUCTS_PER_PAGE;
-    const pageItems = filteredItems.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
-
-    // Update pagination controls
-    if (catalogPrevBtn && catalogNextBtn && catalogPaginationWrap) {
-      if (totalPages <= 1) {
-        catalogPrevBtn.style.visibility = 'hidden';
-        catalogNextBtn.style.visibility = 'hidden';
-        catalogPaginationWrap.style.display = 'none';
-      } else {
-        catalogPrevBtn.style.visibility = 'visible';
-        catalogNextBtn.style.visibility = 'visible';
-        catalogPaginationWrap.style.display = 'flex';
-
-        catalogPrevBtn.disabled = (currentCatalogPage === 1);
-        catalogNextBtn.disabled = (currentCatalogPage === totalPages);
-
-        if (catalogPageCounter) {
-          catalogPageCounter.textContent = `Trang ${currentCatalogPage} / ${totalPages} (${filteredItems.length} sản phẩm)`;
-        }
+    if (parallaxBg) {
+      const box = parallaxBg.parentElement.getBoundingClientRect();
+      if (box.bottom > 0 && box.top < vh) {
+        const p = (vh - box.top) / (vh + box.height); // 0 → 1 while passing
+        parallaxBg.style.transform = `translate3d(0, ${(-p * 16).toFixed(2)}%, 0)`;
       }
     }
+  }
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+  window.addEventListener('resize', () => requestAnimationFrame(frame));
+  frame();
 
-    productsCatalogContainer.innerHTML = pageItems.map(item => `
-      <article class="product-floating-card reveal-on-scroll is-revealed" data-id="${item.id}" data-category="${item.category}">
-        <div class="product-image-box" data-action="view-detail" data-id="${item.id}" title="Nhấn để xem chi tiết ${item.name}">
-          <img src="${item.image}" alt="${item.name}" class="product-image" loading="lazy" />
-        </div>
-        <div class="product-info-minimal">
-          <h3 class="product-name">${item.name}</h3>
-          <span class="product-tag">${item.categoryLabel}</span>
-          <div class="product-price">${formatVND(item.price)}</div>
-        </div>
-        <div class="product-buttons-row">
-          <button class="product-cta-btn" data-action="add-to-cart" data-id="${item.id}">
-            Thêm Vào Giỏ
-          </button>
-          <button class="product-detail-link" data-action="view-detail" data-id="${item.id}">
-            Xem Chi Tiết & Thành Phần
-          </button>
-        </div>
-      </article>
-    `).join('');
+  /* ------------------------------------------------------------------------
+     7. BREWING TABS (sliding thumb)
+     ------------------------------------------------------------------------ */
+  const segBtns = $$('.seg-btn');
+  const segThumb = $('.seg-thumb');
 
-    // Reattach event listeners to new cards
-    productsCatalogContainer.querySelectorAll('[data-action="view-detail"]').forEach(el => {
-      el.addEventListener('click', () => {
-        const id = el.getAttribute('data-id');
-        openProductModal(id);
-      });
-    });
-
-    productsCatalogContainer.querySelectorAll('[data-action="add-to-cart"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        addToCart(id);
-      });
-    });
+  function placeThumb(btn) {
+    if (!segThumb || !btn) return;
+    segThumb.style.width = btn.offsetWidth + 'px';
+    segThumb.style.transform = `translateX(${btn.offsetLeft}px)`;
   }
 
-  // Prev / Next button listeners
-  if (catalogPrevBtn) {
-    catalogPrevBtn.addEventListener('click', () => {
-      if (currentCatalogPage > 1) {
-        currentCatalogPage--;
-        renderCatalog(currentCatalogFilter, currentCatalogPage);
-      }
+  function selectTab(btn, focus) {
+    segBtns.forEach(b => {
+      const on = b === btn;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', String(on));
+      b.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(b.getAttribute('aria-controls'));
+      panel.hidden = !on;
+      panel.classList.toggle('is-active', on);
     });
+    placeThumb(btn);
+    if (focus) btn.focus();
   }
 
-  if (catalogNextBtn) {
-    catalogNextBtn.addEventListener('click', () => {
-      const filteredItems = Object.values(catalog).filter(item => {
-        if (currentCatalogFilter === 'all') return true;
-        return item.category === currentCatalogFilter;
-      });
-      const totalPages = Math.ceil(filteredItems.length / PRODUCTS_PER_PAGE) || 1;
-      if (currentCatalogPage < totalPages) {
-        currentCatalogPage++;
-        renderCatalog(currentCatalogFilter, currentCatalogPage);
-      }
+  segBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => selectTab(btn));
+    btn.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      selectTab(segBtns[(i + (e.key === 'ArrowRight' ? 1 : -1) + segBtns.length) % segBtns.length], true);
     });
+  });
+  window.addEventListener('resize', () => placeThumb($('.seg-btn.is-active')));
+  requestAnimationFrame(() => placeThumb($('.seg-btn.is-active')));
+  if (document.fonts) document.fonts.ready.then(() => placeThumb($('.seg-btn.is-active')));
+
+  /* ------------------------------------------------------------------------
+     8. FLAVOR MENU + STICKY PREVIEW
+     ------------------------------------------------------------------------ */
+  const menuList = $('#menu-list');
+  const previewStage = $('#preview-stage');
+  const previewImg = $('#preview-img');
+  const previewSphere = $('#preview-sphere');
+  const previewName = $('#preview-name');
+  const previewLine = $('#preview-line');
+  let menuFilter = 'all';
+  let previewId = null;
+  let swapTimer = null;
+
+  function renderMenu() {
+    const groups = [HOT, COLD].filter(l => menuFilter === 'all' || menuFilter === l);
+    menuList.innerHTML = groups.map(line => {
+      const items = flavors.filter(f => f.line === line);
+      return `
+        <div class="menu-group">
+          <h3 class="menu-group-title">${LINE_NAME[line]} <small>${items.length} vị</small></h3>
+          ${items.map(f => `
+            <div class="flavor" data-id="${f.id}" style="--fc:${f.color}">
+              ${sphere(f)}
+              <button class="flavor-name" data-open="${f.id}" aria-label="Xem chi tiết ${esc(f.name)}">
+                <strong>${esc(f.name)}</strong>
+                <span>${esc(f.vn)}</span>
+              </button>
+              <span class="flavor-price">${vnd(f.price)}</span>
+              <button class="add-btn" data-add="${f.id}" aria-label="Thêm ${esc(f.name)} vào giỏ">${plusIcon}</button>
+            </div>`).join('')}
+        </div>`;
+    }).join('');
   }
 
-  function setCatalogFilter(filter) {
-    filterButtons.forEach(btn => {
-      if (btn.getAttribute('data-filter') === filter) {
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
+  function showPreview(id) {
+    if (id === previewId) return;
+    const f = byId[id];
+    if (!f) return;
+    previewId = id;
+    $$('.flavor', menuList).forEach(r => r.classList.toggle('is-hot', r.dataset.id === id));
+    clearTimeout(swapTimer);
+    previewStage.classList.add('is-swapping');
+    previewStage.style.setProperty('--pc', f.color);
+    swapTimer = setTimeout(() => {
+      if (f.image) {
+        previewImg.src = f.image;
+        previewImg.dataset.hidden = 'false';
+        previewSphere.dataset.hidden = 'true';
       } else {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-selected', 'false');
+        previewImg.dataset.hidden = 'true';
+        previewSphere.dataset.hidden = 'false';
+        previewSphere.className = `preview-sphere sph is-${f.line}`;
+        previewSphere.style.setProperty('--c', f.color);
       }
-    });
-    currentCatalogPage = 1;
-    renderCatalog(filter, 1);
+      previewName.textContent = f.name;
+      previewLine.textContent = LINE_NAME[f.line];
+      requestAnimationFrame(() => previewStage.classList.remove('is-swapping'));
+    }, reduceMotion ? 0 : 260);
   }
 
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = btn.getAttribute('data-filter');
-      setCatalogFilter(filter);
+  function setMenuFilter(filter) {
+    if (filter === menuFilter) return;
+    menuFilter = filter;
+    $$('.filter-btn').forEach(b => {
+      const on = b.dataset.menuFilter === filter;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    menuList.classList.add('is-filtering');
+    setTimeout(() => {
+      renderMenu();
+      previewId = null;
+      showPreview(flavors.find(f => filter === 'all' || f.line === filter).id);
+      requestAnimationFrame(() => menuList.classList.remove('is-filtering'));
+    }, reduceMotion ? 0 : 300);
+  }
+
+  $$('.filter-btn').forEach(b => b.addEventListener('click', () => setMenuFilter(b.dataset.menuFilter)));
+
+  menuList.addEventListener('pointerover', e => {
+    const row = e.target.closest('.flavor');
+    if (row) showPreview(row.dataset.id);
+  });
+  menuList.addEventListener('focusin', e => {
+    const row = e.target.closest('.flavor');
+    if (row) showPreview(row.dataset.id);
+  });
+  menuList.addEventListener('click', e => {
+    const add = e.target.closest('[data-add]');
+    const open = e.target.closest('[data-open]');
+    if (add) addFlavor(add.dataset.add, 1, add);
+    else if (open) openProduct(open.dataset.open, open);
+  });
+
+  renderMenu();
+  showPreview(flavors[0].id);
+
+  /* ------------------------------------------------------------------------
+     9. OVERLAYS (modals + drawer) with focus handling
+     ------------------------------------------------------------------------ */
+  const overlayStack = [];
+
+  function openOverlay(el, opener) {
+    el.classList.add('is-open');
+    el.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    overlayStack.push({ el, opener: opener || document.activeElement });
+    setTimeout(() => {
+      const first = el.querySelector('[data-close], .icon-btn, button, input');
+      if (first) first.focus({ preventScroll: true });
+    }, 60);
+  }
+
+  function closeOverlay(el) {
+    const idx = overlayStack.findIndex(o => o.el === el);
+    if (idx === -1) return;
+    const { opener } = overlayStack.splice(idx, 1)[0];
+    el.classList.remove('is-open');
+    el.setAttribute('aria-hidden', 'true');
+    if (el === cartDrawer) cartScrim.classList.remove('is-open');
+    if (!overlayStack.length && !mobileNav.classList.contains('is-open')) document.body.style.overflow = '';
+    if (opener && document.contains(opener)) opener.focus({ preventScroll: true });
+  }
+
+  function closeAllOverlays() {
+    [...overlayStack].reverse().forEach(o => closeOverlay(o.el));
+  }
+
+  $$('.modal').forEach(m => {
+    m.addEventListener('click', e => {
+      if (e.target === m || e.target.closest('[data-close]')) closeOverlay(m);
     });
   });
 
-  // Hero CTAs and Navigation links with data-filter
-  document.querySelectorAll('[data-filter]').forEach(trigger => {
-    if (trigger.classList.contains('filter-tab-btn')) return;
-    trigger.addEventListener('click', (e) => {
-      const filter = trigger.getAttribute('data-filter');
-      setCatalogFilter(filter);
-      const shopSection = document.getElementById('shop');
-      if (shopSection) {
-        shopSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (overlayStack.length) closeOverlay(overlayStack[overlayStack.length - 1].el);
+      else if (mobileNav.classList.contains('is-open')) setMobileNav(false);
+    }
+    if (e.key === 'Tab' && overlayStack.length) {
+      const top = overlayStack[overlayStack.length - 1].el;
+      const focusables = $$('button:not([disabled]), a[href], input, textarea', top).filter(x => x.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
 
-  /* --------------------------------------------------------------------------
-     9. PRODUCT DETAIL MODAL
-     -------------------------------------------------------------------------- */
-  function openProductModal(productId) {
-    const item = catalog[productId];
-    if (!item) return;
+  /* ------------------------------------------------------------------------
+     10. PRODUCT MODAL (styled after the round ingredient card)
+     ------------------------------------------------------------------------ */
+  const productModal = $('#product-modal');
+  const pmBody = $('#pm-body');
 
-    productModalBody.innerHTML = `
-      <div class="modal-product-layout">
-        <div class="modal-product-gallery">
-          <img src="${item.image}" alt="${item.name}" class="modal-product-img"
-               onerror="this.onerror=null; this.src='assets/categorie2.jpg';" />
-          <div class="modal-badge-overlay">${item.categoryLabel}</div>
-        </div>
-        <div class="modal-product-info">
-          <span class="modal-sku">${item.sku} • ${item.netWeight}</span>
-          <h2 class="modal-title" id="modal-product-title">${item.name}</h2>
-          <div class="modal-price">${formatVND(item.price)}</div>
-          
-          <div class="modal-desc-block">
-            <h4>Hương Vị Đặc Trưng:</h4>
-            <p>${item.tastingNotes}</p>
-          </div>
-
-          <div class="modal-specs-accordion">
-            <div class="spec-row">
-              <strong>Thành phần:</strong>
-              <span>${item.ingredients}</span>
-            </div>
-            <div class="spec-row">
-              <strong>Hướng dẫn pha:</strong>
-              <span>${item.brewing}</span>
-            </div>
-            <div class="spec-row">
-              <strong>Bảo quản & HSD:</strong>
-              <span>${item.storage} (Hạn dùng: ${item.shelfLife})</span>
-            </div>
-            <div class="spec-row">
-              <strong>Ghi chú an toàn:</strong>
-              <span>${item.allergen}</span>
-            </div>
-          </div>
-
-          <div class="modal-action-row">
-            <div class="modal-qty-selector">
-              <button class="modal-qty-btn" id="modal-qty-minus">−</button>
-              <input type="number" id="modal-qty-input" value="1" min="1" max="99" readonly />
-              <button class="modal-qty-btn" id="modal-qty-plus">+</button>
-            </div>
-            <button class="modal-add-btn" id="modal-confirm-add" data-id="${item.id}">
-              Thêm Vào Giỏ Hàng (${formatVND(item.price)})
-            </button>
-          </div>
-        </div>
+  function openProduct(id, opener) {
+    const f = byId[id];
+    if (!f) return;
+    const label = f.line === HOT ? TEA_LABEL : COLD_LABEL;
+    pmBody.style.setProperty('--fc', f.color);
+    pmBody.innerHTML = `
+      <div class="pm-visual">
+        ${f.image ? `<img src="${f.image}" alt="${esc(f.vn)}" />` : sphere(f)}
       </div>
-    `;
+      <div class="pm-text">
+        <p class="pm-line">${LINE_NAME[f.line]}</p>
+        <h3 id="pm-title">${esc(f.name)}</h3>
+        <p class="pm-vn">${esc(f.vn)}</p>
+        <p class="pm-notes">${esc(f.notes)}</p>
+        <dl class="pm-label">
+          <div><dt>Thành phần</dt><dd>${f.ingredients ? esc(f.ingredients) : 'Thành phần chi tiết in trên card sản phẩm đi kèm.'}</dd></div>
+          <div><dt>Cách pha</dt><dd>${label.brew}</dd></div>
+          <div><dt>Bảo quản</dt><dd>${label.storage}</dd></div>
+          <div><dt>Lưu ý</dt><dd>${label.caution}${f.extra ? ' ' + esc(f.extra) : ''}</dd></div>
+        </dl>
+        <div class="pm-buy">
+          <span class="pm-price">${vnd(f.price)}</span>
+          <div class="qty" aria-label="Số lượng">
+            <button type="button" data-q="-1" aria-label="Giảm">−</button>
+            <span id="pm-qty">1</span>
+            <button type="button" data-q="1" aria-label="Tăng">+</button>
+          </div>
+          <button class="btn btn-solid" id="pm-add" type="button">Thêm vào giỏ</button>
+        </div>
+      </div>`;
 
     let qty = 1;
-    const qtyInput = document.getElementById('modal-qty-input');
-    const minusBtn = document.getElementById('modal-qty-minus');
-    const plusBtn = document.getElementById('modal-qty-plus');
-    const addBtn = document.getElementById('modal-confirm-add');
-
-    minusBtn.addEventListener('click', () => {
-      if (qty > 1) {
-        qty--;
-        qtyInput.value = qty;
-        addBtn.textContent = `Thêm Vào Giỏ Hàng (${formatVND(item.price * qty)})`;
-      }
+    const qtyEl = $('#pm-qty', pmBody);
+    $$('[data-q]', pmBody).forEach(b => b.addEventListener('click', () => {
+      qty = Math.max(1, Math.min(20, qty + Number(b.dataset.q)));
+      qtyEl.textContent = qty;
+    }));
+    $('#pm-add', pmBody).addEventListener('click', () => {
+      closeOverlay(productModal);
+      addFlavor(f.id, qty);
     });
-
-    plusBtn.addEventListener('click', () => {
-      qty++;
-      qtyInput.value = qty;
-      addBtn.textContent = `Thêm Vào Giỏ Hàng (${formatVND(item.price * qty)})`;
-    });
-
-    addBtn.addEventListener('click', () => {
-      addToCart(item.id, qty);
-      closeProductModal();
-    });
-
-    productModal.classList.add('open');
-    productModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    openOverlay(productModal, opener);
   }
 
-  function closeProductModal() {
-    productModal.classList.remove('open');
-    productModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
+  /* ------------------------------------------------------------------------
+     11. GIFT BOX BUILDER
+     ------------------------------------------------------------------------ */
+  const giftBox = $('#gift-box');
+  const wellsEl = $('#box-wells');
+  const boxStatus = $('#box-status');
+  const builderTotal = $('#builder-total');
+  const builderAdd = $('#builder-add');
+  const giftNote = $('#gift-note');
+  let boxSize = 3;
+  let slots = [null, null, null];
 
-  if (closeProductModalBtn) closeProductModalBtn.addEventListener('click', closeProductModal);
-  if (productModal) {
-    productModal.addEventListener('click', (e) => {
-      if (e.target === productModal) closeProductModal();
+  function renderChips() {
+    [HOT, COLD].forEach(line => {
+      $('#chips-' + line).innerHTML = flavors.filter(f => f.line === line).map(f =>
+        `<button type="button" class="chip" data-chip="${f.id}">${sphere(f)}${esc(f.name)}</button>`).join('');
     });
   }
 
-  /* --------------------------------------------------------------------------
-     10. INTERACTIVE GIFT BUILDER (Tự Phối Vị Set 3 & Set 6 + Viết Thiệp)
-     -------------------------------------------------------------------------- */
-  const builderSlotsGrid = document.getElementById('builder-slots-grid');
-  const builderSize3Btn = document.getElementById('builder-size-3');
-  const builderSize6Btn = document.getElementById('builder-size-6');
-  const builderCardMsg = document.getElementById('builder-card-msg');
-  const summarySetTitle = document.getElementById('summary-set-title');
-  const summaryFlavorsList = document.getElementById('summary-flavors-list');
-  const summaryCardStatus = document.getElementById('summary-card-status');
-  const summaryPriceVal = document.getElementById('summary-price-val');
-  const builderAddToCartBtn = document.getElementById('builder-add-to-cart-btn');
-  const startBuilder3Btn = document.getElementById('start-builder-3');
-  const startBuilder6Btn = document.getElementById('start-builder-6');
-
-  let currentBuilderSize = 3;
-  let currentBuilderFlavors = ['rose-amber', 'citrus-matcha', 'lavender-pea'];
-
-  const availableSingleFlavors = [
-    { id: 'rose-amber', name: 'Rose Amber (Trà Hồng Hổ Phách)' },
-    { id: 'citrus-matcha', name: 'Citrus & Matcha (Matcha Cam Chanh)' },
-    { id: 'lavender-pea', name: 'Lavender Pea (Trà Đậu Biếc Oải Hương)' },
-    { id: 'ruby-hibiscus', name: 'Ruby Hibiscus (Mocktail Hồng Ngọc)' }
-  ];
-
-  function renderBuilderSlots() {
-    if (!builderSlotsGrid) return;
-
-    builderSlotsGrid.innerHTML = '';
-    for (let i = 0; i < currentBuilderSize; i++) {
-      const selectedFlavorId = currentBuilderFlavors[i] || availableSingleFlavors[i % availableSingleFlavors.length].id;
-      currentBuilderFlavors[i] = selectedFlavorId;
-
-      const slotEl = document.createElement('div');
-      slotEl.className = 'slot-select-card';
-      slotEl.innerHTML = `
-        <div class="slot-num">Vị trí #${i + 1}</div>
-        <select class="slot-flavor-dropdown" data-slot="${i}">
-          ${availableSingleFlavors.map(f => `
-            <option value="${f.id}" ${f.id === selectedFlavorId ? 'selected' : ''}>
-              ${f.name}
-            </option>
-          `).join('')}
-        </select>
-      `;
-      builderSlotsGrid.appendChild(slotEl);
-    }
-
-    builderSlotsGrid.querySelectorAll('.slot-flavor-dropdown').forEach(dropdown => {
-      dropdown.addEventListener('change', (e) => {
-        const slotIdx = parseInt(e.target.getAttribute('data-slot'));
-        currentBuilderFlavors[slotIdx] = e.target.value;
-        updateBuilderSummary();
-      });
-    });
-
-    updateBuilderSummary();
-  }
-
-  function updateBuilderSummary() {
-    if (!summarySetTitle) return;
-
-    const isSet3 = currentBuilderSize === 3;
-    const price = isSet3 ? 100000 : 190000;
-
-    summarySetTitle.textContent = isSet3 ? 'Hộp Quà 3 Viên Tự Chọn' : 'Hộp Quà 6 Viên Tinh Tuyển';
-    summaryPriceVal.textContent = formatVND(price);
-
-    summaryFlavorsList.innerHTML = currentBuilderFlavors.map((fid, idx) => {
-      const flavorObj = availableSingleFlavors.find(f => f.id === fid);
-      return `<div class="summary-flavor-item"><span>#${idx + 1}:</span> ${flavorObj ? flavorObj.name : fid}</div>`;
+  function renderWells(animateId = null) {
+    const nextEmpty = slots.indexOf(null);
+    wellsEl.innerHTML = slots.map((id, i) => {
+      const f = id && byId[id];
+      return `<div class="well" style="animation-delay:${i * 40}ms">
+        <button type="button" class="well-btn${i === nextEmpty ? ' is-next' : ''}" data-well="${i}" ${f ? '' : 'disabled'}
+          aria-label="${f ? `Ô ${i + 1}: ${esc(f.name)}. Bấm để lấy ra` : `Ô ${i + 1} trống`}">
+          ${f ? `<span class="sph is-${f.line}" style="--c:${f.color};${i === animateId ? '' : 'animation:none'}"></span>` : '<span class="well-empty"></span>'}
+        </button>
+      </div>`;
     }).join('');
+    // keep the wells' entrance animation only when the grid itself changes size
+    if (animateId !== 'resize') $$('.well', wellsEl).forEach(w => { w.style.animation = 'none'; });
+    updateBuilder();
+  }
 
-    const msg = builderCardMsg ? builderCardMsg.value.trim() : '';
-    if (msg) {
-      summaryCardStatus.textContent = `"${msg.length > 50 ? msg.slice(0, 50) + '...' : msg}"`;
-      summaryCardStatus.classList.remove('italic-text');
-    } else {
-      summaryCardStatus.textContent = 'Chưa nhập lời nhắn (Meliora sẽ gửi thiệp trống)';
-      summaryCardStatus.classList.add('italic-text');
+  function updateBuilder() {
+    const empty = slots.filter(s => !s).length;
+    boxStatus.textContent = empty ? `Còn trống ${empty} ô` : 'Hộp đã đủ viên';
+    builderTotal.textContent = vnd(BOX_PRICE[boxSize]);
+    builderAdd.disabled = empty > 0;
+    $$('.chip').forEach(c => { c.disabled = empty === 0; });
+  }
+
+  function setBoxSize(size) {
+    if (size === boxSize) return;
+    boxSize = size;
+    slots = Array.from({ length: size }, (_, i) => slots[i] || null);
+    giftBox.dataset.size = String(size);
+    $$('.size-opt').forEach(o => {
+      const on = Number(o.dataset.size) === size;
+      o.classList.toggle('is-active', on);
+      o.setAttribute('aria-checked', String(on));
+      o.tabIndex = on ? 0 : -1;
+    });
+    renderWells('resize');
+  }
+
+  $$('.size-opt').forEach((o, i, all) => {
+    o.addEventListener('click', () => setBoxSize(Number(o.dataset.size)));
+    o.addEventListener('keydown', e => {
+      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+      e.preventDefault();
+      const next = all[(i + 1) % all.length];
+      setBoxSize(Number(next.dataset.size));
+      next.focus();
+    });
+  });
+
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('[data-chip]');
+    if (chip) {
+      const i = slots.indexOf(null);
+      if (i === -1) return;
+      slots[i] = chip.dataset.chip;
+      renderWells(i);
+      return;
     }
-  }
-
-  function setBuilderSize(size) {
-    currentBuilderSize = size;
-    if (size === 3) {
-      builderSize3Btn.classList.add('active');
-      builderSize6Btn.classList.remove('active');
-      currentBuilderFlavors = currentBuilderFlavors.slice(0, 3);
-      if (currentBuilderFlavors.length < 3) {
-        currentBuilderFlavors = ['rose-amber', 'citrus-matcha', 'lavender-pea'];
-      }
-    } else {
-      builderSize6Btn.classList.add('active');
-      builderSize3Btn.classList.remove('active');
-      while (currentBuilderFlavors.length < 6) {
-        currentBuilderFlavors.push(availableSingleFlavors[currentBuilderFlavors.length % availableSingleFlavors.length].id);
-      }
-    }
-    renderBuilderSlots();
-  }
-
-  if (builderSize3Btn && builderSize6Btn) {
-    builderSize3Btn.addEventListener('click', () => setBuilderSize(3));
-    builderSize6Btn.addEventListener('click', () => setBuilderSize(6));
-  }
-
-  if (builderCardMsg) {
-    builderCardMsg.addEventListener('input', updateBuilderSummary);
-  }
-
-  if (startBuilder3Btn) {
-    startBuilder3Btn.addEventListener('click', () => {
-      setBuilderSize(3);
-      document.getElementById('gift-builder').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  if (startBuilder6Btn) {
-    startBuilder6Btn.addEventListener('click', () => {
-      setBuilderSize(6);
-      document.getElementById('gift-builder').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  if (builderAddToCartBtn) {
-    builderAddToCartBtn.addEventListener('click', () => {
-      const isSet3 = currentBuilderSize === 3;
-      const baseProductId = isSet3 ? 'gift-set-3' : 'gift-set-6';
-      const baseProduct = catalog[baseProductId];
-      const cardMessage = builderCardMsg ? builderCardMsg.value.trim() : '';
-
-      const flavorNames = currentBuilderFlavors.map(fid => {
-        const found = availableSingleFlavors.find(f => f.id === fid);
-        return found ? found.name.split(' (')[0] : fid;
-      });
-
-      const customGiftItem = {
-        id: `custom-gift-${Date.now()}`,
-        name: isSet3 ? 'Set Quà 3 Viên Tự Phối' : 'Set Quà 6 Viên Tự Phối',
-        price: isSet3 ? 100000 : 190000,
-        image: baseProduct.image,
-        qty: 1,
-        isCustomGift: true,
-        flavors: flavorNames,
-        cardMessage: cardMessage || 'Không có lời nhắn'
-      };
-
-      cart.push(customGiftItem);
-      renderCart();
-      saveCart();
-      showToast(`Đã thêm ${customGiftItem.name} vào giỏ hàng!`);
-      openCart();
-    });
-  }
-
-  /* --------------------------------------------------------------------------
-     11. SHOPPING CART MANAGEMENT
-     -------------------------------------------------------------------------- */
-  function openCart() {
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('open');
-    cartDrawer.setAttribute('aria-hidden', 'false');
-    cartOverlay.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeCart() {
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('open');
-    cartDrawer.setAttribute('aria-hidden', 'true');
-    cartOverlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  if (openCartBtn) openCartBtn.addEventListener('click', openCart);
-  if (headerCartBtn) headerCartBtn.addEventListener('click', openCart);
-  if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
-  if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-
-  // Close on ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (cartDrawer.classList.contains('open')) closeCart();
-      if (productModal.classList.contains('open')) closeProductModal();
-      if (checkoutModal.classList.contains('open')) closeCheckoutModal();
-      if (orderConfirmModal.classList.contains('open')) closeOrderConfirmModal();
-      if (mobileNavDrawer.classList.contains('open')) closeMobileMenu();
+    const well = e.target.closest('[data-well]');
+    if (well && !well.disabled) {
+      const i = Number(well.dataset.well);
+      const sph = well.querySelector('.sph');
+      const done = () => { slots[i] = null; renderWells(); };
+      if (sph && !reduceMotion) { sph.classList.add('is-leaving'); sph.style.animation = ''; setTimeout(done, 330); } else done();
     }
   });
 
-  function addToCart(productId, qty = 1) {
-    const product = catalog[productId];
-    if (!product) return;
+  $('#builder-clear').addEventListener('click', () => {
+    slots = slots.map(() => null);
+    giftNote.value = '';
+    renderWells();
+  });
 
-    const existingItem = cart.find(item => item.id === productId && !item.isCustomGift);
-    if (existingItem) {
-      existingItem.qty += qty;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        qty: qty,
-        isCustomGift: false
-      });
-    }
-
-    renderCart();
-    saveCart();
-    showToast(`Đã thêm ${product.name} vào giỏ hàng!`);
-    openCart();
-  }
-
-  function updateItemQty(itemId, delta) {
-    const itemIndex = cart.findIndex(item => item.id === itemId);
-    if (itemIndex > -1) {
-      cart[itemIndex].qty += delta;
-      if (cart[itemIndex].qty <= 0) {
-        cart.splice(itemIndex, 1);
-      }
-    }
-    renderCart();
-    saveCart();
-  }
-
-  function removeItem(itemId) {
-    const itemIndex = cart.findIndex(item => item.id === itemId);
-    if (itemIndex > -1) {
-      cart.splice(itemIndex, 1);
-      renderCart();
-      saveCart();
-    }
-  }
-
-  function renderCart() {
-    const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-    cartCountBadges.forEach(badge => {
-      badge.textContent = totalCount;
+  builderAdd.addEventListener('click', () => {
+    if (slots.includes(null)) return;
+    const note = giftNote.value.trim().slice(0, 150);
+    cart.push({
+      key: 'box-' + Date.now(),
+      kind: 'box',
+      name: `Hộp quà ${boxSize} viên`,
+      price: BOX_PRICE[boxSize],
+      qty: 1,
+      flavors: [...slots],
+      note
     });
-    if (cartItemsQty) cartItemsQty.textContent = totalCount;
+    saveCart();
+    renderCart(true);
+    toast(`Đã thêm hộp ${boxSize} viên vào giỏ`);
+    slots = slots.map(() => null);
+    giftNote.value = '';
+    renderWells();
+    openCart(builderAdd);
+  });
 
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    if (cartSubtotalVal) cartSubtotalVal.textContent = formatVND(subtotal);
+  renderChips();
+  renderWells('resize');
 
-    const freeShippingThreshold = 200000;
-    if (shippingProgress && shippingText) {
-      if (subtotal >= freeShippingThreshold && totalCount > 0) {
-        shippingProgress.style.width = '100%';
-        shippingText.innerHTML = 'Bạn đã nhận được <strong>MIỄN PHÍ VẬN CHUYỂN</strong> toàn quốc!';
-      } else {
-        const remaining = Math.max(0, freeShippingThreshold - subtotal);
-        const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-        shippingProgress.style.width = `${progressPercent}%`;
-        shippingText.innerHTML = `Thêm <strong>${formatVND(remaining)}</strong> để được MIỄN PHÍ vận chuyển!`;
-      }
-    }
+  /* ------------------------------------------------------------------------
+     12. CART
+     ------------------------------------------------------------------------ */
+  const cartDrawer = $('#cart-drawer');
+  const cartScrim = $('#cart-scrim');
+  const cartItems = $('#cart-items');
+  let cart = store.get('meliora_cart_v2', []).filter(i => i && (i.kind === 'box' || byId[i.id]));
 
-    if (!cartItemsList) return;
+  const saveCart = () => store.set('meliora_cart_v2', cart);
+  const subtotal = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-    if (cart.length === 0) {
-      cartItemsList.innerHTML = `
-        <div class="cart-empty-state">
-          <p>Giỏ hàng của bạn đang trống!</p>
-          <button class="empty-shop-cta" id="empty-shop-now-btn">Khám Phá Hương Vị Ngay</button>
-        </div>
-      `;
-      const emptyShopBtn = document.getElementById('empty-shop-now-btn');
-      if (emptyShopBtn) {
-        emptyShopBtn.addEventListener('click', () => {
-          closeCart();
-          document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
-        });
-      }
-    } else {
-      cartItemsList.innerHTML = cart.map(item => `
-        <div class="cart-item-row" data-id="${item.id}">
-          <div class="cart-item-thumb">
-            <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='assets/categorie2.jpg';">
-          </div>
-          <div class="cart-item-info">
-            <h4 class="cart-item-title">${item.name}</h4>
-            ${item.isCustomGift ? `
-              <div class="cart-gift-details">
-                <p><strong>Vị:</strong> ${item.flavors.join(' • ')}</p>
-                <p><strong>Thiệp:</strong> "${item.cardMessage}"</p>
-              </div>
-            ` : ''}
-            <div class="cart-item-price">${formatVND(item.price * item.qty)}</div>
-            <div class="item-qty-control">
-              <button class="qty-btn" data-action="decrease" data-id="${item.id}" aria-label="Giảm">−</button>
-              <span class="qty-num">${item.qty}</span>
-              <button class="qty-btn" data-action="increase" data-id="${item.id}" aria-label="Tăng">+</button>
-            </div>
-          </div>
-          <button class="cart-remove-item" data-action="remove" data-id="${item.id}" title="Xóa sản phẩm" aria-label="Xóa">&times;</button>
-        </div>
-      `).join('');
+  function openCart(opener) {
+    cartScrim.classList.add('is-open');
+    openOverlay(cartDrawer, opener);
+  }
+  $('#open-cart-btn').addEventListener('click', e => openCart(e.currentTarget));
+  $('#close-cart-btn').addEventListener('click', () => closeOverlay(cartDrawer));
+  cartScrim.addEventListener('click', () => closeOverlay(cartDrawer));
 
-      cartItemsList.querySelectorAll('.qty-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          const action = btn.getAttribute('data-action');
-          updateItemQty(id, action === 'increase' ? 1 : -1);
-        });
-      });
-
-      cartItemsList.querySelectorAll('.cart-remove-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          removeItem(id);
-        });
-      });
-    }
+  function addFlavor(id, qty = 1, opener) {
+    const f = byId[id];
+    if (!f) return;
+    const row = cart.find(i => i.kind === 'single' && i.id === id);
+    if (row) row.qty += qty;
+    else cart.push({ key: 'f-' + id, kind: 'single', id, name: f.name, price: f.price, qty });
+    saveCart();
+    renderCart(true);
+    toast(`Đã thêm ${qty} viên ${f.name} vào giỏ`);
+    openCart(opener);
   }
 
-  // Toast Functionality
-  let toastTimer = null;
-  function showToast(message) {
-    if (!toast) return;
-    if (toastTimer) clearTimeout(toastTimer);
-    toastMsg.textContent = message;
-    toast.classList.add('show');
-    toastTimer = setTimeout(() => {
-      toast.classList.remove('show');
-    }, 3000);
+  function thumb(item) {
+    if (item.kind === 'box') {
+      return `<div class="cart-thumb"><span class="mini-box">${item.flavors.map(id => `<i style="--c:${byId[id] ? byId[id].color : '#ccc'}"></i>`).join('')}</span></div>`;
+    }
+    const f = byId[item.id];
+    return `<div class="cart-thumb" style="--fc:${f.color}">${f.image ? `<img src="${f.image}" alt="" />` : sphere(f)}</div>`;
   }
 
-  /* --------------------------------------------------------------------------
-     12. CHECKOUT & ORDER SUBMISSION (VietQR & Zalo Direct)
-     -------------------------------------------------------------------------- */
-  function openCheckoutModal() {
-    if (cart.length === 0) {
-      showToast('Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng!');
+  function renderCart(bump = false) {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    $$('[data-cart-count]').forEach(b => {
+      b.textContent = count;
+      if (bump && b.classList.contains('cart-count')) {
+        b.classList.remove('bump');
+        void b.offsetWidth;
+        b.classList.add('bump');
+      }
+    });
+
+    const sub = subtotal();
+    $('#cart-subtotal').textContent = vnd(sub);
+    const pct = Math.min(100, Math.round((sub / FREE_SHIP) * 100));
+    $('#ship-fill').style.width = pct + '%';
+    $('#ship-text').textContent = sub >= FREE_SHIP
+      ? 'Đơn của bạn được freeship.'
+      : `Thêm ${vnd(FREE_SHIP - sub)} để được freeship.`;
+
+    if (!cart.length) {
+      cartItems.innerHTML = `
+        <div class="cart-empty">
+          ${sphere(byId['strawberry-rose'])}
+          <p>Giỏ hàng đang trống. Chọn một vị để bắt đầu.</p>
+          <a href="#menu" class="btn btn-line">Xem hương vị</a>
+        </div>`;
       return;
     }
 
-    closeCart();
-
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const shippingFee = subtotal >= 200000 ? 0 : 25000;
-    const finalTotal = subtotal + shippingFee;
-
-    checkoutMiniSummary.innerHTML = `
-      <div class="summary-receipt">
-        <div class="summary-items-list">
-          ${cart.map(item => `
-            <div class="summary-row">
-              <span>${item.name} <strong>x${item.qty}</strong></span>
-              <span>${formatVND(item.price * item.qty)}</span>
-            </div>
-          `).join('')}
+    cartItems.innerHTML = cart.map(item => `
+      <div class="cart-row" data-key="${item.key}">
+        ${thumb(item)}
+        <div class="cart-info">
+          <h4>${esc(item.name)}</h4>
+          ${item.kind === 'box'
+            ? `<p class="cart-sub">${item.flavors.map(id => esc(byId[id] ? byId[id].name : id)).join(', ')}</p>
+               ${item.note ? `<p class="cart-sub">Lời nhắn: “${esc(item.note)}”</p>` : ''}`
+            : `<p class="cart-sub">${esc(byId[item.id].vn)}</p>`}
+          <p class="cart-price">${vnd(item.price * item.qty)}</p>
+          <div class="qty">
+            <button type="button" data-cart-q="-1" aria-label="Giảm số lượng">−</button>
+            <span>${item.qty}</span>
+            <button type="button" data-cart-q="1" aria-label="Tăng số lượng">+</button>
+          </div>
         </div>
-        <div class="summary-divider"></div>
-        <div class="summary-row">
-          <span>Tiền hàng:</span>
-          <span>${formatVND(subtotal)}</span>
-        </div>
-        <div class="summary-row">
-          <span>Phí vận chuyển:</span>
-          <span>${shippingFee === 0 ? '<strong style="color:#0F3B26;">MIỄN PHÍ</strong>' : formatVND(shippingFee)}</span>
-        </div>
-        <div class="summary-divider"></div>
-        <div class="summary-row total-highlight">
-          <span>Tổng thanh toán:</span>
-          <strong>${formatVND(finalTotal)}</strong>
-        </div>
-      </div>
-    `;
-
-    checkoutModal.classList.add('open');
-    checkoutModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+        <button type="button" class="cart-remove" data-cart-remove>Xoá</button>
+      </div>`).join('');
   }
 
-  function closeCheckoutModal() {
-    checkoutModal.classList.remove('open');
-    checkoutModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  if (checkoutBtn) checkoutBtn.addEventListener('click', openCheckoutModal);
-  if (closeCheckoutModalBtn) closeCheckoutModalBtn.addEventListener('click', closeCheckoutModal);
-
-  if (checkoutOrderForm) {
-    checkoutOrderForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const fullname = document.getElementById('order-fullname').value.trim();
-      const phone = document.getElementById('order-phone').value.trim();
-      const address = document.getElementById('order-address').value.trim();
-      const note = document.getElementById('order-note').value.trim();
-      const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
-
-      if (!fullname || !phone || !address) {
-        alert('Vui lòng điền đầy đủ Họ tên, Số điện thoại và Địa chỉ nhận hàng!');
-        return;
-      }
-
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const shippingFee = subtotal >= 200000 ? 0 : 25000;
-      const finalTotal = subtotal + shippingFee;
-      const orderCode = 'MEL-' + Math.floor(100000 + Math.random() * 900000);
-
-      const orderData = {
-        code: orderCode,
-        createdAt: new Date().toLocaleString('vi-VN'),
-        customer: { fullname, phone, address, note },
-        paymentMethod,
-        items: [...cart],
-        subtotal,
-        shippingFee,
-        finalTotal
-      };
-
-      try {
-        const orderHistory = JSON.parse(localStorage.getItem('meliora_orders') || '[]');
-        orderHistory.unshift(orderData);
-        localStorage.setItem('meliora_orders', JSON.stringify(orderHistory));
-      } catch (err) {
-        console.warn('Could not save order history', err);
-      }
-
-      closeCheckoutModal();
-      cart = [];
+  cartItems.addEventListener('click', e => {
+    const row = e.target.closest('.cart-row');
+    if (!row) return;
+    const item = cart.find(i => i.key === row.dataset.key);
+    if (!item) return;
+    const q = e.target.closest('[data-cart-q]');
+    const remove = () => {
+      const finish = () => { cart = cart.filter(i => i !== item); saveCart(); renderCart(); };
+      if (reduceMotion) finish();
+      else { row.classList.add('is-removing'); setTimeout(finish, 380); }
+    };
+    if (q) {
+      item.qty += Number(q.dataset.cartQ);
+      if (item.qty <= 0) { item.qty = 0; remove(); return; }
       saveCart();
       renderCart();
-
-      showOrderConfirmation(orderData);
-    });
-  }
-
-  function showOrderConfirmation(order) {
-    const paymentLabel = order.paymentMethod === 'vietqr'
-      ? 'Chuyển khoản Ngân Hàng (VietQR)'
-      : order.paymentMethod === 'zalo'
-      ? 'Đặt hàng hỗ trợ qua Zalo'
-      : 'Thanh toán tiền mặt khi nhận hàng (COD)';
-
-    const zaloMsg = encodeURIComponent(
-      `Chào Meliora, tôi vừa đặt đơn hàng #${order.code} trên website:\n` +
-      `- Khách hàng: ${order.customer.fullname} (${order.customer.phone})\n` +
-      `- Địa chỉ: ${order.customer.address}\n` +
-      `- Đơn gồm: ${order.items.map(i => `${i.name} (x${i.qty})`).join(', ')}\n` +
-      `- Tổng tiền: ${formatVND(order.finalTotal)}\n` +
-      `- Ghi chú: ${order.customer.note || 'Không có'}`
-    );
-    const zaloUrl = `https://zalo.me/0988250399?text=${zaloMsg}`;
-
-    confirmModalBody.innerHTML = `
-      <div class="confirm-card-content">
-        <h2 class="confirm-title">Đặt Hàng Thành Công!</h2>
-        <p class="confirm-subtitle">
-          Cảm ơn bạn đã lựa chọn Meliora. Mã đơn hàng của bạn là: <strong class="order-code-badge">#${order.code}</strong>
-        </p>
-
-        <div class="order-receipt-box">
-          <div class="receipt-section">
-            <h4>Thông Tin Người Nhận:</h4>
-            <p><strong>Người nhận:</strong> ${order.customer.fullname}</p>
-            <p><strong>Số điện thoại:</strong> ${order.customer.phone}</p>
-            <p><strong>Địa chỉ:</strong> ${order.customer.address}</p>
-            ${order.customer.note ? `<p><strong>Ghi chú:</strong> ${order.customer.note}</p>` : ''}
-            <p><strong>Hình thức:</strong> ${paymentLabel}</p>
-          </div>
-
-          <div class="receipt-divider"></div>
-
-          <div class="receipt-section">
-            <h4>Chi Tiết Đơn Hàng:</h4>
-            ${order.items.map(item => `
-              <div class="receipt-item-row">
-                <span>${item.name} x${item.qty}</span>
-                <strong>${formatVND(item.price * item.qty)}</strong>
-              </div>
-            `).join('')}
-            <div class="receipt-divider"></div>
-            <div class="receipt-item-row total">
-              <span>Tổng thanh toán:</span>
-              <strong class="receipt-total-price">${formatVND(order.finalTotal)}</strong>
-            </div>
-          </div>
-        </div>
-
-        ${order.paymentMethod === 'vietqr' ? `
-          <div class="vietqr-payment-box">
-            <h4>Thông Tin Chuyển Khoản Qua VietQR:</h4>
-            <div class="qr-mockup-wrapper">
-              <img src="https://api.vietqr.io/image/970422-0988250399-vWjZ82v.jpg?accountName=MELIORA%20BEVERAGE&amount=${order.finalTotal}&addInfo=MELIORA%20${order.code}"
-                   alt="Mã QR Thanh Toán Meliora" class="vietqr-image"
-                   onerror="this.src='assets/logo.jpg'; this.style.maxHeight='100px';" />
-              <div class="qr-details">
-                <p>Ngân hàng: <strong>MB Bank (Ngân Hàng Quân Đội)</strong></p>
-                <p>Số tài khoản: <strong>0988.250.399</strong></p>
-                <p>Chủ tài khoản: <strong>MELIORA BEVERAGE</strong></p>
-                <p>Số tiền: <strong>${formatVND(order.finalTotal)}</strong></p>
-                <p>Nội dung CK: <strong class="copy-tag">MELIORA ${order.code}</strong></p>
-              </div>
-            </div>
-            <p class="qr-note">Đơn hàng sẽ được nhân viên Meliora gọi điện xác nhận và gửi ngay sau khi nhận thông báo.</p>
-          </div>
-        ` : ''}
-
-        <div class="confirm-actions-row">
-          <a href="${zaloUrl}" target="_blank" rel="noopener noreferrer" class="btn-zalo-direct">
-            Gửi Đơn & Chat Nhanh Qua Zalo
-          </a>
-          <button class="btn-continue-shopping" id="btn-done-order">
-            Tiếp Tục Mua Sắm
-          </button>
-        </div>
-      </div>
-    `;
-
-    orderConfirmModal.classList.add('open');
-    orderConfirmModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    const doneOrderBtn = document.getElementById('btn-done-order');
-    if (doneOrderBtn) {
-      doneOrderBtn.addEventListener('click', closeOrderConfirmModal);
+      $$('.cart-row', cartItems).forEach(r => { r.style.animation = 'none'; });
+    } else if (e.target.closest('[data-cart-remove]')) {
+      remove();
     }
+  });
+
+  renderCart();
+  $$('.cart-row', cartItems).forEach(r => { r.style.animation = 'none'; });
+
+  /* ------------------------------------------------------------------------
+     13. CHECKOUT
+     ------------------------------------------------------------------------ */
+  const checkoutModal = $('#checkout-modal');
+  const confirmModal = $('#confirm-modal');
+  const checkoutForm = $('#checkout-form');
+  const orderError = $('#order-error');
+
+  const shipFee = sub => (sub >= FREE_SHIP ? 0 : SHIP_FEE);
+
+  $('#checkout-btn').addEventListener('click', e => {
+    if (!cart.length) { toast('Giỏ hàng đang trống'); return; }
+    const sub = subtotal();
+    const fee = shipFee(sub);
+    $('#co-summary').innerHTML = `
+      ${cart.map(i => `<div class="co-row"><span>${esc(i.name)} × ${i.qty}</span><span>${vnd(i.price * i.qty)}</span></div>`).join('')}
+      <div class="co-row"><span>Phí giao hàng</span><span>${fee ? vnd(fee) : 'Miễn phí'}</span></div>
+      <div class="co-row total"><span>Tổng</span><span>${vnd(sub + fee)}</span></div>`;
+    orderError.textContent = '';
+    closeOverlay(cartDrawer);
+    openOverlay(checkoutModal, e.currentTarget);
+  });
+
+  checkoutForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = $('#order-name').value.trim();
+    const phone = $('#order-phone').value.replace(/\s|\./g, '');
+    const address = $('#order-address').value.trim();
+    const note = $('#order-note').value.trim();
+    const pay = $('input[name="pay"]:checked', checkoutForm).value;
+
+    $$('.field', checkoutForm).forEach(f => f.classList.remove('has-error'));
+    const missing = [];
+    if (!name) missing.push('#order-name');
+    if (!/^(\+?84|0)\d{9,10}$/.test(phone)) missing.push('#order-phone');
+    if (!address) missing.push('#order-address');
+    if (missing.length) {
+      missing.forEach(s => $(s).closest('.field').classList.add('has-error'));
+      orderError.textContent = missing.includes('#order-phone') && missing.length === 1
+        ? 'Số điện thoại chưa đúng. Nhập 10 số, ví dụ 0842097274.'
+        : 'Vui lòng điền họ tên, số điện thoại và địa chỉ nhận hàng.';
+      $(missing[0]).focus();
+      return;
+    }
+
+    const sub = subtotal();
+    const fee = shipFee(sub);
+    const order = {
+      code: 'MEL-' + Math.floor(100000 + Math.random() * 900000),
+      createdAt: new Date().toLocaleString('vi-VN'),
+      customer: { name, phone, address, note },
+      pay,
+      items: cart.map(i => ({ ...i })),
+      subtotal: sub,
+      shippingFee: fee,
+      total: sub + fee
+    };
+    const history = store.get('meliora_orders', []);
+    history.unshift(order);
+    store.set('meliora_orders', history);
+
+    cart = [];
+    saveCart();
+    renderCart();
+    checkoutForm.reset();
+    closeOverlay(checkoutModal);
+    showConfirm(order);
+  });
+
+  function showConfirm(order) {
+    const lines = order.items.map(i => `${i.name} x${i.qty}${i.kind === 'box' ? ` (${i.flavors.map(id => byId[id] ? byId[id].name : id).join(', ')})` : ''}`);
+    const zaloText = encodeURIComponent(
+      `Chào Meliora, mình vừa đặt đơn ${order.code} trên website.\n` +
+      `Người nhận: ${order.customer.name} (${order.customer.phone})\n` +
+      `Địa chỉ: ${order.customer.address}\n` +
+      `Đơn: ${lines.join('; ')}\n` +
+      `Tổng: ${vnd(order.total)}` + (order.customer.note ? `\nGhi chú: ${order.customer.note}` : '')
+    );
+    const next = {
+      cod: 'Meliora sẽ gọi để xác nhận đơn, bạn thanh toán khi nhận hàng.',
+      bank: 'Meliora sẽ gọi xác nhận đơn và gửi thông tin chuyển khoản cho bạn.',
+      zalo: 'Bấm nút bên dưới để gửi đơn qua Zalo cho Meliora.'
+    }[order.pay];
+
+    $('#confirm-body').innerHTML = `
+      <img src="assets/logo-mark.png" alt="" class="confirm-mark" />
+      <h3 id="cf-title">Đã nhận đơn của bạn</h3>
+      <p class="confirm-code">Mã đơn <strong>${order.code}</strong></p>
+      <div class="confirm-list">
+        ${order.items.map(i => `<div class="co-row"><span>${esc(i.name)} × ${i.qty}</span><span>${vnd(i.price * i.qty)}</span></div>`).join('')}
+        <div class="co-row"><span>Phí giao hàng</span><span>${order.shippingFee ? vnd(order.shippingFee) : 'Miễn phí'}</span></div>
+        <div class="co-row total"><span>Tổng</span><span>${vnd(order.total)}</span></div>
+      </div>
+      <p class="confirm-next">${next}</p>
+      <div class="confirm-actions">
+        <a class="btn ${order.pay === 'zalo' ? 'btn-solid' : 'btn-line'}" href="https://zalo.me/${HOTLINE}?text=${zaloText}" target="_blank" rel="noopener">Gửi đơn qua Zalo</a>
+        <button type="button" class="btn btn-ghost" data-close-confirm>Tiếp tục xem</button>
+      </div>`;
+    $('[data-close-confirm]').addEventListener('click', () => closeOverlay(confirmModal));
+    openOverlay(confirmModal);
   }
 
-  function closeOrderConfirmModal() {
-    orderConfirmModal.classList.remove('open');
-    orderConfirmModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  /* --------------------------------------------------------------------------
-     13. FAQ ACCORDION
-     -------------------------------------------------------------------------- */
-  const faqItems = document.querySelectorAll('.faq-item');
-  faqItems.forEach(item => {
-    const trigger = item.querySelector('.faq-trigger');
-    trigger.addEventListener('click', () => {
-      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-      faqItems.forEach(otherItem => {
-        otherItem.classList.remove('open');
-        otherItem.querySelector('.faq-trigger').setAttribute('aria-expanded', 'false');
-      });
-
-      if (!isExpanded) {
-        item.classList.add('open');
-        trigger.setAttribute('aria-expanded', 'true');
+  /* ------------------------------------------------------------------------
+     14. FAQ — animated <details>
+     ------------------------------------------------------------------------ */
+  $$('.faq-item').forEach(d => {
+    const summary = d.querySelector('summary');
+    const body = d.querySelector('.faq-a');
+    summary.addEventListener('click', e => {
+      if (reduceMotion || !body.animate) return;
+      e.preventDefault();
+      if (d.dataset.busy) return;
+      d.dataset.busy = '1';
+      if (!d.open) {
+        $$('.faq-item[open]').forEach(o => { if (o !== d) o.querySelector('summary').click(); });
+        d.open = true;
+        const h = body.scrollHeight;
+        body.animate([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.22,1,.36,1)' })
+          .onfinish = () => delete d.dataset.busy;
+      } else {
+        const h = body.scrollHeight;
+        body.animate([{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.45,0,.2,1)' })
+          .onfinish = () => { d.open = false; delete d.dataset.busy; };
       }
     });
   });
 
-  /* --------------------------------------------------------------------------
-     14. QUICK INQUIRY FORM & NEWSLETTER SUBSCRIPTION
-     -------------------------------------------------------------------------- */
-  const quickInquiryForm = document.getElementById('quick-inquiry-form');
-  if (quickInquiryForm) {
-    quickInquiryForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('inquiry-name').value.trim();
-      const phone = document.getElementById('inquiry-phone').value.trim();
-      const msg = document.getElementById('inquiry-msg').value.trim();
+  /* ------------------------------------------------------------------------
+     15. CONTACT + NEWSLETTER
+     ------------------------------------------------------------------------ */
+  const contactForm = $('#contact-form');
+  contactForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = $('#contact-name').value.trim();
+    const phone = $('#contact-phone').value.replace(/\s|\./g, '');
+    const msg = $('#contact-msg').value.trim();
+    const err = $('#contact-error');
+    $$('.field', contactForm).forEach(f => f.classList.remove('has-error'));
+    if (!name || !/^(\+?84|0)\d{9,10}$/.test(phone)) {
+      if (!name) $('#contact-name').closest('.field').classList.add('has-error');
+      if (!/^(\+?84|0)\d{9,10}$/.test(phone)) $('#contact-phone').closest('.field').classList.add('has-error');
+      err.textContent = 'Vui lòng nhập tên và số điện thoại (10 số) để Meliora gọi lại.';
+      return;
+    }
+    err.textContent = '';
+    const list = store.get('meliora_inquiries', []);
+    list.push({ name, phone, msg, date: new Date().toLocaleString('vi-VN') });
+    store.set('meliora_inquiries', list);
+    contactForm.reset();
+    toast(`Đã gửi. Meliora sẽ gọi lại cho ${name} sớm.`);
+  });
 
-      const inquiries = JSON.parse(localStorage.getItem('meliora_inquiries') || '[]');
-      inquiries.push({ name, phone, msg, date: new Date().toLocaleString('vi-VN') });
-      localStorage.setItem('meliora_inquiries', JSON.stringify(inquiries));
+  $('#newsletter-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = $('#newsletter-email');
+    const email = input.value.trim();
+    if (!input.checkValidity()) { toast('Email chưa đúng định dạng'); return; }
+    const subs = store.get('meliora_subscribers', []);
+    if (!subs.includes(email)) subs.push(email);
+    store.set('meliora_subscribers', subs);
+    input.value = '';
+    toast('Đã đăng ký. Meliora sẽ báo khi có vị mới.');
+  });
 
-      alert(`Cảm ơn ${name}! Yêu cầu tư vấn của bạn đã được gửi. Đội ngũ Meliora sẽ liên hệ qua SĐT ${phone} trong thời gian sớm nhất.`);
-      quickInquiryForm.reset();
-    });
+  /* ------------------------------------------------------------------------
+     16. TOAST
+     ------------------------------------------------------------------------ */
+  const toastEl = $('#toast');
+  let toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('is-on'), 2800);
   }
-
-  const newsletterForm = document.getElementById('newsletter-form');
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const emailInput = document.getElementById('newsletter-email');
-      const email = emailInput.value.trim();
-
-      const subscribers = JSON.parse(localStorage.getItem('meliora_subscribers') || '[]');
-      if (!subscribers.includes(email)) {
-        subscribers.push(email);
-        localStorage.setItem('meliora_subscribers', JSON.stringify(subscribers));
-      }
-
-      showToast('Cảm ơn bạn! Meliora đã ghi nhận email ưu đãi của bạn.');
-      emailInput.value = '';
-    });
-  }
-
-  /* --------------------------------------------------------------------------
-     15. INITIALIZATION
-     -------------------------------------------------------------------------- */
-  renderCatalog('all');
-  renderBuilderSlots();
-  renderCart();
-});
+})();
