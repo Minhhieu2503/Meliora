@@ -3548,9 +3548,11 @@ h3 {
     padding-left: .9em;
   }
 
-  .hero-actions .btn,
-  .hero-how {
+  .hero-actions .btn {
     flex: 1 1 100%;
+  }
+
+  .hero-how {
     width: 100%;
   }
 

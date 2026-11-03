@@ -24,6 +24,12 @@
   };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Reload always starts at the top of the page (product deep links #/san-pham/... still work)
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash && !location.hash.startsWith('#/')) history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo(0, 0);
+  window.addEventListener('load', () => { if (!location.hash.startsWith('#/')) window.scrollTo(0, 0); });
+
   /* ------------------------------------------------------------------------
      1. CATALOG — SKU list from brief section 4.3
      status: 'available' | 'soldout' | 'soon'  (update to match real stock)
@@ -255,6 +261,14 @@
   }
   window.addEventListener('hashchange', route);
 
+  // buttons that scroll to a section (e.g. "Xem cách pha")
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-scroll]');
+    if (!btn) return;
+    const el = document.getElementById(btn.dataset.scroll);
+    if (el) scrollToEl(el);
+  });
+
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -275,7 +289,7 @@
     const el = document.getElementById(id);
     if (!el) return;
     if (el.tagName === 'DETAILS') el.open = true;
-    history.pushState(null, '', '#' + id);
+    history.replaceState(null, '', location.pathname + location.search); // keep URL clean so reload starts at top
     if (wasProduct) requestAnimationFrame(() => { scrollToEl(el, true); frame(); });
     else scrollToEl(el);
   });
@@ -719,7 +733,7 @@
   }
 
   function startBuilder(size) {
-    if (document.body.classList.contains('on-product')) { showHome(); history.pushState(null, '', '#gift'); }
+    if (document.body.classList.contains('on-product')) { showHome(); history.replaceState(null, '', location.pathname + location.search); }
     setBoxSize(size);
     requestAnimationFrame(() => scrollToEl($('#builder')));
   }
