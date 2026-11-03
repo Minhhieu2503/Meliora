@@ -540,13 +540,13 @@ h3 { font-size: clamp(1.5rem, 2vw, 1.8rem); font-weight: 600; }
 .box-wells { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(var(--rows), 1fr); gap: 4%; }
 .well { position: relative; display: grid; place-items: center; border-radius: 12px; background: #E8D7C4; box-shadow: inset 0 3px 8px rgba(80, 40, 20, .18); animation: wellIn .55s var(--ease-out) both; min-height: 0; }
 @keyframes wellIn { from { opacity: 0; transform: scale(.85); } }
-.well-btn { width: 84%; max-width: 130px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; }
+.well-btn { width: 100%; height: 100%; border-radius: inherit; display: grid; place-items: center; }
 .well-btn:disabled { cursor: default; }
-.well-empty { width: 70%; aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed rgba(31, 61, 48, .3); }
+.well-empty { width: min(70%, 90px); aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed rgba(31, 61, 48, .3); }
 .well-btn.is-next .well-empty { animation: breathe 2.2s ease-in-out infinite; }
 @keyframes breathe { 50% { border-color: var(--rose-ink); transform: scale(1.05); } }
-.well-bomb { width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #fff; box-shadow: 0 6px 12px -6px rgba(60, 30, 20, .45); display: grid; place-items: center; transition: transform .35s var(--ease-out); }
-.well-bomb img { width: 140%; max-width: none; height: auto; transform: translateY(-2%); }
+.well-bomb { position: relative; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; background: #fff; box-shadow: 0 6px 14px -8px rgba(60, 30, 20, .45); transition: transform .35s var(--ease-out); }
+.well-bomb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
 .well-bomb.is-dropping { animation: dropIn .7s cubic-bezier(.3, 1.4, .5, 1) both; }
 .well-bomb.is-leaving { animation: liftOut .3s var(--ease-soft) forwards; }
 @keyframes dropIn { from { transform: translateY(-60%) scale(.6); opacity: 0; } }
