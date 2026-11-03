@@ -16,7 +16,7 @@
     href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=42" />
+  <link rel="stylesheet" href="style.css?v=44" />
   <script>document.documentElement.classList.add('js');</script>
 </head>
 
@@ -55,7 +55,9 @@
         <path d="M24 38h12" />
         <path d="M36 30c10 4 18 12 22 22" stroke-dasharray="1 5" />
         <path d="M54 52v28h24V52" />
-        <circle cx="62" cy="70" r="1.6" /><circle cx="70" cy="64" r="1.6" /><circle cx="66" cy="58" r="1.2" />
+        <circle cx="62" cy="70" r="1.6" />
+        <circle cx="70" cy="64" r="1.6" />
+        <circle cx="66" cy="58" r="1.2" />
       </symbol>
       <symbol id="b-drop" viewBox="0 0 96 96">
         <circle cx="48" cy="22" r="10" />
@@ -68,13 +70,16 @@
         <path d="M24 44h44v14c0 12-10 20-22 20S24 70 24 58z" />
         <path d="M68 50c8 0 10 10 0 12" />
         <path d="M38 34c0-5 4-5 4-10M48 34c0-5 4-5 4-10M58 34c0-5 4-5 4-10" />
-        <circle cx="80" cy="22" r="8" /><path d="M80 17v5l3 2" />
+        <circle cx="80" cy="22" r="8" />
+        <path d="M80 17v5l3 2" />
       </symbol>
       <symbol id="b-stir" viewBox="0 0 96 96">
         <path d="M26 36h44l-5 46H31z" />
         <path d="M58 14 46 66" />
         <path d="M34 56c6 4 22 4 28 0" />
-        <circle cx="40" cy="68" r="1.6" /><circle cx="54" cy="72" r="1.6" /><circle cx="48" cy="62" r="1.2" />
+        <circle cx="40" cy="68" r="1.6" />
+        <circle cx="54" cy="72" r="1.6" />
+        <circle cx="48" cy="62" r="1.2" />
         <path d="M30 46l6 6M62 44l-5 6" />
       </symbol>
     </defs>
@@ -83,7 +88,8 @@
   <!-- HEADER -->
   <header class="site-header" id="site-header">
     <div class="header-inner">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu" aria-expanded="false" aria-controls="mobile-nav">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu" aria-expanded="false"
+        aria-controls="mobile-nav">
         <span></span><span></span>
       </button>
 
@@ -101,7 +107,10 @@
       </nav>
 
       <button class="cart-btn" id="open-cart-btn" aria-label="Mở giỏ hàng">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z" /><path d="M9 8V7a3 3 0 0 1 6 0v1" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z" />
+          <path d="M9 8V7a3 3 0 0 1 6 0v1" />
+        </svg>
         <span class="cart-label">Cart</span>
         <span class="cart-count" data-cart-count>0</span>
       </button>
@@ -141,12 +150,19 @@
             <a href="#shop" class="btn btn-solid" data-filter="tea">Khám phá Tea Bomb</a>
             <a href="#shop" class="btn btn-line" data-filter="mocktail">Khám phá Mocktail Bomb</a>
           </div>
-          <a href="#how" class="text-link hero-how">Xem cách pha</a>
+          <a href="#how" class="btn btn-soft hero-how">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M10 8.5v7l5.5-3.5z" />
+            </svg>
+            Xem cách pha
+          </a>
         </div>
 
         <div class="hero-visual">
           <div class="arch" data-parallax="0.05">
-            <img src="assets/wavy.webp" alt="Ly trà đã pha, có cánh hoa hồng, cam sấy và hoa khô" class="arch-img" width="1376" height="768" />
+            <img src="assets/wavy.webp" alt="Ly trà đã pha, có cánh hoa hồng, cam sấy và hoa khô" class="arch-img"
+              width="1376" height="768" />
             <span class="tag tag-after">Sau khi pha</span>
           </div>
           <div class="hero-sphere" data-parallax="-0.1">
@@ -165,14 +181,16 @@
         <div class="what-head">
           <h2 id="what-title" data-reveal>What is a Beverage Bomb?</h2>
           <p data-reveal>
-            Beverage bomb là viên pha đồ uống làm thủ công. Bạn thả một viên vào ly nước, viên tan ra và cho bạn một ly trà
+            Beverage bomb là viên pha đồ uống làm thủ công. Bạn thả một viên vào ly nước, viên tan ra và cho bạn một ly
+            trà
             hoặc mocktail hoàn chỉnh. Đây là sản phẩm để pha uống, không phải đồ trang trí hay kẹo để ăn trực tiếp.
           </p>
         </div>
 
         <ol class="what-steps">
           <li class="what-step" data-reveal>
-            <div class="what-media"><img src="assets/products/TB-PO.jpg" alt="Viên Tea Bomb Đào Ô Long nguyên vẹn" loading="lazy" width="880" height="1100" /></div>
+            <div class="what-media"><img src="assets/products/TB-PO.jpg" alt="Viên Tea Bomb Đào Ô Long nguyên vẹn"
+                loading="lazy" width="880" height="1100" /></div>
             <p class="what-n">1</p>
             <h3>Viên nguyên vẹn</h3>
             <p>Mỗi viên khoảng 5 cm, bên trong là trà, hoa, trái cây sấy hoặc bột trái cây.</p>
@@ -181,9 +199,13 @@
             <div class="what-media what-anim" aria-hidden="true">
               <svg viewBox="0 0 200 250" class="drop-svg">
                 <defs>
-                  <clipPath id="glass-clip"><path d="M52 92h96l-10 132a10 10 0 0 1-10 9H72a10 10 0 0 1-10-9z" /></clipPath>
+                  <clipPath id="glass-clip">
+                    <path d="M52 92h96l-10 132a10 10 0 0 1-10 9H72a10 10 0 0 1-10-9z" />
+                  </clipPath>
                   <radialGradient id="bomb-g" cx=".35" cy=".3" r=".8">
-                    <stop offset="0" stop-color="#FFE7B8" /><stop offset=".55" stop-color="#F0A649" /><stop offset="1" stop-color="#C46A1F" />
+                    <stop offset="0" stop-color="#FFE7B8" />
+                    <stop offset=".55" stop-color="#F0A649" />
+                    <stop offset="1" stop-color="#C46A1F" />
                   </radialGradient>
                 </defs>
                 <g clip-path="url(#glass-clip)">
@@ -203,7 +225,8 @@
             <p>Nước nóng khoảng 90°C cho Tea Bomb, nước có gas lạnh cho Mocktail Bomb.</p>
           </li>
           <li class="what-step" data-reveal style="--d:.2s">
-            <div class="what-media"><img src="assets/wavy.webp" alt="Ly trà thành phẩm sau khi viên tan" loading="lazy" width="1376" height="768" /></div>
+            <div class="what-media"><img src="assets/wavy.webp" alt="Ly trà thành phẩm sau khi viên tan" loading="lazy"
+                width="1376" height="768" /></div>
             <p class="what-n">3</p>
             <h3>Thành phẩm trong ly</h3>
             <p>Vỏ tan hết, hương và màu lan ra. Bạn có một ly trà hoặc mocktail để uống.</p>
@@ -220,24 +243,36 @@
         <div class="lines-grid">
           <article class="line-card line-hot" data-reveal>
             <div class="line-visual">
-              <img src="assets/products/TB-OC.jpg" alt="Viên Tea Bomb Cam Quế" loading="lazy" width="880" height="1100" />
+              <img src="assets/products/TB-OC.jpg" alt="Viên Tea Bomb Cam Quế" loading="lazy" width="880"
+                height="1100" />
               <svg class="line-glass" viewBox="0 0 120 120" aria-hidden="true">
                 <path class="steam" d="M46 30c0-6 6-6 6-12M60 30c0-6 6-6 6-12M74 30c0-6 6-6 6-12" />
                 <path class="cup-fill" d="M30 46h64v20c0 18-14 30-32 30S30 84 30 66z" />
                 <path class="cup" d="M30 46h64v20c0 18-14 30-32 30S30 84 30 66zM94 54c12 0 14 16 0 18M22 104h80" />
-                <circle class="petal-dot" cx="52" cy="56" r="3" /><circle class="petal-dot" cx="70" cy="60" r="2.4" />
+                <circle class="petal-dot" cx="52" cy="56" r="3" />
+                <circle class="petal-dot" cx="70" cy="60" r="2.4" />
               </svg>
             </div>
             <div class="line-text">
               <p class="line-kicker">Tea Bombs — Trà nóng</p>
               <p>
-                Lớp vỏ Isomalt tinh khiết ôm trọn lá trà được tuyển chọn cùng hoa khô tự nhiên. Chỉ cần rót nước nóng, vỏ trà
+                Lớp vỏ Isomalt tinh khiết ôm trọn lá trà được tuyển chọn cùng hoa khô tự nhiên. Chỉ cần rót nước nóng,
+                vỏ trà
                 sẽ tan chảy và tỏa ngát hương thơm của nguyên liệu trà và các thành phần theo công thức.
               </p>
               <dl class="line-facts">
-                <div><dt>Pha với</dt><dd>250 mL nước nóng khoảng 90°C</dd></div>
-                <div><dt>Thời gian</dt><dd>Ủ 5 phút</dd></div>
-                <div><dt>Số vị</dt><dd>7 vị</dd></div>
+                <div>
+                  <dt>Pha với</dt>
+                  <dd>250 mL nước nóng khoảng 90°C</dd>
+                </div>
+                <div>
+                  <dt>Thời gian</dt>
+                  <dd>Ủ 5 phút</dd>
+                </div>
+                <div>
+                  <dt>Số vị</dt>
+                  <dd>7 vị</dd>
+                </div>
               </dl>
               <a href="#shop" class="btn btn-solid" data-filter="tea">Explore Tea Bombs</a>
             </div>
@@ -245,26 +280,39 @@
 
           <article class="line-card line-cold" data-reveal style="--d:.12s">
             <div class="line-visual">
-              <img src="assets/products/MB-CM.jpg" alt="Viên Sparkling Mocktail Bomb Cam Chanh Bạc Hà" loading="lazy" width="880" height="1100" />
+              <img src="assets/products/MB-CM.jpg" alt="Viên Sparkling Mocktail Bomb Cam Chanh Bạc Hà" loading="lazy"
+                width="880" height="1100" />
               <svg class="line-glass" viewBox="0 0 120 120" aria-hidden="true">
                 <path class="cup-fill" d="M36 34h48l-6 66H42z" />
                 <rect class="ice" x="46" y="42" width="12" height="12" rx="2" transform="rotate(-12 52 48)" />
                 <rect class="ice" x="62" y="48" width="11" height="11" rx="2" transform="rotate(14 67 53)" />
                 <path class="cup" d="M36 34h48l-6 66H42zM34 104h52" />
-                <circle class="fizz f1" cx="50" cy="90" r="2" /><circle class="fizz f2" cx="62" cy="94" r="1.6" /><circle class="fizz f3" cx="70" cy="86" r="2.2" />
+                <circle class="fizz f1" cx="50" cy="90" r="2" />
+                <circle class="fizz f2" cx="62" cy="94" r="1.6" />
+                <circle class="fizz f3" cx="70" cy="86" r="2.2" />
                 <circle class="lime" cx="84" cy="34" r="10" />
               </svg>
             </div>
             <div class="line-text">
               <p class="line-kicker">Sparkling Mocktail Bombs — Đồ uống sủi</p>
               <p>
-                Viên phối trộn dạng sủi dành cho nước lạnh, có ga, sủi tan nhanh trong nước biến ly soda quen thuộc thành thức
+                Viên phối trộn dạng sủi dành cho nước lạnh, có ga, sủi tan nhanh trong nước biến ly soda quen thuộc
+                thành thức
                 uống trái cây sảng khoái tức thì.
               </p>
               <dl class="line-facts">
-                <div><dt>Pha với</dt><dd>250 mL nước có gas lạnh</dd></div>
-                <div><dt>Thời gian</dt><dd>Sủi tan 2–3 phút</dd></div>
-                <div><dt>Số vị</dt><dd>4 vị</dd></div>
+                <div>
+                  <dt>Pha với</dt>
+                  <dd>250 mL nước có gas lạnh</dd>
+                </div>
+                <div>
+                  <dt>Thời gian</dt>
+                  <dd>Sủi tan 2–3 phút</dd>
+                </div>
+                <div>
+                  <dt>Số vị</dt>
+                  <dd>4 vị</dd>
+                </div>
               </dl>
               <a href="#shop" class="btn btn-solid btn-cold" data-filter="mocktail">Explore Mocktail Bombs</a>
             </div>
@@ -279,8 +327,10 @@
         <div class="brew-head">
           <h2 id="brew-title" data-reveal>How It Works</h2>
           <div class="seg" role="tablist" aria-label="Chọn dòng sản phẩm" data-reveal>
-            <button role="tab" id="tab-hot" aria-controls="panel-hot" aria-selected="true" class="seg-btn is-active">Tea Bomb</button>
-            <button role="tab" id="tab-cold" aria-controls="panel-cold" aria-selected="false" class="seg-btn" tabindex="-1">Sparkling Mocktail Bomb</button>
+            <button role="tab" id="tab-hot" aria-controls="panel-hot" aria-selected="true" class="seg-btn is-active">Tea
+              Bomb</button>
+            <button role="tab" id="tab-cold" aria-controls="panel-cold" aria-selected="false" class="seg-btn"
+              tabindex="-1">Sparkling Mocktail Bomb</button>
             <span class="seg-thumb" aria-hidden="true"></span>
           </div>
         </div>
@@ -288,20 +338,60 @@
         <div class="brew-panels" data-reveal>
           <div class="brew-panel is-active" id="panel-hot" role="tabpanel" aria-labelledby="tab-hot">
             <ol class="steps">
-              <li><svg class="step-ico"><use href="#b-open" /></svg><span class="step-n">01</span><h3>Mở gói</h3><p>Lấy 01 viên ra khỏi lớp bọc.</p></li>
-              <li><svg class="step-ico"><use href="#b-kettle" /></svg><span class="step-n">02</span><h3>Chuẩn bị nước</h3><p>Rót 250 mL nước nóng khoảng 90°C.</p></li>
-              <li><svg class="step-ico"><use href="#b-drop" /></svg><span class="step-n">03</span><h3>Thả viên</h3><p>Thả viên vào ly; chờ lớp vỏ tan.</p></li>
-              <li><svg class="step-ico"><use href="#b-steep" /></svg><span class="step-n">04</span><h3>Ủ trà &amp; thưởng thức</h3><p>Ủ 5 phút.</p></li>
+              <li><svg class="step-ico">
+                  <use href="#b-open" />
+                </svg><span class="step-n">01</span>
+                <h3>Mở gói</h3>
+                <p>Lấy 01 viên ra khỏi lớp bọc.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-kettle" />
+                </svg><span class="step-n">02</span>
+                <h3>Chuẩn bị nước</h3>
+                <p>Rót 250 mL nước nóng khoảng 90°C.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-drop" />
+                </svg><span class="step-n">03</span>
+                <h3>Thả viên</h3>
+                <p>Thả viên vào ly; chờ lớp vỏ tan.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-steep" />
+                </svg><span class="step-n">04</span>
+                <h3>Ủ trà &amp; thưởng thức</h3>
+                <p>Ủ 5 phút.</p>
+              </li>
             </ol>
             <p class="brew-note"><strong>Lưu ý:</strong> Dùng ly chịu nhiệt. Cẩn thận khi pha với nước nóng.</p>
           </div>
 
           <div class="brew-panel" id="panel-cold" role="tabpanel" aria-labelledby="tab-cold" hidden>
             <ol class="steps">
-              <li><svg class="step-ico"><use href="#b-open" /></svg><span class="step-n">01</span><h3>Mở gói</h3><p>Lấy 01 viên ra khỏi lớp bọc.</p></li>
-              <li><svg class="step-ico"><use href="#b-soda" /></svg><span class="step-n">02</span><h3>Chuẩn bị nước</h3><p>Rót 250 mL nước có gas lạnh vào ly.</p></li>
-              <li><svg class="step-ico"><use href="#b-drop" /></svg><span class="step-n">03</span><h3>Thả viên</h3><p>Thả viên, chờ sủi tan 2–3 phút.</p></li>
-              <li><svg class="step-ico"><use href="#b-stir" /></svg><span class="step-n">04</span><h3>Khuấy &amp; thưởng thức</h3><p>Khuấy nhẹ, thêm đá nếu thích.</p></li>
+              <li><svg class="step-ico">
+                  <use href="#b-open" />
+                </svg><span class="step-n">01</span>
+                <h3>Mở gói</h3>
+                <p>Lấy 01 viên ra khỏi lớp bọc.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-soda" />
+                </svg><span class="step-n">02</span>
+                <h3>Chuẩn bị nước</h3>
+                <p>Rót 250 mL nước có gas lạnh vào ly.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-drop" />
+                </svg><span class="step-n">03</span>
+                <h3>Thả viên</h3>
+                <p>Thả viên, chờ sủi tan 2–3 phút.</p>
+              </li>
+              <li><svg class="step-ico">
+                  <use href="#b-stir" />
+                </svg><span class="step-n">04</span>
+                <h3>Khuấy &amp; thưởng thức</h3>
+                <p>Khuấy nhẹ, thêm đá nếu thích.</p>
+              </li>
             </ol>
             <p class="brew-note"><strong>Lưu ý:</strong> Không pha trong chai kín. Có thể thay bằng nước lạnh.</p>
           </div>
@@ -318,10 +408,14 @@
             <p data-reveal>11 hương vị, 30.000₫ mỗi viên. Bấm vào ảnh hoặc tên để xem thành phần và cách pha.</p>
           </div>
           <div class="filter" role="group" aria-label="Lọc sản phẩm" data-reveal>
-            <button class="filter-btn is-active" data-shop-filter="all" aria-pressed="true">All <span data-count="all"></span></button>
-            <button class="filter-btn" data-shop-filter="tea" aria-pressed="false">Tea Bombs <span data-count="tea"></span></button>
-            <button class="filter-btn" data-shop-filter="mocktail" aria-pressed="false">Mocktail Bombs <span data-count="mocktail"></span></button>
-            <button class="filter-btn" data-shop-filter="gift" aria-pressed="false">Gift Sets <span data-count="gift"></span></button>
+            <button class="filter-btn is-active" data-shop-filter="all" aria-pressed="true">All <span
+                data-count="all"></span></button>
+            <button class="filter-btn" data-shop-filter="tea" aria-pressed="false">Tea Bombs <span
+                data-count="tea"></span></button>
+            <button class="filter-btn" data-shop-filter="mocktail" aria-pressed="false">Mocktail Bombs <span
+                data-count="mocktail"></span></button>
+            <button class="filter-btn" data-shop-filter="gift" aria-pressed="false">Gift Sets <span
+                data-count="gift"></span></button>
           </div>
         </div>
 
@@ -331,12 +425,16 @@
           </div>
           <div class="shop-nav">
             <button class="nav-arrow" id="shop-prev" aria-label="Xem 4 sản phẩm trước">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" />
+              </svg>
             </button>
             <div class="dots" id="shop-dots"></div>
             <span class="shop-counter" id="shop-counter" aria-live="polite">1 / 1</span>
             <button class="nav-arrow" id="shop-next" aria-label="Xem 4 sản phẩm tiếp theo">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>
@@ -353,17 +451,20 @@
 
         <div class="tiers">
           <article class="tier" data-reveal>
-            <div class="tier-img"><img src="assets/products/TB-PO.jpg" alt="Một viên Tea Bomb" loading="lazy" width="880" height="1100" /></div>
+            <div class="tier-img"><img src="assets/products/TB-PO.jpg" alt="Một viên Tea Bomb" loading="lazy"
+                width="880" height="1100" /></div>
             <div class="tier-body">
               <h3>Single Bomb</h3>
               <p class="tier-price">30.000₫ <span>/ viên</span></p>
-              <p class="tier-desc">1 viên, không mặc định có hộp quà, thiệp hay muỗng. Phù hợp để dùng thử hoặc mua thêm.</p>
+              <p class="tier-desc">1 viên, không mặc định có hộp quà, thiệp hay muỗng. Phù hợp để dùng thử hoặc mua
+                thêm.</p>
               <a href="#shop" class="btn btn-line btn-wide" data-filter="all">Chọn hương vị</a>
             </div>
           </article>
 
           <article class="tier tier-feature" data-reveal style="--d:.08s">
-            <div class="tier-img tier-img-box"><img src="assets/products/set3.webp" alt="Hộp quà Meliora 3 viên có cửa sổ trong suốt" loading="lazy" width="1000" height="1000" /></div>
+            <div class="tier-img tier-img-box"><img src="assets/products/set3.webp"
+                alt="Hộp quà Meliora 3 viên có cửa sổ trong suốt" loading="lazy" width="1000" height="1000" /></div>
             <div class="tier-body">
               <h3>Gift Set 3</h3>
               <p class="tier-price">100.000₫ <span>/ hộp</span></p>
@@ -373,11 +474,13 @@
           </article>
 
           <article class="tier" data-reveal style="--d:.16s">
-            <div class="tier-img tier-img-box"><img src="assets/products/set6.webp" alt="Hộp quà Meliora 6 viên có cửa sổ trong suốt" loading="lazy" width="1000" height="1000" /></div>
+            <div class="tier-img tier-img-box"><img src="assets/products/set6.webp"
+                alt="Hộp quà Meliora 6 viên có cửa sổ trong suốt" loading="lazy" width="1000" height="1000" /></div>
             <div class="tier-body">
               <h3>Gift Set 6</h3>
               <p class="tier-price">190.000₫ <span>/ hộp</span></p>
-              <p class="tier-desc">6 viên trong hộp quà Meliora, kèm thiệp và muỗng. Nhiều lựa chọn vị, hợp để làm quà.</p>
+              <p class="tier-desc">6 viên trong hộp quà Meliora, kèm thiệp và muỗng. Nhiều lựa chọn vị, hợp để làm quà.
+              </p>
               <button class="btn btn-solid btn-wide" data-start-builder="6">Chọn Gift Set</button>
             </div>
           </article>
@@ -410,7 +513,8 @@
             </div>
 
             <div class="builder-picker">
-              <p class="picker-label">Chạm vào một vị để đặt vào ô trống tiếp theo. Chạm vào viên trong hộp để lấy ra.</p>
+              <p class="picker-label">Chạm vào một vị để đặt vào ô trống tiếp theo. Chạm vào viên trong hộp để lấy ra.
+              </p>
               <div class="chip-group">
                 <p class="chip-head">Tea Bombs</p>
                 <div class="chips" id="chips-tea"></div>
@@ -421,8 +525,10 @@
               </div>
 
               <label class="note-label" for="gift-note">Lời nhắn trên thiệp (không bắt buộc)</label>
-              <textarea id="gift-note" rows="2" maxlength="150" placeholder="Ví dụ: Chúc mừng sinh nhật, mong bạn luôn có những phút chậm lại thật dễ chịu."></textarea>
-              <p class="note-help"><span id="note-count">0</span>/150 ký tự. Phí và thời gian giao được Meliora xác nhận khi chốt đơn.</p>
+              <textarea id="gift-note" rows="2" maxlength="150"
+                placeholder="Ví dụ: Chúc mừng sinh nhật, mong bạn luôn có những phút chậm lại thật dễ chịu."></textarea>
+              <p class="note-help"><span id="note-count">0</span>/150 ký tự. Phí và thời gian giao được Meliora xác nhận
+                khi chốt đơn.</p>
 
               <div class="builder-foot">
                 <div>
@@ -444,26 +550,31 @@
     <section class="story" id="story" aria-labelledby="story-title">
       <div class="wrap story-grid">
         <figure class="story-photo" data-clip>
-          <img src="assets/story.webp" alt="Viên Tea Bomb và viên Mocktail Bomb trên khay gỗ, cạnh bình hoa cúc" loading="lazy" width="1200" height="866" />
+          <img src="assets/story.webp" alt="Viên Tea Bomb và viên Mocktail Bomb trên khay gỗ, cạnh bình hoa cúc"
+            loading="lazy" width="1200" height="866" />
         </figure>
         <div class="story-text">
           <h2 id="story-title" data-reveal>Why Meliora</h2>
           <p data-reveal>
-            Meliora khởi đầu từ mong muốn biến việc tự pha một ly trà hoặc mocktail thành khoảnh khắc thú vị để chậm lại, ngắm
-            nhìn và tận hưởng. Khi viên đồ uống chạm nước, màu sắc, hương thơm và các nguyên liệu mở ra một trải nghiệm riêng,
+            Meliora khởi đầu từ mong muốn biến việc tự pha một ly trà hoặc mocktail thành khoảnh khắc thú vị để chậm
+            lại, ngắm
+            nhìn và tận hưởng. Khi viên đồ uống chạm nước, màu sắc, hương thơm và các nguyên liệu mở ra một trải nghiệm
+            riêng,
             có thể thưởng thức hoặc sẻ chia như món quà.
           </p>
           <div class="isomalt" data-reveal>
             <h3>Nguyên liệu tiêu biểu: Isomalt</h3>
             <p>
-              Chất tạo ngọt thuộc nhóm polyol, được sử dụng trong thực phẩm và bánh kẹo. Với khả năng tạo lớp vỏ trong suốt và
+              Chất tạo ngọt thuộc nhóm polyol, được sử dụng trong thực phẩm và bánh kẹo. Với khả năng tạo lớp vỏ trong
+              suốt và
               vị ngọt dịu, isomalt cho phép nhìn thấy các nguyên liệu bên trong.
             </p>
           </div>
           <figure class="logo-story" data-reveal>
             <img src="assets/logo-mark.png" alt="" loading="lazy" width="600" height="467" />
             <figcaption>
-              Logo lấy cảm hứng từ lá cây, dải ruy băng và quả cầu đồ uống có cánh hoa: nguyên liệu thiên nhiên, sự chăm chút thủ
+              Logo lấy cảm hứng từ lá cây, dải ruy băng và quả cầu đồ uống có cánh hoa: nguyên liệu thiên nhiên, sự chăm
+              chút thủ
               công và khoảnh khắc bung hương khi chạm nước.
             </figcaption>
           </figure>
@@ -476,37 +587,59 @@
       <div class="faq-inner">
         <div class="faq-side">
           <h2 id="faq-title" data-reveal>Hỏi đáp</h2>
-          <p data-reveal>Chưa thấy câu bạn cần? Nhắn Meliora qua <a href="#contact">Zalo hoặc Facebook</a>, hoặc gọi <a href="tel:+84842097274">0842 097 274</a>.</p>
+          <p data-reveal>Chưa thấy câu bạn cần? Nhắn Meliora qua <a href="#contact">Zalo hoặc Facebook</a>, hoặc gọi <a
+              href="tel:+84842097274">0842 097 274</a>.</p>
         </div>
 
         <div class="faq-list" data-reveal>
           <details class="faq-item">
             <summary>Viên bomb là gì?</summary>
-            <div class="faq-a"><p>Là viên pha đồ uống làm thủ công. Thả một viên vào ly nước phù hợp, viên tan ra thành một ly trà hoặc mocktail. Viên dùng để pha uống, không phải đồ trang trí hay kẹo ăn trực tiếp.</p></div>
+            <div class="faq-a">
+              <p>Là viên pha đồ uống làm thủ công. Thả một viên vào ly nước phù hợp, viên tan ra thành một ly trà hoặc
+                mocktail. Viên dùng để pha uống, không phải đồ trang trí hay kẹo ăn trực tiếp.</p>
+            </div>
           </details>
           <details class="faq-item">
             <summary>Tea Bomb và Mocktail Bomb khác nhau thế nào?</summary>
-            <div class="faq-a"><p>Tea Bomb có vỏ isomalt trong suốt, bên trong là trà, hoa khô và trái cây sấy, pha với nước nóng khoảng 90°C. Sparkling Mocktail Bomb là viên dạng sủi, pha với nước có gas lạnh và sủi tan trong 2–3 phút.</p></div>
+            <div class="faq-a">
+              <p>Tea Bomb có vỏ isomalt trong suốt, bên trong là trà, hoa khô và trái cây sấy, pha với nước nóng khoảng
+                90°C. Sparkling Mocktail Bomb là viên dạng sủi, pha với nước có gas lạnh và sủi tan trong 2–3 phút.</p>
+            </div>
           </details>
           <details class="faq-item">
             <summary>Pha bao nhiêu nước?</summary>
-            <div class="faq-a"><p>Mỗi viên pha với 250 mL nước. Tea Bomb: nước nóng khoảng 90°C, ủ 5 phút. Mocktail Bomb: nước có gas lạnh, chờ sủi tan 2–3 phút rồi khuấy nhẹ, thêm đá nếu thích.</p></div>
+            <div class="faq-a">
+              <p>Mỗi viên pha với 250 mL nước. Tea Bomb: nước nóng khoảng 90°C, ủ 5 phút. Mocktail Bomb: nước có gas
+                lạnh, chờ sủi tan 2–3 phút rồi khuấy nhẹ, thêm đá nếu thích.</p>
+            </div>
           </details>
           <details class="faq-item">
             <summary>Bảo quản thế nào?</summary>
-            <div class="faq-a"><p>Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi thì dùng ngay. Ngày sản xuất và hạn dùng in trên nhãn sản phẩm.</p></div>
+            <div class="faq-a">
+              <p>Giữ trong bao bì kín cản ẩm, tránh ánh nắng trực tiếp. Mở túi thì dùng ngay. Ngày sản xuất và hạn dùng
+                in trên nhãn sản phẩm.</p>
+            </div>
           </details>
           <details class="faq-item" id="faq-shipping">
             <summary>Giao hàng thế nào?</summary>
-            <div class="faq-a"><p>Meliora ở Đà Nẵng. Sau khi bạn gửi đơn, Meliora nhắn lại để xác nhận đơn, phí giao và thời gian giao trước khi chuẩn bị hàng. Bạn có thể trả tiền khi nhận hàng hoặc chuyển khoản.</p></div>
+            <div class="faq-a">
+              <p>Meliora ở Đà Nẵng. Sau khi bạn gửi đơn, Meliora nhắn lại để xác nhận đơn, phí giao và thời gian giao
+                trước khi chuẩn bị hàng. Bạn có thể trả tiền khi nhận hàng hoặc chuyển khoản.</p>
+            </div>
           </details>
           <details class="faq-item">
             <summary>Giá hộp quà bao nhiêu?</summary>
-            <div class="faq-a"><p>Viên lẻ 30.000₫. Gift Set 3 giá 100.000₫ và Gift Set 6 giá 190.000₫, đều kèm hộp quà, thiệp và muỗng. Bạn tự chọn vị cho từng ô trong phần <a href="#gift">Gift Collection</a>.</p></div>
+            <div class="faq-a">
+              <p>Viên lẻ 30.000₫. Gift Set 3 giá 100.000₫ và Gift Set 6 giá 190.000₫, đều kèm hộp quà, thiệp và muỗng.
+                Bạn tự chọn vị cho từng ô trong phần <a href="#gift">Gift Collection</a>.</p>
+            </div>
           </details>
           <details class="faq-item">
             <summary>Có cá nhân hoá được không?</summary>
-            <div class="faq-a"><p>Bạn có thể tự chọn vị và ghi lời nhắn lên thiệp khi đặt hộp quà. Với đơn số lượng nhiều cho doanh nghiệp hay sự kiện, hãy nhắn Meliora để trao đổi về tuỳ chọn và báo giá.</p></div>
+            <div class="faq-a">
+              <p>Bạn có thể tự chọn vị và ghi lời nhắn lên thiệp khi đặt hộp quà. Với đơn số lượng nhiều cho doanh
+                nghiệp hay sự kiện, hãy nhắn Meliora để trao đổi về tuỳ chọn và báo giá.</p>
+            </div>
           </details>
         </div>
       </div>
@@ -521,8 +654,10 @@
           <ul class="contact-list" data-reveal>
             <li><span>Hotline</span><a href="tel:+84842097274">+84 842 097 274</a></li>
             <li><span>Email</span><a href="mailto:hellomelioravn@gmail.com">hellomelioravn@gmail.com</a></li>
-            <li><span>Instagram</span><a href="https://www.instagram.com/hellomelioravn" target="_blank" rel="noopener">@hellomelioravn</a></li>
-            <li><span>TikTok</span><a href="https://www.tiktok.com/@melioravn" target="_blank" rel="noopener">@melioravn</a></li>
+            <li><span>Instagram</span><a href="https://www.instagram.com/hellomelioravn" target="_blank"
+                rel="noopener">@hellomelioravn</a></li>
+            <li><span>TikTok</span><a href="https://www.tiktok.com/@melioravn" target="_blank"
+                rel="noopener">@melioravn</a></li>
           </ul>
         </div>
 
@@ -540,7 +675,8 @@
               <span class="channel-name">Gọi hotline</span><span class="channel-sub">+84 842 097 274</span>
             </a>
             <a class="channel" href="mailto:hellomelioravn@gmail.com?subject=Đặt%20quà%20doanh%20nghiệp%20Meliora">
-              <span class="channel-name">Email báo giá doanh nghiệp</span><span class="channel-sub">hellomelioravn@gmail.com</span>
+              <span class="channel-name">Email báo giá doanh nghiệp</span><span
+                class="channel-sub">hellomelioravn@gmail.com</span>
             </a>
           </div>
         </div>
@@ -555,8 +691,10 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="assets/logo-full.png" alt="Meliora — Artisan Beverage Bombs Experience" class="footer-logo" width="800" height="772" />
-        <p>Viên pha đồ uống làm thủ công tại Đà Nẵng: Tea Bomb pha nước nóng và Sparkling Mocktail Bomb pha nước có gas.</p>
+        <img src="assets/logo-full.png" alt="Meliora — Artisan Beverage Bombs Experience" class="footer-logo"
+          width="800" height="772" />
+        <p>Viên pha đồ uống làm thủ công tại Đà Nẵng: Tea Bomb pha nước nóng và Sparkling Mocktail Bomb pha nước có gas.
+        </p>
       </div>
 
       <div class="footer-cols">
@@ -605,7 +743,9 @@
     <div class="drawer-head">
       <h3>Giỏ hàng <span class="drawer-qty">(<span data-cart-count>0</span>)</span></h3>
       <button class="icon-btn" id="close-cart-btn" aria-label="Đóng giỏ hàng">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
       </button>
     </div>
 
@@ -622,22 +762,31 @@
   <div class="modal" id="checkout-modal" aria-hidden="true">
     <div class="modal-card modal-form" role="dialog" aria-modal="true" aria-labelledby="co-title">
       <button class="icon-btn modal-close" data-close aria-label="Đóng">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
       </button>
       <h3 id="co-title">Thông tin đặt hàng</h3>
-      <ol class="co-steps" aria-label="Các bước đặt hàng"><li class="is-on">Thông tin</li><li>Gửi đơn</li></ol>
+      <ol class="co-steps" aria-label="Các bước đặt hàng">
+        <li class="is-on">Thông tin</li>
+        <li>Gửi đơn</li>
+      </ol>
       <div class="co-summary" id="co-summary"></div>
 
       <form id="checkout-form" class="co-form" novalidate>
-        <label class="field"><span>Họ và tên người nhận</span><input type="text" id="order-name" autocomplete="name" required /></label>
-        <label class="field"><span>Số điện thoại</span><input type="tel" id="order-phone" autocomplete="tel" inputmode="tel" required /></label>
-        <label class="field"><span>Địa chỉ nhận hàng</span><input type="text" id="order-address" autocomplete="street-address" required /></label>
+        <label class="field"><span>Họ và tên người nhận</span><input type="text" id="order-name" autocomplete="name"
+            required /></label>
+        <label class="field"><span>Số điện thoại</span><input type="tel" id="order-phone" autocomplete="tel"
+            inputmode="tel" required /></label>
+        <label class="field"><span>Địa chỉ nhận hàng</span><input type="text" id="order-address"
+            autocomplete="street-address" required /></label>
         <label class="field"><span>Ghi chú (không bắt buộc)</span><textarea id="order-note" rows="2"></textarea></label>
 
         <fieldset class="pay">
           <legend>Thanh toán</legend>
           <label><input type="radio" name="pay" value="cod" checked /> <span>Trả tiền khi nhận hàng (COD)</span></label>
-          <label><input type="radio" name="pay" value="bank" /> <span>Chuyển khoản, Meliora gửi thông tin khi xác nhận đơn</span></label>
+          <label><input type="radio" name="pay" value="bank" /> <span>Chuyển khoản, Meliora gửi thông tin khi xác nhận
+              đơn</span></label>
         </fieldset>
 
         <p class="form-error" id="order-error" role="alert"></p>
@@ -650,7 +799,9 @@
   <div class="modal" id="send-modal" aria-hidden="true">
     <div class="modal-card modal-form" role="dialog" aria-modal="true" aria-labelledby="send-title">
       <button class="icon-btn modal-close" data-close aria-label="Đóng">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
       </button>
       <div id="send-body"></div>
     </div>

@@ -66,27 +66,47 @@
       ingredients: 'Isomalt (E953), trà ô long khô, đào sấy khô, hoa mộc khô dùng cho thực phẩm.',
       lot: 'TB-PO-261101-01', mfg: '01/11/2026', exp: '01/12/2026'
     },
-    { sku: 'TB-OC', line: 'tea', en: 'Orange Cinnamon', vn: 'Cam Quế', color: '#C9702E',
-      notes: 'Cam sấy thơm vỏ cùng quế ấm, vị trà tròn và ấm.' },
-    { sku: 'TB-MPF', line: 'tea', en: 'Mango Passion Fruit', vn: 'Xoài Chanh Dây', color: '#EDA93C',
-      notes: 'Xoài sấy ngọt, chanh dây chua nhẹ, ly trà màu vàng nắng.' },
-    { sku: 'TB-SR', line: 'tea', en: 'Strawberry Rose', vn: 'Dâu Hoa Hồng', color: '#E07E86',
-      notes: 'Dâu sấy và cánh hồng khô, vị chua ngọt, ly trà ngả hồng.' },
-    { sku: 'TB-AG', line: 'tea', en: 'Apple Ginger', vn: 'Táo Gừng', color: '#D69A4A',
-      notes: 'Táo sấy ngọt thanh, gừng ấm nhẹ ở hậu vị.' },
-    { sku: 'TB-BL', line: 'tea', en: 'Blueberry Lavender', vn: 'Việt Quất Oải Hương', color: '#6E4A78',
-      notes: 'Việt quất và oải hương, ly trà màu tím, hương dịu.' },
-    { sku: 'TB-CRG', line: 'tea', en: 'Chamomile, Red Date and Goji', vn: 'Hoa Cúc Táo Đỏ Kỷ Tử', color: '#E7B456',
-      notes: 'Hoa cúc, táo đỏ và kỷ tử, vị ngọt hiền, nhẹ nhàng.' },
+    {
+      sku: 'TB-OC', line: 'tea', en: 'Orange Cinnamon', vn: 'Cam Quế', color: '#C9702E',
+      notes: 'Cam sấy thơm vỏ cùng quế ấm, vị trà tròn và ấm.'
+    },
+    {
+      sku: 'TB-MPF', line: 'tea', en: 'Mango Passion Fruit', vn: 'Xoài Chanh Dây', color: '#EDA93C',
+      notes: 'Xoài sấy ngọt, chanh dây chua nhẹ, ly trà màu vàng nắng.'
+    },
+    {
+      sku: 'TB-SR', line: 'tea', en: 'Strawberry Rose', vn: 'Dâu Hoa Hồng', color: '#E07E86',
+      notes: 'Dâu sấy và cánh hồng khô, vị chua ngọt, ly trà ngả hồng.'
+    },
+    {
+      sku: 'TB-AG', line: 'tea', en: 'Apple Ginger', vn: 'Táo Gừng', color: '#D69A4A',
+      notes: 'Táo sấy ngọt thanh, gừng ấm nhẹ ở hậu vị.'
+    },
+    {
+      sku: 'TB-BL', line: 'tea', en: 'Blueberry Lavender', vn: 'Việt Quất Oải Hương', color: '#6E4A78',
+      notes: 'Việt quất và oải hương, ly trà màu tím, hương dịu.'
+    },
+    {
+      sku: 'TB-CRG', line: 'tea', en: 'Chamomile, Red Date and Goji', vn: 'Hoa Cúc Táo Đỏ Kỷ Tử', color: '#E7B456',
+      notes: 'Hoa cúc, táo đỏ và kỷ tử, vị ngọt hiền, nhẹ nhàng.'
+    },
 
-    { sku: 'MB-WBL', line: 'mocktail', en: 'Wild Berry Lemon', vn: 'Chanh Dâu Rừng', color: '#D98A9B',
-      notes: 'Dâu rừng chua ngọt gặp chanh vàng, sủi bọt tươi mát.' },
-    { sku: 'MB-PM', line: 'mocktail', en: 'Peach Mango', vn: 'Đào Xoài', color: '#E9B43C',
-      notes: 'Đào và xoài chín, ngọt mềm, màu vàng cam.' },
-    { sku: 'MB-CM', line: 'mocktail', en: 'Citrus Mint', vn: 'Cam Chanh Bạc Hà', color: '#9DBF7A',
-      notes: 'Cam chanh tươi và bạc hà mát lạnh, hợp ngày nóng.' },
-    { sku: 'MB-PC', line: 'mocktail', en: 'Pomegranate Cherry', vn: 'Lựu Cherry', color: '#B23A5C',
-      notes: 'Lựu và cherry, sắc đỏ, vị chua ngọt cân bằng.' }
+    {
+      sku: 'MB-WBL', line: 'mocktail', en: 'Wild Berry Lemon', vn: 'Chanh Dâu Rừng', color: '#D98A9B',
+      notes: 'Dâu rừng chua ngọt gặp chanh vàng, sủi bọt tươi mát.'
+    },
+    {
+      sku: 'MB-PM', line: 'mocktail', en: 'Peach Mango', vn: 'Đào Xoài', color: '#E9B43C',
+      notes: 'Đào và xoài chín, ngọt mềm, màu vàng cam.'
+    },
+    {
+      sku: 'MB-CM', line: 'mocktail', en: 'Citrus Mint', vn: 'Cam Chanh Bạc Hà', color: '#9DBF7A',
+      notes: 'Cam chanh tươi và bạc hà mát lạnh, hợp ngày nóng.'
+    },
+    {
+      sku: 'MB-PC', line: 'mocktail', en: 'Pomegranate Cherry', vn: 'Lựu Cherry', color: '#B23A5C',
+      notes: 'Lựu và cherry, sắc đỏ, vị chua ngọt cân bằng.'
+    }
   ].map(p => ({
     status: 'available',
     price: 30000,
