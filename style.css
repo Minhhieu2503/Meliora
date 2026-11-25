@@ -1883,7 +1883,7 @@ h3 {
 
 .tiers {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(.8rem, 2vw, 1.6rem);
   margin-bottom: clamp(3rem, 6vw, 5rem);
 }
@@ -3464,16 +3464,6 @@ h3 {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .tiers .tier:first-child {
-    grid-column: 1 / -1;
-    flex-direction: row;
-  }
-
-  .tiers .tier:first-child .tier-img {
-    width: 42%;
-    aspect-ratio: auto;
-  }
-
   .builder-body {
     grid-template-columns: 1fr;
   }
@@ -3661,15 +3651,6 @@ h3 {
 
   .tiers {
     grid-template-columns: 1fr;
-  }
-
-  .tiers .tier:first-child {
-    flex-direction: column;
-  }
-
-  .tiers .tier:first-child .tier-img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
   }
 
   .builder-intro {

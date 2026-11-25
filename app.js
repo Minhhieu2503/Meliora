@@ -19,8 +19,9 @@
     email: 'hellomelioravn@gmail.com'
   };
   const BOX = {
-    3: { sku: 'GS-3', name: 'Gift Set 3', price: 100000, image: 'assets/products/set3.webp', mustTry: true },
-    6: { sku: 'GS-6', name: 'Gift Set 6', price: 190000, image: 'assets/products/set6.webp' }
+    3: { sku: 'GS-3', name: 'Gift Set 3', count: 3, price: 105000, image: 'assets/products/set3.webp', mustTry: true },
+    6: { sku: 'GS-6', name: 'Gift Set 6', count: 6, price: 210000, image: 'assets/products/set6.webp' },
+    '6p': { sku: 'GS-6P', name: 'Gift Set 6 Premium', count: 6, price: 330000, image: 'assets/products/set6.webp', premium: true }
   };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -115,7 +116,7 @@
     }
   ].map(p => ({
     status: 'available',
-    price: 30000,
+    price: 35000,
     image: `assets/products/${p.sku}.jpg`,
     slug: p.sku.toLowerCase(),
     ...p
@@ -416,15 +417,15 @@
     return `
       <article class="card card-gift">
         <button class="card-img card-img-box" data-start-builder="${size}" aria-label="Chọn ${b.name}">
-          <img src="${b.image}" alt="Hộp quà Meliora ${size} viên" loading="lazy" width="1000" height="1000" />
+          <img src="${b.image}" alt="Hộp quà Meliora ${b.count} viên" loading="lazy" width="1000" height="1000" />
           <span class="status status-available">Còn hàng</span>
           ${b.mustTry ? `<span class="must-try">${HEART}Must try</span>` : ''}
         </button>
         <div class="card-body">
           <p class="card-line card-line-gift">Gift Set</p>
           <h3 class="card-title"><button data-start-builder="${size}">${b.name}</button></h3>
-          <p class="card-en">${size} viên tự chọn vị <span class="sku">${b.sku}</span></p>
-          <p class="card-notes">Hộp quà Meliora có cửa sổ trong suốt, kèm thiệp và muỗng.</p>
+          <p class="card-en">${b.count} viên tự chọn vị <span class="sku">${b.sku}</span></p>
+          <p class="card-notes">${b.premium ? 'Phiên bản hộp quà cao cấp hơn của Gift Set 6.' : 'Hộp quà Meliora có cửa sổ trong suốt, kèm thiệp và muỗng.'}</p>
           <p class="card-price">${vnd(b.price)}</p>
           <div class="card-actions card-actions-one">
             <button class="btn btn-solid btn-sm" data-start-builder="${size}">Chọn Gift Set</button>
@@ -435,7 +436,7 @@
 
   function renderShop() {
     const list = shopFilter === 'gift' ? [] : products.filter(p => shopFilter === 'all' || p.line === shopFilter);
-    const gifts = shopFilter === 'all' || shopFilter === 'gift' ? [3, 6] : [];
+    const gifts = shopFilter === 'all' || shopFilter === 'gift' ? Object.keys(BOX) : [];
     const cards = list.map(productCard).concat(gifts.map(giftCard));
     shopPages = Math.max(1, Math.ceil(cards.length / PER_PAGE));
     let html = '';
@@ -544,17 +545,17 @@
   }
 
   $$('.filter-btn').forEach(b => b.addEventListener('click', () => setShopFilter(b.dataset.shopFilter)));
-  $('[data-count="all"]').textContent = products.length + 2;
+  $('[data-count="all"]').textContent = products.length + Object.keys(BOX).length;
   $('[data-count="tea"]').textContent = products.filter(p => p.line === 'tea').length;
   $('[data-count="mocktail"]').textContent = products.filter(p => p.line === 'mocktail').length;
-  $('[data-count="gift"]').textContent = 2;
+  $('[data-count="gift"]').textContent = Object.keys(BOX).length;
   renderShop();
 
   document.addEventListener('click', e => {
     const add = e.target.closest('[data-add]');
     if (add && !add.disabled) { addProduct(add.dataset.add, 1, add); return; }
     const start = e.target.closest('[data-start-builder]');
-    if (start) startBuilder(Number(start.dataset.startBuilder));
+    if (start) startBuilder(start.dataset.startBuilder);
   });
 
   /* ------------------------------------------------------------------------
@@ -732,7 +733,7 @@
   const builderAdd = $('#builder-add');
   const giftNote = $('#gift-note');
   const noteCount = $('#note-count');
-  let boxSize = 3;
+  let boxSize = '3'; // key of BOX
   let slots = [null, null, null];
 
   const bombThumb = p => `<span class="bomb-thumb" style="--fc:${p.color}"><img src="${p.image}" alt="" loading="lazy" /></span>`;
@@ -769,10 +770,11 @@
   function setBoxSize(size) {
     if (size === boxSize) return;
     boxSize = size;
-    slots = Array.from({ length: size }, (_, i) => slots[i] || null);
-    giftBox.dataset.size = String(size);
+    const { count } = BOX[size];
+    slots = Array.from({ length: count }, (_, i) => slots[i] || null);
+    giftBox.dataset.size = String(count);
     $$('.size-opt').forEach(o => {
-      const on = Number(o.dataset.size) === size;
+      const on = o.dataset.size === size;
       o.classList.toggle('is-active', on);
       o.setAttribute('aria-checked', String(on));
       o.tabIndex = on ? 0 : -1;
@@ -787,12 +789,13 @@
   }
 
   $$('.size-opt').forEach((o, i, all) => {
-    o.addEventListener('click', () => setBoxSize(Number(o.dataset.size)));
+    o.addEventListener('click', () => setBoxSize(o.dataset.size));
     o.addEventListener('keydown', e => {
       if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
       e.preventDefault();
-      const next = all[(i + 1) % all.length];
-      setBoxSize(Number(next.dataset.size));
+      const step = e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1;
+      const next = all[(i + step + all.length) % all.length];
+      setBoxSize(next.dataset.size);
       next.focus();
     });
   });
@@ -856,7 +859,8 @@
      ------------------------------------------------------------------------ */
   const cartItems = $('#cart-items');
   const cartFoot = $('#cart-foot');
-  let cart = store.get('meliora_cart_v3', []).filter(i => i && (i.kind === 'box' ? BOX[i.size] : bySku[i.sku]));
+  let cart = store.get('meliora_cart_v3', []).filter(i => i && (i.kind === 'box' ? BOX[i.size] : bySku[i.sku]))
+    .map(i => ({ ...i, price: (i.kind === 'box' ? BOX[i.size] : bySku[i.sku]).price })); // saved carts follow current prices
 
   const saveCart = () => store.set('meliora_cart_v3', cart);
   const subtotal = () => cart.reduce((s, i) => s + i.price * i.qty, 0);
